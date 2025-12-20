@@ -1,3 +1,4 @@
+import 'package:dun_diary_app/core/constant/hive_constants.dart';
 import 'package:dun_diary_app/feature/home/data/model/user.dart';
 import 'package:dun_diary_app/feature/home/presentation/home_screen.dart';
 import 'package:dun_diary_app/register_provider.dart';
@@ -9,12 +10,10 @@ import 'package:provider/provider.dart';
 import 'firebase_options.dart';
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await Hive.initFlutter();
-  Hive.registerAdapter(UserAdapter());
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  await Hive.openBox<User>('userBox');
-  runApp(MultiProvider(providers: app_providers, child: MyApp()));
+  await initService();  
+  await initHive();
+  await initFirebase();
+  runApp(MultiProvider(providers: appProviders, child: MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -24,5 +23,24 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(title: 'Flutter Demo', home: HomeScreen.create());
   }
+}
+
+
+// init service
+initService() async {
+  WidgetsFlutterBinding.ensureInitialized();
+}
+
+// init hive 
+initHive() async {
+  await Hive.initFlutter();
+  Hive.registerAdapter(UserAdapter());
+  await Hive.openBox<User>(HiveBoxName.userBox);
+  await Hive.openBox(HiveBoxName.settingsBox);
+}
+
+// init firebase
+initFirebase() async {
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 }
 

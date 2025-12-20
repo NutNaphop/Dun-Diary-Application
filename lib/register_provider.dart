@@ -1,10 +1,13 @@
-import 'package:dun_diary_app/feature/home/provider/user_providers.dart';
+import 'package:dun_diary_app/core/core_providers.dart';
+import 'package:dun_diary_app/feature/home/provider/feature_home_provider.dart';
 import 'package:provider/single_child_widget.dart';
 
-List<SingleChildWidget> get app_providers {
-  // Import user_providers from user_provider.dart
+List<SingleChildWidget> get appProviders {
   return [
-    ...user_providers,
+    // 1. Core Services
+    ...coreProviders,
+
+    // 2. Feature: Home
+    ...featureHomeProviders
   ];
 }
-
