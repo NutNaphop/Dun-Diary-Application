@@ -1,6 +1,8 @@
 import 'package:dun_diary_app/core/network/api_state.dart';
+import 'package:dun_diary_app/core/network/network_info.dart';
 import 'package:dun_diary_app/feature/home/data/repository/user_repository.dart';
 import 'package:dun_diary_app/feature/home/presentation/home_viewModel.dart';
+import 'package:dun_diary_app/core/auth/auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -10,7 +12,9 @@ class HomeScreen extends StatefulWidget {
   static Widget create() {
     return ChangeNotifierProvider(
       create: (context) => HomeViewmodel(
-        repository: context.read<UserRepository>(),
+        repo: context.read<UserRepository>(),
+        networkInfo: context.read<NetworkInfo>(),
+        authService: context.read<AuthService>(),
       ),
       child: const HomeScreen(),
     );
@@ -25,7 +29,6 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     Future.microtask(() => context.read<HomeViewmodel>().fetchUser());
-    Future.microtask(() => context.read<HomeViewmodel>().syncPendingData());
   }
 
   @override
@@ -34,7 +37,16 @@ class _HomeScreenState extends State<HomeScreen> {
     final viewModel = context.read<HomeViewmodel>(); // เอาไว้กดปุ่ม
 
     return Scaffold(
-      appBar: AppBar(title: const Text("User List")),
+      appBar: AppBar(
+        title: const Text("Offline First App"),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.cloud_upload),
+            onPressed: () =>
+                viewModel.connectOnline()
+          ),
+        ],
+      ),
       body: switch (uiState) {
         Initial() ||
         Loading() => const Center(child: CircularProgressIndicator()),
@@ -45,11 +57,19 @@ class _HomeScreenState extends State<HomeScreen> {
             final user = users[index];
             return ListTile(
               title: Text(user.id.toString()),
-              subtitle: Text(user.title),
+              subtitle: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('Title: ${user.title}'),
+                  Text('Owner ID: ${user.ownerId}'),
+                  Text('Image: ${user.image}'),
+                  Text('Profile: ${user.profile}'),
+                  Text('Is Synced: ${user.isSynced}'),
+                ],
+              ),
             );
           },
         ),
-
 
         Error(message: final msg) => Center(
           child: Column(
@@ -63,7 +83,7 @@ class _HomeScreenState extends State<HomeScreen> {
       },
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          viewModel.addNewUser("New User", "image_url");
+          viewModel.addNewUser("BP Record ${DateTime.now().second}");
         },
         child: const Icon(Icons.add),
       ),

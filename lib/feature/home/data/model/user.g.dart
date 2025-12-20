@@ -18,26 +18,29 @@ class UserAdapter extends TypeAdapter<User> {
     };
     return User(
       id: fields[0] as int,
-      title: fields[1] as String,
-      image: fields[2] as String,
-      profile: fields[3] as String,
-      isSynced: fields[4] as bool,
+      ownerId: fields[1] as String,
+      title: fields[2] as String,
+      image: fields[3] as String,
+      profile: fields[4] as String,
+      isSynced: fields[5] as bool,
     );
   }
 
   @override
   void write(BinaryWriter writer, User obj) {
     writer
-      ..writeByte(5)
+      ..writeByte(6)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
-      ..write(obj.title)
+      ..write(obj.ownerId)
       ..writeByte(2)
-      ..write(obj.image)
+      ..write(obj.title)
       ..writeByte(3)
-      ..write(obj.profile)
+      ..write(obj.image)
       ..writeByte(4)
+      ..write(obj.profile)
+      ..writeByte(5)
       ..write(obj.isSynced);
   }
 
