@@ -1,6 +1,6 @@
 import 'package:dun_diary_app/core/constant/hive_constants.dart';
 import 'package:dun_diary_app/feature/home/data/model/user.dart';
-import 'package:dun_diary_app/feature/home/presentation/home_screen.dart';
+import 'package:dun_diary_app/feature/main/presentation/main_screen.dart';
 import 'package:dun_diary_app/register_provider.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -21,7 +21,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(title: 'Flutter Demo', home: HomeScreen.create());
+    return MaterialApp(title: 'Flutter Demo', debugShowCheckedModeBanner: false, home: const MainScreen());
   }
 }
 
