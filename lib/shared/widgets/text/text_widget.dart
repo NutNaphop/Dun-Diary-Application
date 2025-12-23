@@ -1,8 +1,9 @@
-import 'package:dun_diary_app/shared/color/color.dart';
-import 'package:dun_diary_app/shared/utils/dimension.dart';
+import 'package:dun_diary_app/shared/style/color.dart';
+import 'package:dun_diary_app/shared/style/dimension.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter/material.dart';
 
+// Main Custom Text
 class CustomText extends StatelessWidget {
   final String text;
   final TextAlign? textAlign;
@@ -33,6 +34,7 @@ class CustomText extends StatelessWidget {
   }
 }
 
+// Use Custom Text as Heading
 class HeadingText extends StatelessWidget {
   final String text;
 
@@ -51,6 +53,7 @@ class HeadingText extends StatelessWidget {
   }
 }
 
+// Use Custom Text as Heading
 class SubHeadingText extends StatelessWidget {
   final String text;
 
