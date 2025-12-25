@@ -27,7 +27,8 @@ class CustomColor {
   // Color
   static const transparent = Colors.transparent;
   static const white = Colors.white;
-
-  // Yellow
   static const yellow1 = Color(0xFFE8BA00);
+  static const purple1 = Color(0xFFA949E1);
+  static const blue1 = Color(0xFF4990E1);
+  static const pink1 = Color(0xFFE1499D);
 }

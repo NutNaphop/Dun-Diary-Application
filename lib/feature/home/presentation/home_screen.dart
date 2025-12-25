@@ -9,12 +9,10 @@ import 'package:dun_diary_app/shared/style/color.dart';
 import 'package:dun_diary_app/shared/style/dimension.dart';
 import 'package:dun_diary_app/shared/style/drop_shadow.dart';
 import 'package:dun_diary_app/shared/widgets/%E0%B8%B4button/custom_button.dart';
-import 'package:dun_diary_app/shared/widgets/card/card_item.dart';
 import 'package:dun_diary_app/shared/widgets/card/custom_card.dart';
-import 'package:dun_diary_app/shared/widgets/svg/custom_svg_widget.dart';
 import 'package:dun_diary_app/shared/widgets/scaffold/custom_scaffold.dart';
 import 'package:dun_diary_app/shared/widgets/scaffold/main_appbar.dart';
-import 'package:dun_diary_app/shared/widgets/text/text_widget.dart';
+import 'package:dun_diary_app/shared/widgets/svg/custom_svg_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -118,18 +116,21 @@ class _HomeScreenState extends State<HomeScreen> {
                     if (hasRecords) ...[
                       _buildStatRow(
                         context,
+                        SVGImage(path: AppIcons.graphUp, size: 34,color: CustomColor.purple1),
                         'SYS',
                         'ความดันโลหิตขณะหัวใจบีบตัว',
                         '115',
                       ),
                       _buildStatRow(
                         context,
+                        SVGImage(path: AppIcons.graphDown, size: 34, color: CustomColor.blue1),
                         'DIA',
                         'ความดันโลหิตขณะหัวใจคลายตัว',
                         '75',
                       ),
                       _buildStatRow(
                         context,
+                        SVGImage(path: AppIcons.heartPulse, size: 34, color: CustomColor.pink1),
                         'PUL',
                         'อัตราการเต้นของหัวใจ',
                         '72',
@@ -172,11 +173,13 @@ class _HomeScreenState extends State<HomeScreen> {
 // Helper Widget เพื่อลดโค้ดที่ซ้ำซ้อนกัน 3 รอบ
 Widget _buildStatRow(
   BuildContext context,
+  Widget leading,
   String label,
   String description,
   String value,
 ) {
   return ContentCard(
+    leading: leading,
     label: label,
     description: description,
     value: value,

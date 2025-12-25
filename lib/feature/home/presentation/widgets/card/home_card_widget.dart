@@ -1,4 +1,3 @@
-import 'package:dun_diary_app/shared/constant/app_icons.dart';
 import 'package:dun_diary_app/shared/constant/app_image.dart';
 import 'package:dun_diary_app/shared/style/dimension.dart';
 import 'package:dun_diary_app/shared/widgets/card/card_item.dart';
@@ -37,14 +36,14 @@ class NoFoundCard extends StatelessWidget {
 }
 
 class ContentCard extends StatelessWidget {
-
-
+  final Widget leading;
   final String label;
   final String description;
   final String value;
 
     const ContentCard({
       super.key,
+      required this.leading,
       required this.label,
       required this.description,
       required this.value
@@ -53,7 +52,7 @@ class ContentCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CardItem(
-        leading: SVGImage(path: AppIcons.image, size: 34),
+        leading: leading,
         title: label,
         subtitle: description,
         trailing: CustomText(
