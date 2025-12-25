@@ -31,6 +31,9 @@ class HomeViewmodel extends ChangeNotifier {
   bool _isLoading = false;
   bool get isLoading => _isLoading;
   
+  bool _hasRecords = false;
+  bool get hasRecords => _hasRecords;
+
   @override
   void dispose() {
     _netSubscription?.cancel();
@@ -95,6 +98,12 @@ class HomeViewmodel extends ChangeNotifier {
       await _repository.migrateData(); // ย้ายข้อมูล
       fetchUser(); // Refresh UI เผื่อมีอะไรเปลี่ยน
     }
+  }
+
+  void toggleHasRecord(){
+    _hasRecords = !_hasRecords;
+    print(_hasRecords);
+    notifyListeners();
   }
 
   notifyListeners();
