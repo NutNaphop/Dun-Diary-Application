@@ -17,5 +17,7 @@ class AppIcons{
   static const image = '$_base/image.svg';
   static const notification = '$_base/notification.svg';
   static const pulse = '$_base/pulse.svg';
-
+  static const heartPulse = '$_base/heart_pulse.svg';
+  static const graphUp = '$_base/graph_up.svg';
+  static const graphDown = '$_base/graph_down.svg';
 }
