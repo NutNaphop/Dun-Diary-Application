@@ -1,8 +1,18 @@
+import 'package:dun_diary_app/core/auth/auth_service.dart';
 import 'package:dun_diary_app/core/network/api_state.dart';
 import 'package:dun_diary_app/core/network/network_info.dart';
 import 'package:dun_diary_app/feature/home/data/repository/user_repository.dart';
 import 'package:dun_diary_app/feature/home/presentation/home_viewModel.dart';
-import 'package:dun_diary_app/core/auth/auth_service.dart';
+import 'package:dun_diary_app/feature/home/presentation/widgets/card/home_card_widget.dart';
+import 'package:dun_diary_app/shared/constant/app_icons.dart';
+import 'package:dun_diary_app/shared/style/color.dart';
+import 'package:dun_diary_app/shared/style/dimension.dart';
+import 'package:dun_diary_app/shared/style/drop_shadow.dart';
+import 'package:dun_diary_app/shared/widgets/%E0%B8%B4button/custom_button.dart';
+import 'package:dun_diary_app/shared/widgets/card/custom_card.dart';
+import 'package:dun_diary_app/shared/widgets/scaffold/custom_scaffold.dart';
+import 'package:dun_diary_app/shared/widgets/scaffold/main_appbar.dart';
+import 'package:dun_diary_app/shared/widgets/svg/custom_svg_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -34,59 +44,144 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     final uiState = context.select((HomeViewmodel vm) => vm.state);
+    final hasRecords = context.select((HomeViewmodel vm) => vm.hasRecords);
     final viewModel = context.read<HomeViewmodel>(); // เอาไว้กดปุ่ม
 
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("Offline First App"),
+    return CustomScaffold(
+      appBar: MainAppBar(
+        isHome: true,
+        title: "คุณเอกพจน์",
         actions: [
-          IconButton(
-            icon: const Icon(Icons.cloud_upload),
-            onPressed: () =>
-                viewModel.connectOnline()
+          IconButtonSVG(
+            path: AppIcons.notification,
+            size: 32,
+            onPressed: () {
+              viewModel.toggleHasRecord();
+            },
           ),
         ],
       ),
-      body: switch (uiState) {
-        Initial() ||
-        Loading() => const Center(child: CircularProgressIndicator()),
+      body: Padding(
+        padding: const EdgeInsets.only(top: 20),
+        child: switch (uiState) {
+          Initial() ||
+          Loading() => const Center(child: CircularProgressIndicator()),
 
-        Success(data: final users) => ListView.builder(
-          itemCount: users.length,
-          itemBuilder: (context, index) {
-            final user = users[index];
-            return ListTile(
-              title: Text(user.id.toString()),
-              subtitle: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+          Success() => Column(
+            mainAxisSize: MainAxisSize.max,
+            spacing: 25,
+            children: [
+              // --- ส่วนปุ่ม (Button) ---
+              Row(
+                mainAxisSize: MainAxisSize.max,
                 children: [
-                  Text('Title: ${user.title}'),
-                  Text('Owner ID: ${user.ownerId}'),
-                  Text('Image: ${user.image}'),
-                  Text('Profile: ${user.profile}'),
-                  Text('Is Synced: ${user.isSynced}'),
+                  Expanded(
+                    child: CustomButton(
+                      text: 'เริ่มบันทึกความดัน',
+                      textStyle: TextStyle(
+                        color: CustomColor.gray900,
+                        fontSize: Dimension.fontSizeHeading2,
+                        fontWeight: Dimension.fontWeightRegular,
+                      ),
+                      leadingIcon: SVGImage(
+                        path: AppIcons.pulse,
+                        size: 45,
+                        color: CustomColor.primaryColor,
+                      ),
+                      trailingIcon: SVGImage(
+                        path: AppIcons.addCircle,
+                        size: 28,
+                        color: CustomColor.primaryColor,
+                      ),
+                      padding: EdgeInsets.symmetric(
+                        vertical: 20,
+                        horizontal: 15,
+                      ),
+                      boxShadow: [DropShadow.drop_thumb],
+                      onPressed: () {
+                        print('Button pressed ...');
+                      },
+                    ),
+                  ),
                 ],
               ),
-            );
-          },
-        ),
 
-        Error(message: final msg) => Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(Icons.error, color: Colors.red, size: 50),
-              Text(msg),
+              // --- ส่วนการ์ดแสดงผลสุขภาพ (Health Status Card) ---
+              CustomCard(
+                title: 'สุขภาพของคุณวันนี้',
+                contentPadding: EdgeInsets.all(10),
+                content: Column(
+                  mainAxisSize: MainAxisSize.max,
+                  children: [
+                    if (hasRecords) ...[
+                      _buildStatRow(
+                        context,
+                        SVGImage(path: AppIcons.graphUp, size: 34,color: CustomColor.purple1),
+                        'SYS',
+                        'ความดันโลหิตขณะหัวใจบีบตัว',
+                        '115',
+                      ),
+                      _buildStatRow(
+                        context,
+                        SVGImage(path: AppIcons.graphDown, size: 34, color: CustomColor.blue1),
+                        'DIA',
+                        'ความดันโลหิตขณะหัวใจคลายตัว',
+                        '75',
+                      ),
+                      _buildStatRow(
+                        context,
+                        SVGImage(path: AppIcons.heartPulse, size: 34, color: CustomColor.pink1),
+                        'PUL',
+                        'อัตราการเต้นของหัวใจ',
+                        '72',
+                      ),
+                    ] else ...[
+                      NoFoundCard(
+                        title: "ยังไม่มีเนื้อหา",
+                        subtitle: "บันทึกความดันของวันนี้ เพื่อให้ข้อมูลสุขภาพสมบูรณ์",
+                      ),
+                    ],
+
+                  ],
+                ),
+              ),
             ],
           ),
-        ),
-      },
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          viewModel.addNewUser("BP Record ${DateTime.now().second}");
+
+          Error(message: final msg) => Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(Icons.error, color: Colors.red, size: 50),
+                Text(msg),
+              ],
+            ),
+          ),
         },
-        child: const Icon(Icons.add),
       ),
+
+      // floatingActionButton: FloatingActionButton(
+      //   onPressed: () {
+      //     viewModel.addNewUser("BP Record ${DateTime.now().second}");
+      //   },
+      //   child: const Icon(Icons.add),
+      // ),
     );
   }
+}
+
+// Helper Widget เพื่อลดโค้ดที่ซ้ำซ้อนกัน 3 รอบ
+Widget _buildStatRow(
+  BuildContext context,
+  Widget leading,
+  String label,
+  String description,
+  String value,
+) {
+  return ContentCard(
+    leading: leading,
+    label: label,
+    description: description,
+    value: value,
+  );
 }
