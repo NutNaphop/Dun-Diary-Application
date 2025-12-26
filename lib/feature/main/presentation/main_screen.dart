@@ -1,3 +1,5 @@
+import 'package:dun_diary_app/core/constant/app_routes.dart';
+import 'package:dun_diary_app/core/services/snackbar_service.dart';
 import 'package:dun_diary_app/shared/style/color.dart';
 import 'package:dun_diary_app/shared/style/dimension.dart';
 import 'package:dun_diary_app/shared/widgets/text/text_widget.dart';
@@ -37,7 +39,10 @@ class MainScreen extends StatelessWidget {
               height: 50,
               child: FittedBox(
                 child: FloatingActionButton(
-                  onPressed: () => viewModel.setIndex(2),
+                  onPressed: () => {
+                    Navigator.pushNamed(context, AppRoutes.record),
+                    SnackBarService.instance.showSuccess("ลบเรียบร้อย"),
+                  },
                   backgroundColor: CustomColor.primaryColor,
                   shape: const CircleBorder(),
                   elevation: 4,
@@ -45,12 +50,16 @@ class MainScreen extends StatelessWidget {
                     'assets/icons/bottom_navigation/plus.svg',
                     width: 24,
                     height: 24,
-                    colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
+                    colorFilter: const ColorFilter.mode(
+                      Colors.white,
+                      BlendMode.srcIn,
+                    ),
                   ),
                 ),
               ),
             ),
-            floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+            floatingActionButtonLocation:
+                FloatingActionButtonLocation.centerDocked,
 
             // 3. ตัว Bottom Bar
             bottomNavigationBar: BottomNavigationBar(
@@ -96,10 +105,7 @@ class MainScreen extends StatelessWidget {
   }
 
   // Helper Function เพื่อเขียน Icon ง่ายๆ (รองรับ SVG)
-  BottomNavigationBarItem _buildNavItem(
-    String iconPath,
-    String label,
-  ) {
+  BottomNavigationBarItem _buildNavItem(String iconPath, String label) {
     return BottomNavigationBarItem(
       icon: _buildIconContent(iconPath, label, isSelected: false),
       activeIcon: _buildIconContent(iconPath, label, isSelected: true),
@@ -107,8 +113,11 @@ class MainScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildIconContent(String iconPath, String label,
-      {required bool isSelected}) {
+  Widget _buildIconContent(
+    String iconPath,
+    String label, {
+    required bool isSelected,
+  }) {
     final color = isSelected ? CustomColor.primaryColor : CustomColor.gray400;
     return Column(
       children: [
