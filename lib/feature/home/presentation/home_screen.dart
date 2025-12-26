@@ -99,7 +99,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                       boxShadow: [DropShadow.drop_thumb],
                       onPressed: () {
-                        print('Button pressed ...');
+                        viewModel.redirectToRecord();
                       },
                     ),
                   ),
