@@ -1,11 +1,14 @@
 import 'dart:async';
 
+import 'package:dun_diary_app/core/auth/auth_service.dart';
+import 'package:dun_diary_app/core/constant/app_routes.dart';
 import 'package:dun_diary_app/core/error/network/error_mapper.dart';
 import 'package:dun_diary_app/core/network/api_state.dart';
 import 'package:dun_diary_app/core/network/network_info.dart';
+import 'package:dun_diary_app/core/services/dialog_service.dart';
+import 'package:dun_diary_app/core/services/navigation_service.dart';
 import 'package:dun_diary_app/feature/home/data/model/user.dart';
 import 'package:dun_diary_app/feature/home/data/repository/user_repository.dart';
-import 'package:dun_diary_app/core/auth/auth_service.dart';
 import 'package:flutter/foundation.dart';
 
 class HomeViewmodel extends ChangeNotifier {
@@ -104,6 +107,15 @@ class HomeViewmodel extends ChangeNotifier {
     _hasRecords = !_hasRecords;
     print(_hasRecords);
     notifyListeners();
+  }
+
+  void redirectToRecord(){
+    NavigationService.instance.pushNamed(AppRoutes.record); 
+    notifyListeners();
+  }
+
+  void showDialog(){
+    DialogService.instance.showConfirm("Hello", "World");
   }
 
   notifyListeners();
