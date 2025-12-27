@@ -20,4 +20,6 @@ class AppIcons{
   static const heartPulse = '$_base/heart_pulse.svg';
   static const graphUp = '$_base/graph_up.svg';
   static const graphDown = '$_base/graph_down.svg';
+  static const leftArrow = '$_base/left_arrow.svg';
+  static const x = '$_base/x.svg';
 }
