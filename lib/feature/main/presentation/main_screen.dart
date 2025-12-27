@@ -1,5 +1,4 @@
 import 'package:dun_diary_app/core/constant/app_routes.dart';
-import 'package:dun_diary_app/core/services/snackbar_service.dart';
 import 'package:dun_diary_app/shared/style/color.dart';
 import 'package:dun_diary_app/shared/style/dimension.dart';
 import 'package:dun_diary_app/shared/widgets/text/text_widget.dart';
@@ -7,8 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 
-import 'main_view_model.dart';
 import '../../home/presentation/home_screen.dart';
+import 'main_view_model.dart';
 
 class MainScreen extends StatelessWidget {
   const MainScreen({super.key});
@@ -41,7 +40,6 @@ class MainScreen extends StatelessWidget {
                 child: FloatingActionButton(
                   onPressed: () => {
                     Navigator.pushNamed(context, AppRoutes.record),
-                    SnackBarService.instance.showSuccess("ลบเรียบร้อย"),
                   },
                   backgroundColor: CustomColor.primaryColor,
                   shape: const CircleBorder(),

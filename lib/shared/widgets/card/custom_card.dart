@@ -4,14 +4,14 @@ import 'package:dun_diary_app/shared/widgets/text/text_widget.dart';
 import 'package:flutter/material.dart';
 
 class CustomCard extends StatelessWidget {
-  final String title;
+  final String? title;
   final String? description;
   final Widget content;
   final EdgeInsets? contentPadding;
 
   const CustomCard({
     super.key,
-    required this.title,
+    this.title,
     this.description,
     required this.content,
     this.contentPadding = const EdgeInsets.all(0),
@@ -38,11 +38,12 @@ class CustomCard extends StatelessWidget {
           children: [
             Column(
               children: [
-                CustomText(
-                  text: title,
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
+                if (title != null)
+                  CustomText(
+                    text: title!,
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
                 if (description != null)
                   CustomText(
                     text: description!,
