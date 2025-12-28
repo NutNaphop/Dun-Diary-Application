@@ -1,7 +1,7 @@
 import 'package:dun_diary_app/core/constant/app_routes.dart';
 import 'package:dun_diary_app/shared/style/color.dart';
 import 'package:dun_diary_app/shared/style/dimension.dart';
-import 'package:dun_diary_app/shared/widgets/text/text_widget.dart';
+import 'package:dun_diary_app/shared/widgets/custom/text/text_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';

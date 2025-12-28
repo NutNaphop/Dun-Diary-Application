@@ -6,6 +6,7 @@ class CustomScaffold extends StatelessWidget {
   final String? title;
   final PreferredSizeWidget? appBar;
   final Widget? floatingActionButton;
+  final FloatingActionButtonLocation? floatingActionButtonLocation;
   final Widget? bottomNavigationBar;
   final List<Widget>? actions;
 
@@ -22,6 +23,7 @@ class CustomScaffold extends StatelessWidget {
     this.title,
     this.appBar,
     this.floatingActionButton,
+    this.floatingActionButtonLocation,
     this.bottomNavigationBar,
     this.actions,
     this.usePadding = true, // default เป็น true
@@ -51,6 +53,7 @@ class CustomScaffold extends StatelessWidget {
       appBar: appBar,
       body: content,
       floatingActionButton: floatingActionButton,
+      floatingActionButtonLocation: floatingActionButtonLocation,
       bottomNavigationBar: bottomNavigationBar,
     );
   }
