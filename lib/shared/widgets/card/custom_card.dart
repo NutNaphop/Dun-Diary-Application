@@ -6,6 +6,10 @@ import 'package:flutter/material.dart';
 class CustomCard extends StatelessWidget {
   final String? title;
   final String? description;
+  final double titleFontSize;
+  final double descriptionFontSize;
+  final TextAlign titleTextAlign;
+  final TextAlign descriptionTextAlign;
   final Widget content;
   final EdgeInsets? contentPadding;
 
@@ -13,6 +17,10 @@ class CustomCard extends StatelessWidget {
     super.key,
     this.title,
     this.description,
+    this.titleFontSize = 18,
+    this.descriptionFontSize = 18,
+    this.titleTextAlign = TextAlign.start,
+    this.descriptionTextAlign = TextAlign.start,
     required this.content,
     this.contentPadding = const EdgeInsets.all(0),
   });
@@ -37,18 +45,21 @@ class CustomCard extends StatelessWidget {
           mainAxisSize: MainAxisSize.max,
           children: [
             Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 if (title != null)
                   CustomText(
                     text: title!,
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
+                    textAlign: titleTextAlign,
                   ),
                 if (description != null)
                   CustomText(
                     text: description!,
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
+                    textAlign: descriptionTextAlign,
                   ),
               ],
             ),
