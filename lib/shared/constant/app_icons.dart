@@ -22,4 +22,5 @@ class AppIcons{
   static const graphDown = '$_base/graph_down.svg';
   static const leftArrow = '$_base/left_arrow.svg';
   static const x = '$_base/x.svg';
+  static const starCircle = '$_base/star_circle.svg';
 }

@@ -6,11 +6,13 @@ import 'package:flutter/material.dart';
 class WheelNumber extends StatefulWidget {
   final int initialValue;
   final ValueChanged<int> onChanged;
+  final int totalCount;
 
   const WheelNumber({
     super.key,
     this.initialValue = 0,
     required this.onChanged,
+    this.totalCount = 300,
   });
 
   @override
@@ -70,7 +72,7 @@ class _WheelNumberState extends State<WheelNumber> {
                 widget.onChanged(index);
               },
               childDelegate: ListWheelChildBuilderDelegate(
-                childCount: 300,
+                childCount: widget.totalCount,
                 builder: (context, index) {
                   return Container(
                     alignment: Alignment.center,

@@ -24,7 +24,7 @@ class CustomText extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(
       text,
-      style: GoogleFonts.anuphan(
+      style: GoogleFonts.sarabun(
         fontSize: fontSize,
         fontWeight: fontWeight,
         color: color,
