@@ -23,4 +23,7 @@ class AppIcons{
   static const leftArrow = '$_base/left_arrow.svg';
   static const x = '$_base/x.svg';
   static const starCircle = '$_base/star_circle.svg';
+  static const calendar = '$_base/calendar.svg';
+  static const clock = '$_base/clock.svg';
+  static const camera = '$_base/camera.svg';
 }

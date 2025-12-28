@@ -1,10 +1,10 @@
 import 'package:dun_diary_app/shared/constant/app_icons.dart';
 import 'package:dun_diary_app/shared/style/color.dart';
 import 'package:dun_diary_app/shared/style/dimension.dart';
-import 'package:dun_diary_app/shared/widgets/guage/guage_indicator.dart';
-import 'package:dun_diary_app/shared/widgets/guage/utils/guage_utils.dart';
-import 'package:dun_diary_app/shared/widgets/svg/custom_svg_widget.dart';
-import 'package:dun_diary_app/shared/widgets/text/text_widget.dart';
+import 'package:dun_diary_app/shared/widgets/ui/guage/guage_indicator.dart';
+import 'package:dun_diary_app/shared/widgets/ui/guage/utils/guage_utils.dart';
+import 'package:dun_diary_app/shared/widgets/custom/svg/custom_svg_widget.dart';
+import 'package:dun_diary_app/shared/widgets/custom/text/text_widget.dart';
 import 'package:flutter/material.dart';
 
 class BloodPressureGauge extends StatelessWidget {

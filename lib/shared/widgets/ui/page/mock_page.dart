@@ -1,6 +1,6 @@
 // Make me a mock page
 import 'package:dun_diary_app/core/services/navigation_service.dart';
-import 'package:dun_diary_app/shared/widgets/scaffold/custom_scaffold.dart';
+import 'package:dun_diary_app/shared/widgets/custom/scaffold/custom_scaffold.dart';
 import 'package:flutter/material.dart';
 
 class MockPage extends StatelessWidget {

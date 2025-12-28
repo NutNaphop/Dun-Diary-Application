@@ -1,6 +1,6 @@
 import 'package:dun_diary_app/shared/style/dimension.dart';
-import 'package:dun_diary_app/shared/widgets/listscroll/wheel_number.dart';
-import 'package:dun_diary_app/shared/widgets/text/text_widget.dart';
+import 'package:dun_diary_app/shared/widgets/ui/wheel_number/wheel_number.dart';
+import 'package:dun_diary_app/shared/widgets/custom/text/text_widget.dart';
 import 'package:flutter/material.dart';
 
 class BpCardLayout extends StatelessWidget {
