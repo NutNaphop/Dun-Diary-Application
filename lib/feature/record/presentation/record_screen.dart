@@ -33,8 +33,8 @@ class RecordScreen extends StatefulWidget {
 }
 
 class _RecordScreenState extends State<RecordScreen> {
-  bool _isMenuOpen = false; // ตัวแปรคุมสถานะเมนู
-
+  bool _isMenuOpen = false;
+  late int _selectVal ; 
   @override
   Widget build(BuildContext context) {
     final viewModel = context.watch<RecordViewmodel>();
@@ -108,17 +108,18 @@ class _RecordScreenState extends State<RecordScreen> {
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 CustomPopupMenuButton(
-                  offset: const Offset(0, -175),
+                  openAbove: true, 
                   icon: CustomBoxIcon(
                     iconPath: AppIcons.outline.camera,
                     activeIconPath: AppIcons.outline.x,
-                    isActive: _isMenuOpen, // ส่งสถานะเข้าไป
+                    isActive: _isMenuOpen,
                   ),
                   onOpened: () => setState(() => _isMenuOpen = true),
                   onCanceled: () => setState(() => _isMenuOpen = false),
                   onSelected: (String result) {
                     print(result);
-                    setState(() => _isMenuOpen = false); // เลือกเมนู -> คืนรูป
+                    
+                    setState(() { _isMenuOpen = false; _selectVal = int.parse(result);}); // เลือกเมนู -> คืนรูป
                   },
                   items: [
                     CustomPopupMenuItem(
@@ -141,7 +142,7 @@ class _RecordScreenState extends State<RecordScreen> {
                   text: "บันทึก",
                   type: CustomButtonType.fill,
                   backgroundColor: CustomColor.accentColor,
-                  onPressed: () => {print("Record Click")},
+                  onPressed: () => {print("Record Click: $_selectVal")},
                 ),
               ],
             ),
