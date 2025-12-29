@@ -1,31 +1,47 @@
 import 'package:flutter/material.dart';
 
 class Dimension {
+  Dimension._();
+  static const paddings = _Padding._();
+  static const fontSizes = _FontSize._();
+  static const fontWeights = _FontWeight._();
+  static const conSizes = _IconSize._();
+
+}
+
+class _Padding{
+  const _Padding._();
   // padding
-  static const double paddingSmall = 8.0; /// 8
-  static const double paddingMedium = 16.0; /// 16
-  static const double paddingLarge = 24.0; /// 24
+  final double sm = 8.0; /// 8
+  final double md = 16.0; /// 16
+  final double lg = 24.0; /// 24
+}
 
-
-
+class _FontSize {
+  const _FontSize._();
   // fontSize
-  static const double fontSizeHeading1 = 21.0; /// 21
-  static const double fontSizeHeading2 = 16.0; /// 16
-  static const double fontSizeMedium = 14.0; /// 14
-  static const double fontSizeRegular =  12.0; /// 12
-  static const double fontSizeSmall = 11.0; /// 11
-  static const double fontSizeExtraSmall = 10.0; /// 10
+  final double h1 = 21.0; /// 21
+  final double h2 = 16.0; /// 16
+  final double md = 14.0; /// 14
+  final double rg =  12.0; /// 12
+  final double sm = 11.0; /// 11
+  final double esm = 10.0; /// 10
+}
 
-
-
+class _IconSize {
+  const  _IconSize._();
   // iconSize
-  static const double iconSizeSmall = 16.0; /// 16
-  static const double iconSizeMedium = 24.0; /// 24
-  static const double iconSizeLarge = 32.0; /// 32
+  final double sm = 16.0; /// 16
+  final double md = 24.0; /// 24
+  final double lg = 32.0; /// 32
 
+}
+
+class _FontWeight {
+  const _FontWeight._();
   // fontWeight
-  static const FontWeight fontWeightBold = FontWeight.w700;
-  static const FontWeight fontWeightSemiBold = FontWeight.w600;
-  static const FontWeight fontWeightMedium = FontWeight.w500;
-  static const FontWeight fontWeightRegular = FontWeight.w400;
+  final FontWeight bold = FontWeight.w700;
+  final FontWeight semiBold = FontWeight.w600;
+  final FontWeight medium = FontWeight.w500;
+  final FontWeight regular = FontWeight.w400;
 }

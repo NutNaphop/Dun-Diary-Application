@@ -35,8 +35,8 @@ class CardItem extends StatelessWidget {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                  CustomText(text: title, fontSize: Dimension.fontSizeMedium, fontWeight: Dimension.fontWeightSemiBold),
-                  CustomText(text: subtitle, fontSize: Dimension.fontSizeRegular, fontWeight: Dimension.fontWeightRegular)
+                  CustomText(text: title, fontSize: Dimension.fontSizes.md, fontWeight: Dimension.fontWeights.semiBold),
+                  CustomText(text: subtitle, fontSize: Dimension.fontSizes.rg, fontWeight: Dimension.fontWeights.regular)
                 ]),
               ],
             ),

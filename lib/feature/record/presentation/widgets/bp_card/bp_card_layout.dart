@@ -48,8 +48,8 @@ class BpCardLayout extends StatelessWidget {
       children: [
         CustomText(
           text: title,
-          fontSize: Dimension.fontSizeHeading2,
-          fontWeight: Dimension.fontWeightSemiBold,
+          fontSize: Dimension.fontSizes.h2,
+          fontWeight: Dimension.fontWeights.semiBold,
         ),
         SizedBox(
           width: width,

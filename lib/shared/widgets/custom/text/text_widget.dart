@@ -10,14 +10,14 @@ class CustomText extends StatelessWidget {
   final Color color;
   final double fontSize;
   final FontWeight fontWeight;
-
+  
   const CustomText({
     Key? key,
     required this.text,
     this.textAlign,
     this.color = CustomColor.gray900,
-    this.fontSize = Dimension.fontSizeRegular,
-    this.fontWeight = Dimension.fontWeightRegular,
+    this.fontSize = 12.0,
+    this.fontWeight = FontWeight.normal,
   }) : super(key: key);
   
   @override
@@ -47,8 +47,8 @@ class HeadingText extends StatelessWidget {
   Widget build(BuildContext context) {
     return CustomText(
         text: text,
-        fontSize: Dimension.fontSizeHeading1,
-        fontWeight: Dimension.fontWeightBold,       
+        fontSize: Dimension.fontSizes.h1,
+        fontWeight: Dimension.fontWeights.bold,       
       );
   }
 }
@@ -66,8 +66,8 @@ class SubHeadingText extends StatelessWidget {
   Widget build(BuildContext context) {
     return CustomText(
         text: text,
-        fontSize: Dimension.fontSizeHeading2,
-        fontWeight: Dimension.fontWeightSemiBold,       
+        fontSize: Dimension.fontSizes.h2,
+        fontWeight: Dimension.fontWeights.semiBold,       
       );
   }
 }
