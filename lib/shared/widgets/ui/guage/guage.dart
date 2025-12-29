@@ -25,20 +25,20 @@ class BloodPressureGauge extends StatelessWidget {
 
     return Column(
       children: [
-        const Padding(
+        Padding(
           padding: EdgeInsets.only(left: 10.0, right: 10.0, bottom: 5),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               CustomText(
                 text: 'ต่ำ',
-                fontSize: Dimension.fontSizeSmall,
-                fontWeight: Dimension.fontWeightRegular,
+                fontSize: Dimension.fontSizes.sm,
+                fontWeight: Dimension.fontWeights.regular,
               ),
               CustomText(
                 text: 'สูง',
-                fontSize: Dimension.fontSizeSmall,
-                fontWeight: Dimension.fontWeightRegular,
+                fontSize: Dimension.fontSizes.sm,
+                fontWeight: Dimension.fontWeights.regular,
               ),
             ],
           ),
@@ -84,7 +84,7 @@ class BloodPressureGauge extends StatelessWidget {
                 curve: Curves.easeOutCubic, // ให้ความรู้สึกนุ่มนวลเวลาขยับ
                 alignment: Alignment(alignmentValue, 0),
                 child: SVGImage(
-                  path: AppIcons.starCircle,
+                  path: AppIcons.duotone.starCircle,
                   size: 24,
                   color: CustomColor.white,
                 ),
@@ -107,15 +107,15 @@ class BloodPressureGauge extends StatelessWidget {
                   child: Container(
                     width: 0,
                     height: 10,
-                    child: const OverflowBox(
+                    child: OverflowBox(
                       minWidth: 0,
                       maxWidth: double.infinity,
                       minHeight: 0,
                       maxHeight: double.infinity,
                       child: CustomText(
                         text: 'ค่าเฉลี่ย',
-                        fontSize: Dimension.fontSizeSmall,
-                        fontWeight: Dimension.fontWeightRegular,
+                        fontSize: Dimension.fontSizes.sm,
+                        fontWeight: Dimension.fontWeights.regular,
                         textAlign: TextAlign.center,
                       ),
                     ),

@@ -53,7 +53,7 @@ class _HomeScreenState extends State<HomeScreen> {
         title: "คุณเอกพจน์",
         actions: [
           IconButtonSVG(
-            path: AppIcons.notification,
+            path: AppIcons.fill.notification,
             size: 32,
             onPressed: () {
               viewModel.toggleHasRecord();
@@ -80,16 +80,16 @@ class _HomeScreenState extends State<HomeScreen> {
                       text: 'เริ่มบันทึกความดัน',
                       textStyle: TextStyle(
                         color: CustomColor.gray900,
-                        fontSize: Dimension.fontSizeHeading2,
-                        fontWeight: Dimension.fontWeightRegular,
+                        fontSize: Dimension.fontSizes.h2,
+                        fontWeight: Dimension.fontWeights.regular,
                       ),
                       leadingIcon: SVGImage(
-                        path: AppIcons.pulse,
+                        path: AppIcons.duotone.pulse,
                         size: 45,
                         color: CustomColor.primaryColor,
                       ),
                       trailingIcon: SVGImage(
-                        path: AppIcons.addCircle,
+                        path: AppIcons.duotone.addCircle,
                         size: 28,
                         color: CustomColor.primaryColor,
                       ),
@@ -116,21 +116,21 @@ class _HomeScreenState extends State<HomeScreen> {
                     if (hasRecords) ...[
                       _buildStatRow(
                         context,
-                        SVGImage(path: AppIcons.graphUp, size: 34,color: CustomColor.purple1),
+                        SVGImage(path: AppIcons.duotone.graphUp, size: 34,color: CustomColor.purple1),
                         'SYS',
                         'ความดันโลหิตขณะหัวใจบีบตัว',
                         '115',
                       ),
                       _buildStatRow(
                         context,
-                        SVGImage(path: AppIcons.graphDown, size: 34, color: CustomColor.blue1),
+                        SVGImage(path: AppIcons.duotone.graphDown, size: 34, color: CustomColor.blue1),
                         'DIA',
                         'ความดันโลหิตขณะหัวใจคลายตัว',
                         '75',
                       ),
                       _buildStatRow(
                         context,
-                        SVGImage(path: AppIcons.heartPulse, size: 34, color: CustomColor.pink1),
+                        SVGImage(path: AppIcons.duotone.heartPulse, size: 34, color: CustomColor.pink1),
                         'PUL',
                         'อัตราการเต้นของหัวใจ',
                         '72',

@@ -127,8 +127,8 @@ class MainScreen extends StatelessWidget {
         ),
         CustomText(
           text: label,
-          fontSize: Dimension.fontSizeExtraSmall,
-          fontWeight: Dimension.fontWeightMedium,
+          fontSize: Dimension.fontSizes.esm ,
+          fontWeight: Dimension.fontWeights.medium,
           color: color,
         ),
       ],

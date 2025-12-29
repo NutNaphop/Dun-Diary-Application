@@ -1,5 +1,5 @@
 import 'package:dun_diary_app/core/services/navigation_service.dart';
-import 'package:dun_diary_app/feature/record/data/model/record_model.dart';
+import 'package:dun_diary_app/shared/widgets/custom/button/custom_box_icon.dart';
 import 'package:dun_diary_app/feature/record/presentation/record_viewModel.dart';
 import 'package:dun_diary_app/feature/record/presentation/widgets/bp_card/bp_card_layout.dart';
 import 'package:dun_diary_app/feature/record/presentation/widgets/demo/demo_record.dart';
@@ -7,6 +7,7 @@ import 'package:dun_diary_app/shared/constant/app_icons.dart';
 import 'package:dun_diary_app/shared/style/color.dart';
 import 'package:dun_diary_app/shared/utils/blood_pressure_utils.dart';
 import 'package:dun_diary_app/shared/widgets/custom/button/custom_button.dart';
+import 'package:dun_diary_app/shared/widgets/custom/button/custom_popup_menu.dart';
 import 'package:dun_diary_app/shared/widgets/custom/card/custom_card.dart';
 import 'package:dun_diary_app/shared/widgets/custom/scaffold/custom_scaffold.dart';
 import 'package:dun_diary_app/shared/widgets/custom/scaffold/main_appbar.dart';
@@ -32,20 +33,17 @@ class RecordScreen extends StatefulWidget {
 }
 
 class _RecordScreenState extends State<RecordScreen> {
-  BloodPressure BPValue = BloodPressure(sys: 120, dia: 80, pul: 70);
-  int? avgLevel = 0;
-  DateTime recordDate = DateTime.now();
-
-  int get level =>
-      BloodPressureUtils.calculateBloodPressureLevel(BPValue.sys, BPValue.dia);
+  bool _isMenuOpen = false; // ตัวแปรคุมสถานะเมนู
 
   @override
   Widget build(BuildContext context) {
+    final viewModel = context.watch<RecordViewmodel>();
+
     return CustomScaffold(
       appBar: MainAppBar(
         title: "บันทึกความดัน",
         showBack: true,
-        backIconPath: AppIcons.x,
+        backIconPath: AppIcons.outline.x,
         onBackPressed: () => NavigationService.instance.goBack(),
       ),
       body: Padding(
@@ -54,19 +52,19 @@ class _RecordScreenState extends State<RecordScreen> {
           children: [
             CustomCard(
               content: BpCardLayout(
-                sys: BPValue.sys,
-                dia: BPValue.dia,
-                pul: BPValue.pul,
-                onSysChanged: (val) => setState(() => BPValue.sys = val),
-                onDiaChanged: (val) => setState(() => BPValue.dia = val),
-                onPulChanged: (val) => setState(() => BPValue.pul = val),
+                sys: viewModel.bpValue.sys,
+                dia: viewModel.bpValue.dia,
+                pul: viewModel.bpValue.pul,
+                onSysChanged: (val) => viewModel.updateSys(val),
+                onDiaChanged: (val) => viewModel.updateDia(val),
+                onPulChanged: (val) => viewModel.updatePul(val),
               ),
             ),
 
             const SizedBox(height: 20),
 
             CustomCard(
-              title: BloodPressureUtils.mapLevelLabel(level),
+              title: BloodPressureUtils.mapLevelLabel(viewModel.level),
               titleFontSize: 21,
               titleTextAlign: TextAlign.center,
               contentPadding: EdgeInsets.symmetric(
@@ -74,11 +72,8 @@ class _RecordScreenState extends State<RecordScreen> {
                 horizontal: 20,
               ),
               content: BloodPressureGauge(
-                level: BloodPressureUtils.calculateBloodPressureLevel(
-                  BPValue.sys,
-                  BPValue.dia,
-                ),
-                avgLevel: avgLevel,
+                level: viewModel.level,
+                avgLevel: viewModel.avgLevel,
               ),
             ),
 
@@ -89,46 +84,58 @@ class _RecordScreenState extends State<RecordScreen> {
               children: [
                 Expanded(
                   child: DatePicker(
-                    selectedDate: recordDate,
-                    onDateTimeChanged: (val) =>
-                        setState(() => recordDate = val),
+                    selectedDate: viewModel.recordDate,
+                    onDateTimeChanged: (val) => viewModel.setRecordDate(val),
                   ),
                 ),
                 const SizedBox(width: 12),
                 Expanded(
                   child: TimePicker(
-                    selectedDate: recordDate,
-                    onDateTimeChanged: (val) =>
-                        setState(() => recordDate = val),
+                    selectedDate: viewModel.recordDate,
+                    onDateTimeChanged: (val) => viewModel.setRecordDate(val),
                   ),
                 ),
               ],
             ),
             DemoRecord(
-              currentAvgLevel: avgLevel,
-              onBPValset: (val) => setState(() => BPValue = val),
-              onAVGValset: (val) => setState(() => avgLevel = val),
+              currentAvgLevel: viewModel.avgLevel,
+              onBPValset: (val) => viewModel.setBPValue(val),
+              onAVGValset: (val) => viewModel.setAvgLevel(val),
             ),
             Spacer(),
             Column(
               spacing: 20,
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                Ink(
-                  decoration: ShapeDecoration(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadiusGeometry.all(
-                        Radius.circular(15),
+                CustomPopupMenuButton(
+                  offset: const Offset(0, -175),
+                  icon: CustomBoxIcon(
+                    iconPath: AppIcons.outline.camera,
+                    activeIconPath: AppIcons.outline.x,
+                    isActive: _isMenuOpen, // ส่งสถานะเข้าไป
+                  ),
+                  onOpened: () => setState(() => _isMenuOpen = true),
+                  onCanceled: () => setState(() => _isMenuOpen = false),
+                  onSelected: (String result) {
+                    print(result);
+                    setState(() => _isMenuOpen = false); // เลือกเมนู -> คืนรูป
+                  },
+                  items: [
+                    CustomPopupMenuItem(
+                      value: "0",
+                      title: 'ถ่ายรูปผลวัด',
+                      icon: SVGImage(
+                        path: AppIcons.duotone.camera,
+                        size: 22,
+                        color: CustomColor.accentColor,
                       ),
                     ),
-                    color: CustomColor.accentColor,
-                  ),
-                  child: IconButtonSVG(
-                    path: AppIcons.camera,
-                    size: 24,
-                    color: CustomColor.white,
-                    onPressed: () => {print("Camera Click")},
-                  ),
+                    CustomPopupMenuItem(
+                      value: "1",
+                      title: 'เลือกรูปจากคลัง',
+                      icon: SVGImage(path: AppIcons.duotone.image, size: 22, color: CustomColor.accentColor),
+                    ),
+                  ],
                 ),
                 CustomButton(
                   text: "บันทึก",

@@ -51,13 +51,13 @@ class MainAppBar extends StatelessWidget implements PreferredSizeWidget {
                     CustomText(
                       text: "สวัสดี",
                       fontSize: 12,
-                      fontWeight: Dimension.fontWeightRegular,
+                      fontWeight: Dimension.fontWeights.regular,
                       color: CustomColor.gray900,
                     ),
                     CustomText(
                       text: title ?? "คุณ...",
                       fontSize: 14,
-                      fontWeight: Dimension.fontWeightRegular,
+                      fontWeight: Dimension.fontWeights.regular,
                       color: CustomColor.gray900,
                     ),
                   ],
@@ -75,7 +75,7 @@ class MainAppBar extends StatelessWidget implements PreferredSizeWidget {
       // ถ้ามีการส่ง onBackPressed มา จะ Override ปุ่ม Back เดิม
       leading: showBack && onBackPressed != null
           ? IconButtonSVG(
-              path: backIconPath ?? AppIcons.leftArrow,
+              path: backIconPath ?? AppIcons.outline.leftArrow,
               size: 22,
               color: CustomColor.gray900,
               onPressed: onBackPressed,
@@ -84,8 +84,8 @@ class MainAppBar extends StatelessWidget implements PreferredSizeWidget {
       titleSpacing: showBack ? 0 : NavigationToolbar.kMiddleSpacing,
       title: CustomText(
         text: title ?? "",
-        fontSize: Dimension.fontSizeHeading2,
-        fontWeight: Dimension.fontWeightSemiBold,
+        fontSize: Dimension.fontSizes.h2,
+        fontWeight: Dimension.fontWeights.semiBold,
       ),
       backgroundColor: Colors.white, 
       surfaceTintColor: Colors.transparent,

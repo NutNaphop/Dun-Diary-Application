@@ -78,8 +78,8 @@ class _WheelNumberState extends State<WheelNumber> {
                     alignment: Alignment.center,
                     child: CustomText(
                       text: '$index',
-                      fontSize: Dimension.fontSizeHeading1,
-                      fontWeight: Dimension.fontWeightBold,
+                      fontSize: Dimension.fontSizes.h1,
+                      fontWeight: Dimension.fontWeights.bold,
                       color: index == _selectedIndex
                           ? CustomColor.gray900
                           : CustomColor.gray400,

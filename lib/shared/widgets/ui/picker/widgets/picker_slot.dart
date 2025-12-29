@@ -27,8 +27,8 @@ class PickerSlot extends StatelessWidget {
               labelText: label,
               labelStyle: TextStyle(
                 color: CustomColor.gray900,
-                fontSize: Dimension.fontSizeSmall,
-                fontWeight: Dimension.fontWeightMedium
+                fontSize: Dimension.fontSizes.sm,
+                fontWeight: Dimension.fontWeights.medium,
               ),
               border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
               contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
@@ -38,7 +38,11 @@ class PickerSlot extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                CustomText(text: displayText, fontSize: Dimension.fontSizeMedium, fontWeight: Dimension.fontWeightRegular),
+                CustomText(
+                  text: displayText,
+                  fontSize: Dimension.fontSizes.md,
+                  fontWeight: Dimension.fontWeights.regular,
+                ),
                 trailingIcon,
               ],
             ),

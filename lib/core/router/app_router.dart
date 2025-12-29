@@ -17,10 +17,10 @@ class AppRouter {
       
       // --- Case 1: หน้าปกติ ไม่รับค่า ---
       case AppRoutes.main:
-        return _buildRoute(const Scaffold(body: Center(child: MainScreen()))); 
+        return _buildRoute(const MainScreen());
 
       case AppRoutes.record:
-        return _buildRoute(const Scaffold(body: Center(child: RecordScreen())));
+        return _buildRoute(RecordScreen.create());
 
       // --- Case 2: หน้าที่ต้องรับค่า (ตัวอย่าง) ---
       // สมมติหน้า Edit ต้องรับ ID (String) ไปแก้ไข
@@ -41,8 +41,8 @@ class AppRouter {
   }
 
   // Helper Function: ช่วยให้เขียนสั้นลง (Optional)
-  static MaterialPageRoute _buildRoute(Widget screen) {
-    return MaterialPageRoute(builder: (_) => screen);
+  static MaterialPageRoute _buildRoute(Widget child) {
+    return MaterialPageRoute(builder: (_) => child);
   }
 
   // Error Page: หน้าแจ้งเตือนเวลาหลงทาง
