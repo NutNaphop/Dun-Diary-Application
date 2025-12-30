@@ -1,3 +1,7 @@
+import 'dart:io';
+
+import 'package:dun_diary_app/core/constant/app_routes.dart';
+import 'package:dun_diary_app/core/services/media_service.dart';
 import 'package:dun_diary_app/core/services/navigation_service.dart';
 import 'package:dun_diary_app/shared/widgets/custom/button/custom_box_icon.dart';
 import 'package:dun_diary_app/feature/record/presentation/record_viewModel.dart';
@@ -16,6 +20,7 @@ import 'package:dun_diary_app/shared/widgets/ui/guage/guage.dart';
 import 'package:dun_diary_app/shared/widgets/ui/picker/date_picker.dart';
 import 'package:dun_diary_app/shared/widgets/ui/picker/time_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
 class RecordScreen extends StatefulWidget {
@@ -33,8 +38,10 @@ class RecordScreen extends StatefulWidget {
 }
 
 class _RecordScreenState extends State<RecordScreen> {
+
+
   bool _isMenuOpen = false;
-  late int _selectVal ; 
+  late int _selectVal;
   @override
   Widget build(BuildContext context) {
     final viewModel = context.watch<RecordViewmodel>();
@@ -107,8 +114,8 @@ class _RecordScreenState extends State<RecordScreen> {
               spacing: 20,
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                CustomPopupMenuButton(
-                  openAbove: true, 
+                CustomPopupMenuButton<ImageSource>(
+                  openAbove: true,
                   icon: CustomBoxIcon(
                     iconPath: AppIcons.outline.camera,
                     activeIconPath: AppIcons.outline.x,
@@ -116,14 +123,15 @@ class _RecordScreenState extends State<RecordScreen> {
                   ),
                   onOpened: () => setState(() => _isMenuOpen = true),
                   onCanceled: () => setState(() => _isMenuOpen = false),
-                  onSelected: (String result) {
-                    print(result);
-                    
-                    setState(() { _isMenuOpen = false; _selectVal = int.parse(result);}); // เลือกเมนู -> คืนรูป
+                  onSelected: (ImageSource source) {
+                    viewModel.handlePickImage(source);
+                    setState(() {
+                      _isMenuOpen = false;
+                    }); 
                   },
                   items: [
                     CustomPopupMenuItem(
-                      value: "0",
+                      value: ImageSource.camera,
                       title: 'ถ่ายรูปผลวัด',
                       icon: SVGImage(
                         path: AppIcons.duotone.camera,
@@ -132,12 +140,17 @@ class _RecordScreenState extends State<RecordScreen> {
                       ),
                     ),
                     CustomPopupMenuItem(
-                      value: "1",
+                      value: ImageSource.gallery,
                       title: 'เลือกรูปจากคลัง',
-                      icon: SVGImage(path: AppIcons.duotone.image, size: 22, color: CustomColor.accentColor),
+                      icon: SVGImage(
+                        path: AppIcons.duotone.image,
+                        size: 22,
+                        color: CustomColor.accentColor,
+                      ),
                     ),
                   ],
                 ),
+                
                 CustomButton(
                   text: "บันทึก",
                   type: CustomButtonType.fill,

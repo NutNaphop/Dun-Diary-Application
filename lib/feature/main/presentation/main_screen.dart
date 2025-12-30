@@ -1,4 +1,5 @@
 import 'package:dun_diary_app/core/constant/app_routes.dart';
+import 'package:dun_diary_app/feature/record/presentation/resultScreen/result_screen.dart';
 import 'package:dun_diary_app/shared/style/color.dart';
 import 'package:dun_diary_app/shared/style/dimension.dart';
 import 'package:dun_diary_app/shared/widgets/custom/text/text_widget.dart';
@@ -15,7 +16,7 @@ class MainScreen extends StatelessWidget {
   // 1. กำหนดหน้าที่จะแสดงในแต่ละ Tab เรียงตามลำดับ
   List<Widget> get _pages => [
     HomeScreen.create(),
-    Center(child: Text("หน้าบันทึก")),
+    ResultScreen(),
     Center(child: Text("หน้าเพิ่ม")),
     Center(child: Text("หน้าสถิติ")),
     Center(child: Text("หน้าโปรไฟล์")),
