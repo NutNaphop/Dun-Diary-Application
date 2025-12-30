@@ -10,6 +10,7 @@ import 'package:dun_diary_app/shared/style/dimension.dart';
 import 'package:dun_diary_app/shared/style/drop_shadow.dart';
 import 'package:dun_diary_app/shared/widgets/custom/button/custom_button.dart';
 import 'package:dun_diary_app/shared/widgets/custom/card/custom_card.dart';
+import 'package:dun_diary_app/shared/widgets/custom/card/stat_row.dart';
 import 'package:dun_diary_app/shared/widgets/custom/scaffold/custom_scaffold.dart';
 import 'package:dun_diary_app/shared/widgets/custom/scaffold/main_appbar.dart';
 import 'package:dun_diary_app/shared/widgets/custom/svg/custom_svg_widget.dart';
@@ -114,26 +115,23 @@ class _HomeScreenState extends State<HomeScreen> {
                   mainAxisSize: MainAxisSize.max,
                   children: [
                     if (hasRecords) ...[
-                      _buildStatRow(
-                        context,
-                        SVGImage(path: AppIcons.duotone.graphUp, size: 34,color: CustomColor.purple1),
-                        'SYS',
-                        'ความดันโลหิตขณะหัวใจบีบตัว',
-                        '115',
+                      StatRow(
+                        leading: SVGImage(path: AppIcons.duotone.graphUp, size: 34,color: CustomColor.purple1),
+                        label: 'SYS',
+                        description: 'ความดันโลหิตขณะหัวใจบีบตัว',
+                        value: '115',
                       ),
-                      _buildStatRow(
-                        context,
-                        SVGImage(path: AppIcons.duotone.graphDown, size: 34, color: CustomColor.blue1),
-                        'DIA',
-                        'ความดันโลหิตขณะหัวใจคลายตัว',
-                        '75',
+                      StatRow(
+                        leading: SVGImage(path: AppIcons.duotone.graphDown, size: 34, color: CustomColor.blue1),
+                        label: 'DIA',
+                        description: 'ความดันโลหิตขณะหัวใจคลายตัว',
+                        value: '75',
                       ),
-                      _buildStatRow(
-                        context,
-                        SVGImage(path: AppIcons.duotone.heartPulse, size: 34, color: CustomColor.pink1),
-                        'PUL',
-                        'อัตราการเต้นของหัวใจ',
-                        '72',
+                      StatRow(
+                        leading: SVGImage(path: AppIcons.duotone.heartPulse, size: 34, color: CustomColor.pink1),
+                        label: 'PUL',
+                        description: 'อัตราการเต้นของหัวใจ',
+                        value: '72',
                       ),
                     ] else ...[
                       NoFoundCard(
@@ -168,20 +166,4 @@ class _HomeScreenState extends State<HomeScreen> {
       // ),
     );
   }
-}
-
-// Helper Widget เพื่อลดโค้ดที่ซ้ำซ้อนกัน 3 รอบ
-Widget _buildStatRow(
-  BuildContext context,
-  Widget leading,
-  String label,
-  String description,
-  String value,
-) {
-  return ContentCard(
-    leading: leading,
-    label: label,
-    description: description,
-    value: value,
-  );
 }

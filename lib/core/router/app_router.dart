@@ -1,5 +1,7 @@
 import 'package:dun_diary_app/feature/main/presentation/main_screen.dart';
 import 'package:dun_diary_app/feature/record/presentation/record_screen.dart';
+import 'package:dun_diary_app/feature/record/presentation/resultScreen/result_screen.dart';
+import 'package:dun_diary_app/shared/widgets/ui/page/mock_page.dart';
 import 'package:flutter/material.dart';
 
 import '../constant/app_routes.dart';
@@ -22,6 +24,13 @@ class AppRouter {
       case AppRoutes.record:
         return _buildRoute(RecordScreen.create());
 
+      case AppRoutes.mock:
+        return _buildRoute(const MockPage());
+      
+      case AppRoutes.result:
+        return _buildRoute(ResultScreen());
+
+      
       // --- Case 2: หน้าที่ต้องรับค่า (ตัวอย่าง) ---
       // สมมติหน้า Edit ต้องรับ ID (String) ไปแก้ไข
       /*
