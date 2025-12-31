@@ -14,9 +14,6 @@ class RecordViewmodel extends ChangeNotifier {
   BloodPressure _bpValue = BloodPressure(sys: 120, dia: 80, pul: 70);
   BloodPressure get bpValue => _bpValue;
 
-  int? _avgLevel = 0;
-  int? get avgLevel => _avgLevel;
-
   DateTime _recordDate = DateTime.now();
   DateTime get recordDate => _recordDate;
 
@@ -51,11 +48,6 @@ class RecordViewmodel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void setAvgLevel(int? value) {
-    _avgLevel = value;
-    notifyListeners();
-  }
-
   void setRecordDate(DateTime value) {
     _recordDate = value;
     notifyListeners();
@@ -65,9 +57,12 @@ class RecordViewmodel extends ChangeNotifier {
     final File? image = await _mediaService.pickImage(source: source);
 
     if (image != null) {
-      _selectedImage = image; // อัปเดต UI ให้โชว์รูป
-      NavigationService.instance.pushNamed(AppRoutes.mock);
-      print("ได้รูปมาแล้วที่: ${image.path}");
+      _selectedImage = image;
+      final result = await NavigationService.instance.pushNamed(AppRoutes.result, arguments: selectedImage);
+      
+      if (result is BloodPressure) {
+        setBPValue(result);
+      }
     }
 
     notifyListeners();
