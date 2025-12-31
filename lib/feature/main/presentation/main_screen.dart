@@ -16,7 +16,7 @@ class MainScreen extends StatelessWidget {
   // 1. กำหนดหน้าที่จะแสดงในแต่ละ Tab เรียงตามลำดับ
   List<Widget> get _pages => [
     HomeScreen.create(),
-    ResultScreen(),
+    ResultScreen.create(),
     Center(child: Text("หน้าเพิ่ม")),
     Center(child: Text("หน้าสถิติ")),
     Center(child: Text("หน้าโปรไฟล์")),

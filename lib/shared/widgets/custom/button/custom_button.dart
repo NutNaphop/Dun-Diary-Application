@@ -43,10 +43,10 @@ class CustomButton extends StatelessWidget {
 
     final effectiveBackgroundColor =
         backgroundColor ??
-        (isFill ? CustomColor.primaryColor : CustomColor.white);
+        (isFill ? CustomColor.accentColor : CustomColor.white);
 
     final effectiveBorderColor =
-        borderColor ?? (isFill ? Colors.transparent : CustomColor.primaryColor);
+        borderColor ?? (isFill ? Colors.transparent : CustomColor.gray400);
 
     final defaultTextColor = isFill ? CustomColor.white : CustomColor.gray900;
 

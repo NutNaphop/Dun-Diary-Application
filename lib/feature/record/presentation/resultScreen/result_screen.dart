@@ -1,16 +1,40 @@
+import 'dart:io';
+
+import 'package:dun_diary_app/core/constant/app_routes.dart';
 import 'package:dun_diary_app/core/services/navigation_service.dart';
+import 'package:dun_diary_app/feature/record/data/model/record_model.dart';
+import 'package:dun_diary_app/feature/record/presentation/resultScreen/result_viewModel.dart';
 import 'package:dun_diary_app/shared/constant/app_icons.dart';
 import 'package:dun_diary_app/shared/style/color.dart';
 import 'package:dun_diary_app/shared/style/drop_shadow.dart';
+import 'package:dun_diary_app/shared/widgets/custom/button/custom_button.dart';
 import 'package:dun_diary_app/shared/widgets/custom/card/custom_card.dart';
 import 'package:dun_diary_app/shared/widgets/custom/card/stat_row.dart';
 import 'package:dun_diary_app/shared/widgets/custom/scaffold/custom_scaffold.dart';
 import 'package:dun_diary_app/shared/widgets/custom/scaffold/main_appbar.dart';
 import 'package:dun_diary_app/shared/widgets/custom/svg/custom_svg_widget.dart';
+import 'package:dun_diary_app/shared/widgets/ui/image/image_display.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class ResultScreen extends StatefulWidget {
-  const ResultScreen({super.key});
+  final File? image;
+
+  const ResultScreen({super.key, this.image});
+
+  static Widget create() {
+    return ChangeNotifierProvider(
+      create: (context) => ResultViewmodel(),
+      child: const ResultScreen(),
+    );
+  }
+
+  static Widget createWithArg(File image) {
+    return ChangeNotifierProvider(
+      create: (context) => ResultViewmodel(),
+      child: ResultScreen(image: image),
+    );
+  }
 
   @override
   State<ResultScreen> createState() => _ResultScreenState();
@@ -18,7 +42,27 @@ class ResultScreen extends StatefulWidget {
 
 class _ResultScreenState extends State<ResultScreen> {
   @override
+  void initState() {
+    super.initState();
+    if (widget.image != null) {
+      final image = widget.image!;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) return;
+        context.read<ResultViewmodel>().setSelectImage(image);
+        context.read<ResultViewmodel>().sendImageToModel(image);
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final viewModel = context.watch<ResultViewmodel>();
+
     return CustomScaffold(
       appBar: MainAppBar(
         title: "บันทึกความดัน",
@@ -26,20 +70,11 @@ class _ResultScreenState extends State<ResultScreen> {
         onBackPressed: () => NavigationService.instance.goBack(),
       ),
       body: Container(
-        padding: EdgeInsets.only(top: 33),
+        padding: EdgeInsets.only(top: 33, bottom: 30),
         child: Column(
           spacing: 21,
           children: [
-            Container(
-              width: double.infinity,
-              height: 272,
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                color: CustomColor.gray300,
-                boxShadow: [DropShadow.drop_popup],
-                borderRadius: BorderRadius.circular(15),
-              ),
-            ),
+            ImageDisplay(image: viewModel.selectedImage),
             CustomCard(
               contentPadding: EdgeInsets.all(10),
               content: Column(
@@ -52,7 +87,7 @@ class _ResultScreenState extends State<ResultScreen> {
                     ),
                     label: 'SYS',
                     description: 'ความดันโลหิตขณะหัวใจบีบตัว',
-                    value: '115',
+                    value: viewModel.sysValue,
                   ),
                   StatRow(
                     leading: SVGImage(
@@ -62,7 +97,7 @@ class _ResultScreenState extends State<ResultScreen> {
                     ),
                     label: 'DIA',
                     description: 'ความดันโลหิตขณะหัวใจคลายตัว',
-                    value: '75',
+                    value: viewModel.diaValue,
                   ),
                   StatRow(
                     leading: SVGImage(
@@ -72,10 +107,38 @@ class _ResultScreenState extends State<ResultScreen> {
                     ),
                     label: 'PUL',
                     description: 'อัตราการเต้นของหัวใจ',
-                    value: '72',
+                    value: viewModel.pulValue,
                   ),
                 ],
               ),
+            ),
+            Spacer(),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              spacing: 22,
+              children: [
+                Expanded(
+                  child: CustomButton(
+                    text: "ยกเลิก",
+                    type: CustomButtonType.outline,
+                    boxShadow: [DropShadow.drop_thumb],
+                    borderColor: CustomColor.gray400,
+                    onPressed: () {
+                      NavigationService.instance.goBack();
+                    },
+                  ),
+                ),
+                Expanded(
+                  child: CustomButton(
+                    type: CustomButtonType.fill,
+                    boxShadow: [DropShadow.drop_thumb],
+                    text: "บันทึก",
+                    onPressed: () {
+                      viewModel.submitRecord();
+                    },
+                  ),
+                ),
+              ],
             ),
           ],
         ),

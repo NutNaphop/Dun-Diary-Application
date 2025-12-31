@@ -1,15 +1,13 @@
-import 'dart:io';
-
-import 'package:dun_diary_app/core/constant/app_routes.dart';
-import 'package:dun_diary_app/core/services/media_service.dart';
 import 'package:dun_diary_app/core/services/navigation_service.dart';
-import 'package:dun_diary_app/shared/widgets/custom/button/custom_box_icon.dart';
+import 'package:dun_diary_app/feature/record/data/model/record_model.dart';
 import 'package:dun_diary_app/feature/record/presentation/record_viewModel.dart';
 import 'package:dun_diary_app/feature/record/presentation/widgets/bp_card/bp_card_layout.dart';
 import 'package:dun_diary_app/feature/record/presentation/widgets/demo/demo_record.dart';
 import 'package:dun_diary_app/shared/constant/app_icons.dart';
 import 'package:dun_diary_app/shared/style/color.dart';
+import 'package:dun_diary_app/shared/style/drop_shadow.dart';
 import 'package:dun_diary_app/shared/utils/blood_pressure_utils.dart';
+import 'package:dun_diary_app/shared/widgets/custom/button/custom_box_icon.dart';
 import 'package:dun_diary_app/shared/widgets/custom/button/custom_button.dart';
 import 'package:dun_diary_app/shared/widgets/custom/button/custom_popup_menu.dart';
 import 'package:dun_diary_app/shared/widgets/custom/card/custom_card.dart';
@@ -29,6 +27,17 @@ class RecordScreen extends StatefulWidget {
   static Widget create() {
     return ChangeNotifierProvider(
       create: (context) => RecordViewmodel(),
+      child: const RecordScreen(),
+    );
+  }
+
+  static Widget createWithArgs(BloodPressure bp) {
+    return ChangeNotifierProvider(
+      create: (context) {
+        final viewModel = RecordViewmodel();
+        viewModel.setBPValue(bp);
+        return viewModel;
+      },
       child: const RecordScreen(),
     );
   }
@@ -80,7 +89,6 @@ class _RecordScreenState extends State<RecordScreen> {
               ),
               content: BloodPressureGauge(
                 level: viewModel.level,
-                avgLevel: viewModel.avgLevel,
               ),
             ),
 
@@ -104,11 +112,11 @@ class _RecordScreenState extends State<RecordScreen> {
                 ),
               ],
             ),
-            DemoRecord(
-              currentAvgLevel: viewModel.avgLevel,
-              onBPValset: (val) => viewModel.setBPValue(val),
-              onAVGValset: (val) => viewModel.setAvgLevel(val),
-            ),
+            // DemoRecord(
+            //   currentAvgLevel: viewModel.avgLevel,
+            //   onBPValset: (val) => viewModel.setBPValue(val),
+            //   onAVGValset: (val) => viewModel.setAvgLevel(val),
+            // ),
             Spacer(),
             Column(
               spacing: 20,
@@ -155,6 +163,7 @@ class _RecordScreenState extends State<RecordScreen> {
                   text: "บันทึก",
                   type: CustomButtonType.fill,
                   backgroundColor: CustomColor.accentColor,
+                  boxShadow: [DropShadow.drop_thumb],
                   onPressed: () => {print("Record Click: $_selectVal")},
                 ),
               ],

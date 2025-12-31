@@ -31,9 +31,9 @@ class NavigationService {
   }
 
   // ย้อนกลับ
-  void goBack() {
+  void goBack({dynamic result}) {
     SnackBarService.instance.clear();
-    return navigatorKey.currentState!.pop();
+    return navigatorKey.currentState!.pop(result);
   }
 
   // ย้อนกลับไปจนกว่าจะเจอ route ที่กำหนด (เช่น กลับไปหน้า Login หรือ Home)

@@ -6,6 +6,12 @@
 
 #import "GeneratedPluginRegistrant.h"
 
+#if __has_include(<camera_avfoundation/CameraPlugin.h>)
+#import <camera_avfoundation/CameraPlugin.h>
+#else
+@import camera_avfoundation;
+#endif
+
 #if __has_include(<cloud_firestore/FLTFirebaseFirestorePlugin.h>)
 #import <cloud_firestore/FLTFirebaseFirestorePlugin.h>
 #else
@@ -30,6 +36,12 @@
 @import firebase_core;
 #endif
 
+#if __has_include(<flutter_vision/FlutterVisionPlugin.h>)
+#import <flutter_vision/FlutterVisionPlugin.h>
+#else
+@import flutter_vision;
+#endif
+
 #if __has_include(<image_picker_ios/FLTImagePickerPlugin.h>)
 #import <image_picker_ios/FLTImagePickerPlugin.h>
 #else
@@ -45,10 +57,12 @@
 @implementation GeneratedPluginRegistrant
 
 + (void)registerWithRegistry:(NSObject<FlutterPluginRegistry>*)registry {
+  [CameraPlugin registerWithRegistrar:[registry registrarForPlugin:@"CameraPlugin"]];
   [FLTFirebaseFirestorePlugin registerWithRegistrar:[registry registrarForPlugin:@"FLTFirebaseFirestorePlugin"]];
   [ConnectivityPlusPlugin registerWithRegistrar:[registry registrarForPlugin:@"ConnectivityPlusPlugin"]];
   [FLTFirebaseAuthPlugin registerWithRegistrar:[registry registrarForPlugin:@"FLTFirebaseAuthPlugin"]];
   [FLTFirebaseCorePlugin registerWithRegistrar:[registry registrarForPlugin:@"FLTFirebaseCorePlugin"]];
+  [FlutterVisionPlugin registerWithRegistrar:[registry registrarForPlugin:@"FlutterVisionPlugin"]];
   [FLTImagePickerPlugin registerWithRegistrar:[registry registrarForPlugin:@"FLTImagePickerPlugin"]];
   [PathProviderPlugin registerWithRegistrar:[registry registrarForPlugin:@"PathProviderPlugin"]];
 }

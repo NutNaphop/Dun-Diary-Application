@@ -1,4 +1,18 @@
+import 'package:dun_diary_app/feature/record/data/model/record_model.dart';
+
 class BloodPressureUtils {
+  static BloodPressure parseStringToBloodPressure(String sys, String dia, String pul) {
+    final parseSys = int.tryParse(sys) ?? 0;
+    final parseDia = int.tryParse(dia) ?? 0;
+    final parsePul = int.tryParse(pul) ?? 0;
+
+
+    return BloodPressure(sys: parseSys, dia: parseDia, pul: parsePul);
+  }
+  static BloodPressure parseIntToBloodPressure(int sys, int dia, int pul) {
+    return BloodPressure(sys: sys, dia: dia, pul: pul);
+  }
+
   static int calculateBloodPressureLevel(int sys, int dia) {
     int sysLevel = 0;
     int diaLevel = 0;
@@ -66,7 +80,7 @@ class BloodPressureUtils {
     return (sumSys) / sysList.length;
   }
 
-  static double calculateAVGDIA(List<int> sysList, List<int> diaList) {
+  static double calculateAVGDIA(List<int> diaList) {
     int sumDia = diaList.fold(
       0,
       (previousValue, element) => previousValue + element,
