@@ -10,4 +10,7 @@ class AppRoutes {
   // Record Feature
   static const String record = "/record";
   static const String result = "/result";
+
+  // History Feature
+  static const String history = "/history";
 }

@@ -1,5 +1,7 @@
+import 'package:dun_diary_app/core/auth/auth_service.dart';
 import 'package:dun_diary_app/core/services/navigation_service.dart';
 import 'package:dun_diary_app/feature/record/data/model/record_model.dart';
+import 'package:dun_diary_app/feature/record/data/repository/record_repository.dart';
 import 'package:dun_diary_app/feature/record/presentation/record_viewModel.dart';
 import 'package:dun_diary_app/feature/record/presentation/widgets/bp_card/bp_card_layout.dart';
 import 'package:dun_diary_app/feature/record/presentation/widgets/demo/demo_record.dart';
@@ -26,7 +28,10 @@ class RecordScreen extends StatefulWidget {
 
   static Widget create() {
     return ChangeNotifierProvider(
-      create: (context) => RecordViewmodel(),
+      create: (context) => RecordViewmodel(
+        repository: context.read<RecordRepository>(),
+        authService: context.read<AuthService>(),
+      ),
       child: const RecordScreen(),
     );
   }
@@ -34,7 +39,10 @@ class RecordScreen extends StatefulWidget {
   static Widget createWithArgs(BloodPressure bp) {
     return ChangeNotifierProvider(
       create: (context) {
-        final viewModel = RecordViewmodel();
+        final viewModel = RecordViewmodel(
+          repository: context.read<RecordRepository>(),
+          authService: context.read<AuthService>(),
+        );
         viewModel.setBPValue(bp);
         return viewModel;
       },
@@ -47,8 +55,6 @@ class RecordScreen extends StatefulWidget {
 }
 
 class _RecordScreenState extends State<RecordScreen> {
-
-
   bool _isMenuOpen = false;
   late int _selectVal;
   @override
@@ -87,9 +93,7 @@ class _RecordScreenState extends State<RecordScreen> {
                 vertical: 10,
                 horizontal: 20,
               ),
-              content: BloodPressureGauge(
-                level: viewModel.level,
-              ),
+              content: BloodPressureGauge(level: viewModel.level),
             ),
 
             const SizedBox(height: 25),
@@ -135,7 +139,7 @@ class _RecordScreenState extends State<RecordScreen> {
                     viewModel.handlePickImage(source);
                     setState(() {
                       _isMenuOpen = false;
-                    }); 
+                    });
                   },
                   items: [
                     CustomPopupMenuItem(
@@ -158,13 +162,29 @@ class _RecordScreenState extends State<RecordScreen> {
                     ),
                   ],
                 ),
-                
+
                 CustomButton(
                   text: "บันทึก",
                   type: CustomButtonType.fill,
                   backgroundColor: CustomColor.accentColor,
                   boxShadow: [DropShadow.drop_thumb],
-                  onPressed: () => {print("Record Click: $_selectVal")},
+                  onPressed: () async {
+                    // เรียกฟังก์ชัน saveResult
+                    final success = await context
+                        .read<RecordViewmodel>()
+                        .saveResult();
+
+                    if (success) {
+                      // ถ้าสำเร็จ -> ปิดหน้านี้ หรือกลับไปหน้า Home
+                      Navigator.pop(context);
+                      // หรือ NavigationService.instance.pushNamedAndRemoveUntil(AppRoutes.home);
+                    } else {
+                      // ถ้าล้มเหลว -> แจ้งเตือน
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text('กรุณาตรวจสอบข้อมูลให้ครบถ้วน')),
+                      );
+                    }
+                  },
                 ),
               ],
             ),

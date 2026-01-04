@@ -26,6 +26,7 @@ class HomeViewmodel extends ChangeNotifier {
        _authService = authService,
        _networkInfo = networkInfo {
     _startAutoDetect();
+    _initializeUserIdentity();
   }
 
   ResourceLoading<List<User>> _state = Initial();
@@ -33,7 +34,7 @@ class HomeViewmodel extends ChangeNotifier {
 
   bool _isLoading = false;
   bool get isLoading => _isLoading;
-  
+
   bool _hasRecords = false;
   bool get hasRecords => _hasRecords;
 
@@ -61,8 +62,15 @@ class HomeViewmodel extends ChangeNotifier {
         await _repository.migrateData();
         await _repository.syncAllPending();
         notifyListeners(); // รีเฟรชหน้าจอเผื่อข้อมูลเปลี่ยน
-      }
+      } else {}
     });
+  }
+
+  // เพิ่มฟังก์ชันนี้เข้าไปใน Class
+  Future<void> _initializeUserIdentity() async {
+    // เรียก getUserId() เพื่อให้มั่นใจว่ามี ID แน่นอน (ไม่ Local ก็ Firebase)
+    final currentId = await _authService.getUserIdForSaving();
+    print("🆔 User Identity Ready: $currentId");
   }
 
   Future fetchUser() async {
@@ -103,18 +111,18 @@ class HomeViewmodel extends ChangeNotifier {
     }
   }
 
-  void toggleHasRecord(){
+  void toggleHasRecord() {
     _hasRecords = !_hasRecords;
     print(_hasRecords);
     notifyListeners();
   }
 
-  void redirectToRecord(){
-    NavigationService.instance.pushNamed(AppRoutes.record); 
+  void redirectToRecord() {
+    NavigationService.instance.pushNamed(AppRoutes.record);
     notifyListeners();
   }
 
-  void showDialog(){
+  void showDialog() {
     DialogService.instance.showConfirm("Hello", "World");
   }
 
