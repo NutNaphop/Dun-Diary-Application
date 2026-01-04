@@ -24,11 +24,11 @@ class CustomText extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(
       text,
-      style: GoogleFonts.sarabun(
-        fontSize: fontSize,
-        fontWeight: fontWeight,
-        color: color,
-      ),
+      // style: GoogleFonts.sarabun(
+      //   fontSize: fontSize,
+      //   fontWeight: fontWeight,
+      //   color: color,
+      // ),
       textAlign: textAlign,
     );
   }
