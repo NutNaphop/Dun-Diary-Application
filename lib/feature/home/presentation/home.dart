@@ -3,6 +3,7 @@ import 'package:dun_diary_app/core/network/network_info.dart';
 import 'package:dun_diary_app/feature/home/data/repository/user_repository.dart';
 import 'package:dun_diary_app/feature/home/presentation/home_viewModel.dart';
 import 'package:dun_diary_app/core/auth/auth_service.dart';
+import 'package:dun_diary_app/feature/record/data/repository/record_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -13,6 +14,7 @@ class Home extends StatefulWidget {
     return ChangeNotifierProvider(
       create: (context) => HomeViewmodel(
         repo: context.read<UserRepository>(),
+        recordRepo: context.read<RecordRepository>(),
         networkInfo: context.read<NetworkInfo>(),
         authService: context.read<AuthService>(),
       ),
