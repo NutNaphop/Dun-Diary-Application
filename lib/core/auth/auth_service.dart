@@ -4,20 +4,18 @@ import 'package:uuid/uuid.dart';
 
 class AuthService {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
-  
+
   // ชื่อกล่องเก็บตั้งค่า (ต้องตรงกับที่ openBox ใน main.dart)
   static const String settingsBoxName = 'settings'; 
 
   /// 1. ฟังก์ชัน Login (เรียกตอนเปิดแอป)
   Future<User?> signInAnonymously() async {
     try {
-      // ถ้ามี User อยู่แล้ว ไม่ต้อง Login ซ้ำ
       if (_firebaseAuth.currentUser != null) {
         print("✅ Auth: Already logged in as ${_firebaseAuth.currentUser!.uid}");
         return _firebaseAuth.currentUser;
       }
 
-      // ถ้ายังไม่มี -> สั่ง Login
       print("⏳ Auth: Signing in anonymously...");
       final userCredential = await _firebaseAuth.signInAnonymously();
       print("✅ Auth: Signed in new user -> ${userCredential.user!.uid}");
@@ -30,7 +28,6 @@ class AuthService {
   }
 
   /// 2. ฟังก์ชันขอ ID สำหรับบันทึก (พระเอกของเรา)
-  /// เรียกใช้ตอนกดปุ่ม Save: authService.getUserIdForSaving()
   Future<String> getUserIdForSaving() async {
     // กรณีที่ 1: ถ้า Login Firebase อยู่ -> ใช้ UID จริงเลย
     final firebaseUser = _firebaseAuth.currentUser;
@@ -54,6 +51,10 @@ class AuthService {
     return localUuid;
   }
   
+  Future<void> initializeUserIdentity() async {
+    final currentId = await getUserIdForSaving();
+    print("🆔 User Identity Ready: $currentId");
+  }
   /// Helper: เช็คว่าตอนนี้ใช้ ID ปลอมอยู่ไหม? (เอาไว้โชว์ UI เตือน หรือไว้ใช้ตอน Migrate)
   bool get isGuest => _firebaseAuth.currentUser == null;
 }

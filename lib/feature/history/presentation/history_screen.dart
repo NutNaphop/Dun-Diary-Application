@@ -4,7 +4,7 @@ import 'package:dun_diary_app/core/constant/hive_constants.dart';
 import 'package:dun_diary_app/feature/history/presentation/widgets/history_item.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:dun_diary_app/feature/home/data/model/bp_record.dart';
+import 'package:dun_diary_app/data/blood_pressure/model/bp_record.dart';
 
 class HistoryScreen extends StatelessWidget {
   const HistoryScreen({Key? key}) : super(key: key);

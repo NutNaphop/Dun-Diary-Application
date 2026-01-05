@@ -2,42 +2,29 @@ import 'dart:async';
 
 import 'package:dun_diary_app/core/auth/auth_service.dart';
 import 'package:dun_diary_app/core/constant/app_routes.dart';
-import 'package:dun_diary_app/core/error/network/error_mapper.dart';
-import 'package:dun_diary_app/core/network/api_state.dart';
 import 'package:dun_diary_app/core/network/network_info.dart';
 import 'package:dun_diary_app/core/services/dialog_service.dart';
 import 'package:dun_diary_app/core/services/navigation_service.dart';
-import 'package:dun_diary_app/feature/home/data/model/user.dart';
-import 'package:dun_diary_app/feature/home/data/repository/user_repository.dart';
-import 'package:dun_diary_app/feature/record/data/repository/record_repository.dart';
+import 'package:dun_diary_app/data/blood_pressure/repository/blood_pressure_repository.dart';
 import 'package:flutter/foundation.dart';
 
 class HomeViewmodel extends ChangeNotifier {
-  final UserRepository _repository;
-  final RecordRepository _recordRepo;
+  final BloodPressureRepository _recordRepo;
   final AuthService _authService;
   final NetworkInfo _networkInfo;
 
   StreamSubscription? _netSubscription; // ตัวดักฟัง
 
   HomeViewmodel({
-    required UserRepository repo,
-    required RecordRepository recordRepo,
+    required BloodPressureRepository recordRepo,
     required AuthService authService,
     required NetworkInfo networkInfo,
-  }) : _repository = repo,
+  }) : 
        _recordRepo = recordRepo,
        _authService = authService,
        _networkInfo = networkInfo {
     _startAutoDetect();
-    _initializeUserIdentity();
   }
-
-  ResourceLoading<List<User>> _state = Initial();
-  ResourceLoading<List<User>> get state => _state;
-
-  bool _isLoading = false;
-  bool get isLoading => _isLoading;
 
   bool _hasRecords = false;
   bool get hasRecords => _hasRecords;
@@ -54,7 +41,7 @@ class HomeViewmodel extends ChangeNotifier {
     ) async {
       // ถ้ามีเน็ตทางใดทางหนึ่ง
       final hasNet = await _networkInfo.isConnected;
-
+      _authService.initializeUserIdentity();
       if (hasNet) {
         print("📶 Internet Connected! Checking status...");
 
@@ -63,57 +50,12 @@ class HomeViewmodel extends ChangeNotifier {
         await _authService.signInAnonymously();
 
         // Step 2: สั่ง Migrate (Repo จะเช็คเองว่ามีข้อมูลต้องย้ายไหม)
-        await _repository.migrateData();
+        // await _repository.migrateData();
         await _recordRepo.syncAllPending();
         
         notifyListeners(); // รีเฟรชหน้าจอเผื่อข้อมูลเปลี่ยน
       } else {}
     });
-  }
-
-  // เพิ่มฟังก์ชันนี้เข้าไปใน Class
-  Future<void> _initializeUserIdentity() async {
-    // เรียก getUserId() เพื่อให้มั่นใจว่ามี ID แน่นอน (ไม่ Local ก็ Firebase)
-    final currentId = await _authService.getUserIdForSaving();
-    print("🆔 User Identity Ready: $currentId");
-  }
-
-  Future fetchUser() async {
-    _state = Loading();
-    notifyListeners();
-
-    try {
-      final users = await _repository.getUsers();
-      _state = Success(users);
-    } catch (e) {
-      final errorMessage = ErrorMapper.map(e);
-      _state = Error(errorMessage);
-    } finally {
-      notifyListeners();
-    }
-  }
-
-  Future<void> addNewUser(String title) async {
-    _isLoading = true;
-    notifyListeners();
-
-    await _repository.createUser(title);
-
-    _isLoading = false;
-
-    // รีเฟรชข้อมูลใหม่เพื่อให้ UI แสดงรายการที่เพิ่งเพิ่ม
-    fetchUser();
-
-    notifyListeners();
-  }
-
-  Future<void> connectOnline() async {
-    notifyListeners();
-    final user = await _authService.signInAnonymously();
-    if (user != null) {
-      await _repository.migrateData(); // ย้ายข้อมูล
-      fetchUser(); // Refresh UI เผื่อมีอะไรเปลี่ยน
-    }
   }
 
   void toggleHasRecord() {

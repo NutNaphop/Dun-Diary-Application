@@ -1,11 +1,11 @@
 import 'package:dun_diary_app/core/constant/hive_constants.dart';
-import 'package:dun_diary_app/feature/home/data/model/bp_record.dart';
+import 'package:dun_diary_app/data/blood_pressure/model/bp_record.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
-class RecordLocalDataSource {
+class BloodPressureLocalDataSource {
   final Box<BPRecord> _box;
 
-  RecordLocalDataSource() : _box = Hive.box(HiveBoxName.bpRecord);
+  BloodPressureLocalDataSource() : _box = Hive.box(HiveBoxName.bpRecord);
 
   Future<void> addRecord(BPRecord record) async {
     await _box.add(record);

@@ -1,7 +1,7 @@
 import 'package:dun_diary_app/core/auth/auth_service.dart';
 import 'package:dun_diary_app/core/services/navigation_service.dart';
-import 'package:dun_diary_app/feature/record/data/model/record_model.dart';
-import 'package:dun_diary_app/feature/record/data/repository/record_repository.dart';
+import 'package:dun_diary_app/data/blood_pressure/model/record_model.dart';
+import 'package:dun_diary_app/data/blood_pressure/repository/blood_pressure_repository.dart';
 import 'package:dun_diary_app/feature/record/presentation/record_viewModel.dart';
 import 'package:dun_diary_app/feature/record/presentation/widgets/bp_card/bp_card_layout.dart';
 import 'package:dun_diary_app/feature/record/presentation/widgets/demo/demo_record.dart';
@@ -29,7 +29,7 @@ class RecordScreen extends StatefulWidget {
   static Widget create() {
     return ChangeNotifierProvider(
       create: (context) => RecordViewmodel(
-        repository: context.read<RecordRepository>(),
+        repository: context.read<BloodPressureRepository>(),
         authService: context.read<AuthService>(),
       ),
       child: const RecordScreen(),
@@ -40,7 +40,7 @@ class RecordScreen extends StatefulWidget {
     return ChangeNotifierProvider(
       create: (context) {
         final viewModel = RecordViewmodel(
-          repository: context.read<RecordRepository>(),
+          repository: context.read<BloodPressureRepository>(),
           authService: context.read<AuthService>(),
         );
         viewModel.setBPValue(bp);
