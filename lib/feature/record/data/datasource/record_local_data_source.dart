@@ -23,4 +23,8 @@ class RecordLocalDataSource {
     return _box.values.where((r) => !r.isSynced).toList();
   }
   
+  // Update Status
+  Future<void> updateRecord(BPRecord record) async {
+    await record.save();
+  }
 }

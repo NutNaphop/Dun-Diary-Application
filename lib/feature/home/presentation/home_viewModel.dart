@@ -9,10 +9,12 @@ import 'package:dun_diary_app/core/services/dialog_service.dart';
 import 'package:dun_diary_app/core/services/navigation_service.dart';
 import 'package:dun_diary_app/feature/home/data/model/user.dart';
 import 'package:dun_diary_app/feature/home/data/repository/user_repository.dart';
+import 'package:dun_diary_app/feature/record/data/repository/record_repository.dart';
 import 'package:flutter/foundation.dart';
 
 class HomeViewmodel extends ChangeNotifier {
   final UserRepository _repository;
+  final RecordRepository _recordRepo;
   final AuthService _authService;
   final NetworkInfo _networkInfo;
 
@@ -20,9 +22,11 @@ class HomeViewmodel extends ChangeNotifier {
 
   HomeViewmodel({
     required UserRepository repo,
+    required RecordRepository recordRepo,
     required AuthService authService,
     required NetworkInfo networkInfo,
   }) : _repository = repo,
+       _recordRepo = recordRepo,
        _authService = authService,
        _networkInfo = networkInfo {
     _startAutoDetect();
@@ -60,7 +64,8 @@ class HomeViewmodel extends ChangeNotifier {
 
         // Step 2: สั่ง Migrate (Repo จะเช็คเองว่ามีข้อมูลต้องย้ายไหม)
         await _repository.migrateData();
-        await _repository.syncAllPending();
+        await _recordRepo.syncAllPending();
+        
         notifyListeners(); // รีเฟรชหน้าจอเผื่อข้อมูลเปลี่ยน
       } else {}
     });
