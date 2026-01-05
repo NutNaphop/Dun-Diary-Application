@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:dun_diary_app/feature/main/presentation/main_screen.dart';
-import 'package:dun_diary_app/feature/record/data/model/record_model.dart';
+import 'package:dun_diary_app/data/blood_pressure/model/record_model.dart';
 import 'package:dun_diary_app/feature/record/presentation/record_screen.dart';
 import 'package:dun_diary_app/feature/record/presentation/resultScreen/result_screen.dart';
 import 'package:dun_diary_app/shared/widgets/ui/page/mock_page.dart';

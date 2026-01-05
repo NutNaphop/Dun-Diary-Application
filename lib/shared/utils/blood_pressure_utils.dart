@@ -1,4 +1,4 @@
-import 'package:dun_diary_app/feature/record/data/model/record_model.dart';
+import 'package:dun_diary_app/data/blood_pressure/model/record_model.dart';
 
 class BloodPressureUtils {
   static BloodPressure parseStringToBloodPressure(String sys, String dia, String pul) {

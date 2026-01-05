@@ -3,8 +3,7 @@ import 'package:dun_diary_app/core/constant/hive_constants.dart';
 import 'package:dun_diary_app/core/router/app_router.dart';
 import 'package:dun_diary_app/core/services/navigation_service.dart';
 import 'package:dun_diary_app/core/services/snackbar_service.dart';
-import 'package:dun_diary_app/feature/home/data/model/bp_record.dart';
-import 'package:dun_diary_app/feature/home/data/model/user.dart';
+import 'package:dun_diary_app/data/blood_pressure/model/bp_record.dart';
 import 'package:dun_diary_app/register_provider.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -44,9 +43,7 @@ initService() async {
 // init hive
 initHive() async {
   await Hive.initFlutter();
-  Hive.registerAdapter(UserAdapter());
   Hive.registerAdapter(BPRecordAdapter());
-  await Hive.openBox<User>(HiveBoxName.userBox);
   await Hive.openBox<BPRecord>(HiveBoxName.bpRecord);
   await Hive.openBox(HiveBoxName.settingsBox);
 }

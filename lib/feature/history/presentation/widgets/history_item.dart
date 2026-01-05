@@ -1,6 +1,6 @@
 // lib/feature/history/widgets/history_item_card.dart
 
-import 'package:dun_diary_app/feature/home/data/model/bp_record.dart';
+import 'package:dun_diary_app/data/blood_pressure/model/bp_record.dart';
 import 'package:dun_diary_app/shared/utils/blood_pressure_utils.dart';
 import 'package:flutter/material.dart';
 

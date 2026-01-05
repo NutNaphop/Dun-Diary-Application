@@ -1,6 +1,5 @@
 import 'package:dun_diary_app/core/constant/app_routes.dart';
 import 'package:dun_diary_app/feature/history/presentation/history_screen.dart';
-import 'package:dun_diary_app/feature/record/presentation/resultScreen/result_screen.dart';
 import 'package:dun_diary_app/shared/style/color.dart';
 import 'package:dun_diary_app/shared/style/dimension.dart';
 import 'package:dun_diary_app/shared/widgets/custom/text/text_widget.dart';
