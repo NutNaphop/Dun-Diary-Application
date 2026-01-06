@@ -34,6 +34,10 @@ class _DuotoneIcons {
   final starCircle = '$_path/star_circle.svg';
   final camera = '$_path/camera.svg';
   final image = '$_path/image.svg';
+  final danger = '$_path/danger.svg';
+  final dangerTriangle = '$_path/danger_triangle.svg';
+  final check_circle = '$_path/check_circle.svg';
+  final info_circle = '$_path/info_circle.svg';
 }
 
 class _FillIcons {

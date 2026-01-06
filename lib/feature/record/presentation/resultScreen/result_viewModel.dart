@@ -1,9 +1,7 @@
 import 'dart:io';
 
-import 'package:dun_diary_app/core/constant/app_routes.dart';
 import 'package:dun_diary_app/core/services/model_service.dart';
 import 'package:dun_diary_app/core/services/navigation_service.dart';
-import 'package:dun_diary_app/data/blood_pressure/model/record_model.dart';
 import 'package:dun_diary_app/data/blood_pressure/model/result_model.dart';
 import 'package:dun_diary_app/shared/utils/blood_pressure_utils.dart';
 import 'package:dun_diary_app/shared/utils/bp_parser.dart';
@@ -24,6 +22,9 @@ class ResultViewmodel extends ChangeNotifier {
   File? _selectedImage;
   File? get selectedImage => _selectedImage;
 
+  bool _isAnalysisCompleted = false;
+  bool get isAnalysisCompleted => _isAnalysisCompleted;
+
   @override
   void dispose() {
     super.dispose();
@@ -40,6 +41,7 @@ class ResultViewmodel extends ChangeNotifier {
       );
       final res = BPParser.mapToYoloBoxResponse(yoloResult);
       _result = BPParser.parse(res);
+      _isAnalysisCompleted = true ;
       notifyListeners();
     }
   }

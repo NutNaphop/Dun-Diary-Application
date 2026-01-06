@@ -1,8 +1,6 @@
 import 'dart:io';
 
-import 'package:dun_diary_app/core/constant/app_routes.dart';
 import 'package:dun_diary_app/core/services/navigation_service.dart';
-import 'package:dun_diary_app/data/blood_pressure/model/record_model.dart';
 import 'package:dun_diary_app/feature/record/presentation/resultScreen/result_viewModel.dart';
 import 'package:dun_diary_app/shared/constant/app_icons.dart';
 import 'package:dun_diary_app/shared/style/color.dart';
@@ -69,80 +67,82 @@ class _ResultScreenState extends State<ResultScreen> {
         showBack: true,
         onBackPressed: () => NavigationService.instance.goBack(),
       ),
-      body: Container(
-        padding: EdgeInsets.only(top: 33, bottom: 30),
-        child: Column(
-          spacing: 21,
-          children: [
-            ImageDisplay(image: viewModel.selectedImage),
-            CustomCard(
-              contentPadding: EdgeInsets.all(10),
-              content: Column(
+      body: !viewModel.isAnalysisCompleted
+          ? Center(child: ImageDisplay(image: null))
+          : Container(
+              padding: EdgeInsets.only(top: 33, bottom: 30),
+              child: Column(
+                spacing: 21,
                 children: [
-                  StatRow(
-                    leading: SVGImage(
-                      path: AppIcons.duotone.graphUp,
-                      size: 34,
-                      color: CustomColor.purple1,
+                  ImageDisplay(image: viewModel.selectedImage),
+                  CustomCard(
+                    contentPadding: EdgeInsets.all(10),
+                    content: Column(
+                      children: [
+                        StatRow(
+                          leading: SVGImage(
+                            path: AppIcons.duotone.graphUp,
+                            size: 34,
+                            color: CustomColor.purple1,
+                          ),
+                          label: 'SYS',
+                          description: 'ความดันโลหิตขณะหัวใจบีบตัว',
+                          value: viewModel.sysValue,
+                        ),
+                        StatRow(
+                          leading: SVGImage(
+                            path: AppIcons.duotone.graphDown,
+                            size: 34,
+                            color: CustomColor.blue1,
+                          ),
+                          label: 'DIA',
+                          description: 'ความดันโลหิตขณะหัวใจคลายตัว',
+                          value: viewModel.diaValue,
+                        ),
+                        StatRow(
+                          leading: SVGImage(
+                            path: AppIcons.duotone.heartPulse,
+                            size: 34,
+                            color: CustomColor.pink1,
+                          ),
+                          label: 'PUL',
+                          description: 'อัตราการเต้นของหัวใจ',
+                          value: viewModel.pulValue,
+                        ),
+                      ],
                     ),
-                    label: 'SYS',
-                    description: 'ความดันโลหิตขณะหัวใจบีบตัว',
-                    value: viewModel.sysValue,
                   ),
-                  StatRow(
-                    leading: SVGImage(
-                      path: AppIcons.duotone.graphDown,
-                      size: 34,
-                      color: CustomColor.blue1,
-                    ),
-                    label: 'DIA',
-                    description: 'ความดันโลหิตขณะหัวใจคลายตัว',
-                    value: viewModel.diaValue,
-                  ),
-                  StatRow(
-                    leading: SVGImage(
-                      path: AppIcons.duotone.heartPulse,
-                      size: 34,
-                      color: CustomColor.pink1,
-                    ),
-                    label: 'PUL',
-                    description: 'อัตราการเต้นของหัวใจ',
-                    value: viewModel.pulValue,
+                  Spacer(),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    spacing: 22,
+                    children: [
+                      Expanded(
+                        child: CustomButton(
+                          text: "ยกเลิก",
+                          type: CustomButtonType.outline,
+                          boxShadow: [DropShadow.drop_thumb],
+                          borderColor: CustomColor.gray400,
+                          onPressed: () {
+                            NavigationService.instance.goBack();
+                          },
+                        ),
+                      ),
+                      Expanded(
+                        child: CustomButton(
+                          type: CustomButtonType.fill,
+                          boxShadow: [DropShadow.drop_thumb],
+                          text: "บันทึก",
+                          onPressed: () {
+                            viewModel.submitRecord();
+                          },
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
             ),
-            Spacer(),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              spacing: 22,
-              children: [
-                Expanded(
-                  child: CustomButton(
-                    text: "ยกเลิก",
-                    type: CustomButtonType.outline,
-                    boxShadow: [DropShadow.drop_thumb],
-                    borderColor: CustomColor.gray400,
-                    onPressed: () {
-                      NavigationService.instance.goBack();
-                    },
-                  ),
-                ),
-                Expanded(
-                  child: CustomButton(
-                    type: CustomButtonType.fill,
-                    boxShadow: [DropShadow.drop_thumb],
-                    text: "บันทึก",
-                    onPressed: () {
-                      viewModel.submitRecord();
-                    },
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
     );
   }
 }
