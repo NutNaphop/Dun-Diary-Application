@@ -149,13 +149,6 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
         ),
       ),
-
-      // floatingActionButton: FloatingActionButton(
-      //   onPressed: () {
-      //     viewModel.addNewUser("BP Record ${DateTime.now().second}");
-      //   },
-      //   child: const Icon(Icons.add),
-      // ),
     );
   }
 }
