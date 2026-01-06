@@ -16,7 +16,6 @@ List<SingleChildWidget> get repositoryRecordProviders {
     ProxyProvider<NetworkClient, BloodPressureRemoteDataSource>(
       update: (_, client, __) => BloodPressureRemoteDataSource(
         firestore: FirebaseFirestore.instance,
-        client: client,
       ),
     ),
     

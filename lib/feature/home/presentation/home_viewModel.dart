@@ -5,6 +5,7 @@ import 'package:dun_diary_app/core/constant/app_routes.dart';
 import 'package:dun_diary_app/core/network/network_info.dart';
 import 'package:dun_diary_app/core/services/dialog_service.dart';
 import 'package:dun_diary_app/core/services/navigation_service.dart';
+import 'package:dun_diary_app/core/services/snackbar_service.dart';
 import 'package:dun_diary_app/data/blood_pressure/repository/blood_pressure_repository.dart';
 import 'package:flutter/foundation.dart';
 
@@ -69,6 +70,9 @@ class HomeViewmodel extends ChangeNotifier {
     notifyListeners();
   }
 
+  void showSnackBar(){
+    SnackBarService.instance.showWarning("Hello");
+  }
   void showDialog() {
     DialogService.instance.showConfirm("Hello", "World");
   }

@@ -16,13 +16,10 @@ class BloodPressureRepository {
 
   Future<void> saveRecord(BPRecord record) async {
     try {
-      // 1. เก็บลงเครื่อง (Hive) ทันที -> เร็วปรู๊ด
       await _localDataSource.addRecord(record);
-
       print("✅ Repository: Saved locally. ID: ${record.id}");
+      await syncAllPending();
 
-      // 2. (อนาคต) ตรงนี้เราจะสั่ง Sync ขึ้น Firebase ต่อ
-      // await _syncService.syncOne(record);
     } catch (e) {
       print("❌ Save Error: $e");
       rethrow;
@@ -49,13 +46,11 @@ class BloodPressureRepository {
 
     print("☁️ Syncing ${pendingRecords.length} records...");
 
-    // :TODO Add remote service here
-
     // 2. วนลูปส่งทีละตัว
     for (final record in pendingRecords) {
       try {
         // Path: users/{uid}/records/{record_id}
-        _remoteDataSource.saveRecordToFirebase(record, user.uid);
+        await _remoteDataSource.saveRecordToFirebase(record, user.uid);
 
         // 3. ถ้าส่งผ่าน -> กลับมาติ๊กถูกในเครื่อง (Local)
         record.isSynced = true;
@@ -66,5 +61,9 @@ class BloodPressureRepository {
         print("❌ Failed to sync record ${record.id}: $e");
       }
     }
+  }
+
+  Stream<dynamic> watchRecords() {
+    return _localDataSource.watchRecords();
   }
 }
