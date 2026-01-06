@@ -54,7 +54,8 @@ class _HomeScreenState extends State<HomeScreen> {
             path: AppIcons.fill.notification,
             size: 32,
             onPressed: () {
-              viewModel.toggleHasRecord();
+              // viewModel.toggleHasRecord();
+              viewModel.showSnackBar();
             },
           ),
         ],

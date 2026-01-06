@@ -27,4 +27,9 @@ class BloodPressureLocalDataSource {
   Future<void> updateRecord(BPRecord record) async {
     await record.save();
   }
+
+  // Watch Record 
+  Stream<dynamic> watchRecords() {
+    return _box.watch();
+  }
 }
