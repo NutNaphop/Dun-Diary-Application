@@ -16,12 +16,16 @@ import 'package:uuid/uuid.dart';
 class RecordViewmodel extends ChangeNotifier {
   final BloodPressureRepository _repository;
   final AuthService _authService;
+  final MediaService _mediaService;
 
   RecordViewmodel({
     required BloodPressureRepository repository,
     required AuthService authService,
+    required MediaService mediaService,
   }) : _repository = repository,
-       _authService = authService;
+       _authService = authService,
+       _mediaService = mediaService;
+
 
   BloodPressure _bpValue = BloodPressure(sys: 120, dia: 80, pul: 70);
   BloodPressure get bpValue => _bpValue;
@@ -33,9 +37,6 @@ class RecordViewmodel extends ChangeNotifier {
     _bpValue.sys,
     _bpValue.dia,
   );
-
-  final MediaService _mediaService = MediaService();
-  MediaService get mediaService => _mediaService;
 
   File? _selectedImage;
   File? get selectedImage => _selectedImage;
