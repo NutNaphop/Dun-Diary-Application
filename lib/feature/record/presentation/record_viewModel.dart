@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:dun_diary_app/core/auth/auth_service.dart';
 import 'package:dun_diary_app/core/constant/app_routes.dart';
+import 'package:dun_diary_app/core/services/flushbar_service.dart';
 import 'package:dun_diary_app/core/services/media_service.dart';
 import 'package:dun_diary_app/core/services/navigation_service.dart';
 import 'package:dun_diary_app/data/blood_pressure/model/bp_record.dart';
@@ -38,6 +39,9 @@ class RecordViewmodel extends ChangeNotifier {
 
   File? _selectedImage;
   File? get selectedImage => _selectedImage;
+
+  bool _isLoading = false;
+  bool get isLoading => _isLoading;
 
   void updateSys(int value) {
     _bpValue.sys = value;
@@ -82,8 +86,11 @@ class RecordViewmodel extends ChangeNotifier {
     notifyListeners();
   }
 
-  /// 💾 ฟังก์ชันกดปุ่มบันทึก
-  Future<bool> saveResult() async {
+  Future<void> saveResult() async {
+    if (_isLoading) return;
+    _isLoading = true;
+    notifyListeners();
+
     try {
       // 2. หา Owner ID -> ได้ทันทีไม่ต้องรอเน็ต
       final userId = await _authService.getUserIdForSaving();
@@ -102,11 +109,15 @@ class RecordViewmodel extends ChangeNotifier {
 
       // 4. ส่งให้ Repo บันทึก
       await _repository.saveRecord(newRecord);
-
-      return true; // บันทึกสำเร็จ
+      NavigationService.instance.goBack(result: true);
     } catch (e) {
       print("❌ ViewModel Save Error: $e");
-      return false;
+      FlushbarService.instance.showError("เกิดข้อผิดพลาดในการบันทึกข้อมูล");
+      _isLoading = false;
+      notifyListeners();
+    } finally {
+      _isLoading = false;
+      notifyListeners();
     }
   }
 

@@ -55,7 +55,8 @@ class _HomeScreenState extends State<HomeScreen> {
             size: 32,
             onPressed: () {
               // viewModel.toggleHasRecord();
-              viewModel.showSnackBar();
+              viewModel.showFlushbar(context);
+              ;
             },
           ),
         ],
