@@ -1,4 +1,5 @@
 import 'package:dun_diary_app/core/auth/auth_service.dart';
+import 'package:dun_diary_app/core/services/media_service.dart';
 import 'package:dun_diary_app/core/services/navigation_service.dart';
 import 'package:dun_diary_app/data/blood_pressure/model/record_model.dart';
 import 'package:dun_diary_app/data/blood_pressure/repository/blood_pressure_repository.dart';
@@ -30,6 +31,7 @@ class RecordScreen extends StatefulWidget {
       create: (context) => RecordViewmodel(
         repository: context.read<BloodPressureRepository>(),
         authService: context.read<AuthService>(),
+        mediaService: context.read<MediaService>(),
       ),
       child: const RecordScreen(),
     );
@@ -41,6 +43,7 @@ class RecordScreen extends StatefulWidget {
         final viewModel = RecordViewmodel(
           repository: context.read<BloodPressureRepository>(),
           authService: context.read<AuthService>(),
+          mediaService: context.read<MediaService>(),
         );
         viewModel.setBPValue(bp);
         return viewModel;
@@ -57,8 +60,7 @@ class _RecordScreenState extends State<RecordScreen> {
   bool _isMenuOpen = false;
   @override
   Widget build(BuildContext context) {
-    final viewModel = context.watch<RecordViewmodel>();
-
+    final viewModel = context.read<RecordViewmodel>();
     return CustomScaffold(
       appBar: MainAppBar(
         title: "บันทึกความดัน",
@@ -70,49 +72,59 @@ class _RecordScreenState extends State<RecordScreen> {
         padding: EdgeInsets.symmetric(vertical: 36),
         child: Column(
           children: [
-            CustomCard(
-              content: BpCardLayout(
-                sys: viewModel.bpValue.sys,
-                dia: viewModel.bpValue.dia,
-                pul: viewModel.bpValue.pul,
-                onSysChanged: (val) => viewModel.updateSys(val),
-                onDiaChanged: (val) => viewModel.updateDia(val),
-                onPulChanged: (val) => viewModel.updatePul(val),
-              ),
+            Consumer<RecordViewmodel>(
+              builder: (context, viewModel, child) {
+                return CustomCard(
+                  content: BpCardLayout(
+                    sys: viewModel.bpValue.sys,
+                    dia: viewModel.bpValue.dia,
+                    pul: viewModel.bpValue.pul,
+                    onSysChanged: (val) => viewModel.updateSys(val),
+                    onDiaChanged: (val) => viewModel.updateDia(val),
+                    onPulChanged: (val) => viewModel.updatePul(val),
+                  ),
+                );
+              },
             ),
 
             const SizedBox(height: 20),
 
-            CustomCard(
-              title: BloodPressureUtils.mapLevelLabel(viewModel.level),
-              titleFontSize: 21,
-              titleTextAlign: TextAlign.center,
-              contentPadding: EdgeInsets.symmetric(
-                vertical: 10,
-                horizontal: 20,
+            Selector<RecordViewmodel, int>(
+              selector: (_, viewModel) => viewModel.level,
+              builder: (context, level, child) => CustomCard(
+                title: BloodPressureUtils.mapLevelLabel(level),
+                titleFontSize: 21,
+                titleTextAlign: TextAlign.center,
+                contentPadding: EdgeInsets.symmetric(
+                  vertical: 10,
+                  horizontal: 20,
+                ),
+                content: BloodPressureGauge(level: level),
               ),
-              content: BloodPressureGauge(level: viewModel.level),
             ),
 
             const SizedBox(height: 25),
 
             // Date time picker
-            Row(
-              children: [
-                Expanded(
-                  child: DatePicker(
-                    selectedDate: viewModel.recordDate,
-                    onDateTimeChanged: (val) => viewModel.setRecordDate(val),
+            Selector<RecordViewmodel, DateTime>(
+              selector: (_, viewModel) => viewModel.recordDate,
+              builder: (context, recordDate, child) => Row(
+                children: [
+                  Expanded(
+                    child: DatePicker(
+                      selectedDate: recordDate,
+                      onDateTimeChanged: (val) => viewModel.setRecordDate(val),
+                    ),
                   ),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: TimePicker(
-                    selectedDate: viewModel.recordDate,
-                    onDateTimeChanged: (val) => viewModel.setRecordDate(val),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: TimePicker(
+                      selectedDate: recordDate,
+                      onDateTimeChanged: (val) => viewModel.setRecordDate(val),
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
             Spacer(),
             Column(
@@ -156,16 +168,17 @@ class _RecordScreenState extends State<RecordScreen> {
                   ],
                 ),
 
-                CustomButton(
-                  text: viewModel.isLoading ? "กำลังบันทึก..." : "บันทึก",
-                  type: CustomButtonType.fill,
-                  backgroundColor: viewModel.isLoading
-                      ? CustomColor.gray400
-                      : CustomColor.accentColor,
-                  boxShadow: [DropShadow.drop_thumb],
-                  onPressed: viewModel.isLoading
-                      ? () {}
-                      : () => viewModel.saveResult(),
+                Selector<RecordViewmodel, bool>(
+                  selector: (_, viewModel) => viewModel.isLoading,
+                  builder: (context, isLoading, child) => CustomButton(
+                    text: isLoading ? "กำลังบันทึก..." : "บันทึก",
+                    type: CustomButtonType.fill,
+                    backgroundColor: isLoading
+                        ? CustomColor.gray400
+                        : CustomColor.accentColor,
+                    boxShadow: [DropShadow.drop_thumb],
+                    onPressed: isLoading ? () {} : () => viewModel.saveResult(),
+                  ),
                 ),
               ],
             ),
