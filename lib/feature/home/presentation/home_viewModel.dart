@@ -1,15 +1,15 @@
 import 'dart:async';
 
 import 'package:dun_diary_app/core/auth/auth_service.dart';
-import 'package:dun_diary_app/core/constant/app_routes.dart';
+import 'package:dun_diary_app/core/mixins/record_navigation_mixin.dart';
 import 'package:dun_diary_app/core/network/network_info.dart';
 import 'package:dun_diary_app/core/services/dialog_service.dart';
-import 'package:dun_diary_app/core/services/navigation_service.dart';
+import 'package:dun_diary_app/core/services/flushbar_service.dart';
 import 'package:dun_diary_app/core/services/snackbar_service.dart';
 import 'package:dun_diary_app/data/blood_pressure/repository/blood_pressure_repository.dart';
-import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 
-class HomeViewmodel extends ChangeNotifier {
+class HomeViewmodel extends ChangeNotifier with RecordNavigationMixin {
   final BloodPressureRepository _recordRepo;
   final AuthService _authService;
   final NetworkInfo _networkInfo;
@@ -20,8 +20,7 @@ class HomeViewmodel extends ChangeNotifier {
     required BloodPressureRepository recordRepo,
     required AuthService authService,
     required NetworkInfo networkInfo,
-  }) : 
-       _recordRepo = recordRepo,
+  }) : _recordRepo = recordRepo,
        _authService = authService,
        _networkInfo = networkInfo {
     _startAutoDetect();
@@ -53,7 +52,7 @@ class HomeViewmodel extends ChangeNotifier {
         // Step 2: สั่ง Migrate (Repo จะเช็คเองว่ามีข้อมูลต้องย้ายไหม)
         // await _repository.migrateData();
         await _recordRepo.syncAllPending();
-        
+
         notifyListeners(); // รีเฟรชหน้าจอเผื่อข้อมูลเปลี่ยน
       } else {}
     });
@@ -65,16 +64,16 @@ class HomeViewmodel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void redirectToRecord() {
-    NavigationService.instance.pushNamed(AppRoutes.record);
-    notifyListeners();
-  }
-
-  void showSnackBar(){
+  void showSnackBar() {
     SnackBarService.instance.showWarning("Hello");
   }
+
   void showDialog() {
     DialogService.instance.showConfirm("Hello", "World");
+  }
+
+  void showFlushbar(BuildContext context) {
+    FlushbarService.instance.showError("Got Error", context: context);
   }
 
   notifyListeners();

@@ -4,7 +4,6 @@ import 'package:dun_diary_app/data/blood_pressure/model/record_model.dart';
 import 'package:dun_diary_app/data/blood_pressure/repository/blood_pressure_repository.dart';
 import 'package:dun_diary_app/feature/record/presentation/record_viewModel.dart';
 import 'package:dun_diary_app/feature/record/presentation/widgets/bp_card/bp_card_layout.dart';
-import 'package:dun_diary_app/feature/record/presentation/widgets/demo/demo_record.dart';
 import 'package:dun_diary_app/shared/constant/app_icons.dart';
 import 'package:dun_diary_app/shared/style/color.dart';
 import 'package:dun_diary_app/shared/style/drop_shadow.dart';
@@ -56,7 +55,6 @@ class RecordScreen extends StatefulWidget {
 
 class _RecordScreenState extends State<RecordScreen> {
   bool _isMenuOpen = false;
-  late int _selectVal;
   @override
   Widget build(BuildContext context) {
     final viewModel = context.watch<RecordViewmodel>();
@@ -116,11 +114,6 @@ class _RecordScreenState extends State<RecordScreen> {
                 ),
               ],
             ),
-            // DemoRecord(
-            //   currentAvgLevel: viewModel.avgLevel,
-            //   onBPValset: (val) => viewModel.setBPValue(val),
-            //   onAVGValset: (val) => viewModel.setAvgLevel(val),
-            // ),
             Spacer(),
             Column(
               spacing: 20,
@@ -164,27 +157,15 @@ class _RecordScreenState extends State<RecordScreen> {
                 ),
 
                 CustomButton(
-                  text: "บันทึก",
+                  text: viewModel.isLoading ? "กำลังบันทึก..." : "บันทึก",
                   type: CustomButtonType.fill,
-                  backgroundColor: CustomColor.accentColor,
+                  backgroundColor: viewModel.isLoading
+                      ? CustomColor.gray400
+                      : CustomColor.accentColor,
                   boxShadow: [DropShadow.drop_thumb],
-                  onPressed: () async {
-                    // เรียกฟังก์ชัน saveResult
-                    final success = await context
-                        .read<RecordViewmodel>()
-                        .saveResult();
-
-                    if (success) {
-                      // ถ้าสำเร็จ -> ปิดหน้านี้ หรือกลับไปหน้า Home
-                      Navigator.pop(context);
-                      // หรือ NavigationService.instance.pushNamedAndRemoveUntil(AppRoutes.home);
-                    } else {
-                      // ถ้าล้มเหลว -> แจ้งเตือน
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text('กรุณาตรวจสอบข้อมูลให้ครบถ้วน')),
-                      );
-                    }
-                  },
+                  onPressed: viewModel.isLoading
+                      ? () {}
+                      : () => viewModel.saveResult(),
                 ),
               ],
             ),
