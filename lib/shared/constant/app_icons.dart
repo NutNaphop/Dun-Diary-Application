@@ -1,23 +1,62 @@
-class AppIcons{
-  AppIcons._();
+class AppIcons {
+  AppIcons._(); // Private constructor ป้องกันการสร้าง instance
 
   static const _base = 'assets/icons';
-  static const _bottomNavigation = '$_base/bottom_navigation';
+  static const bottomNav = _BottomNavigationIcons();
+  static const duotone = _DuotoneIcons();
+  static const fill = _FillIcons();
+  static const outline = _OutlineIcons();
+}
 
-  // bottom navigation
-  static const addSquared = '$_bottomNavigation/add_squared.svg';
-  static const chartSquared = '$_bottomNavigation/chart_squared.svg';
-  static const clipboardList = '$_bottomNavigation/clipboard_list.svg';
-  static const homeSmile = '$_bottomNavigation/home_smile.svg';
-  static const plus = '$_bottomNavigation/plus.svg';
-  static const userCircle = '$_bottomNavigation/user_circle.svg';
+class _BottomNavigationIcons {
+  const _BottomNavigationIcons();
 
-  // icons
-  static const addCircle = '$_base/add_circle.svg';
-  static const image = '$_base/image.svg';
-  static const notification = '$_base/notification.svg';
-  static const pulse = '$_base/pulse.svg';
-  static const heartPulse = '$_base/heart_pulse.svg';
-  static const graphUp = '$_base/graph_up.svg';
-  static const graphDown = '$_base/graph_down.svg';
+  static const _path = '${AppIcons._base}/bottom_navigation';
+
+  final addSquared = '$_path/add_squared.svg';
+  final chartSquared = '$_path/chart_squared.svg';
+  final clipboardList = '$_path/clipboard_list.svg';
+  final homeSmile = '$_path/home_smile.svg';
+  final plus = '$_path/plus.svg';
+  final userCircle = '$_path/user_circle.svg';
+}
+
+class _DuotoneIcons {
+  const _DuotoneIcons();
+
+  static const _path = '${AppIcons._base}/duotone';
+
+  final addCircle = '$_path/add_circle.svg';
+  final graphUp = '$_path/graph_up.svg';
+  final graphDown = '$_path/graph_down.svg';
+  final pulse = '$_path/pulse.svg';
+  final heartPulse = '$_path/heart_pulse.svg';
+  final starCircle = '$_path/star_circle.svg';
+  final camera = '$_path/camera.svg';
+  final image = '$_path/image.svg';
+  final danger = '$_path/danger.svg';
+  final dangerTriangle = '$_path/danger_triangle.svg';
+  final check_circle = '$_path/check_circle.svg';
+  final info_circle = '$_path/info_circle.svg';
+}
+
+class _FillIcons {
+  const _FillIcons();
+
+  static const _path = '${AppIcons._base}/fill';
+
+  final image = '$_path/image.svg';
+  final notification = '$_path/notification.svg';
+}
+
+class _OutlineIcons {
+  const _OutlineIcons();
+
+  static const _path = '${AppIcons._base}/outline';
+
+  final leftArrow = '$_path/left_arrow.svg';
+  final x = '$_path/x.svg';
+  final calendar = '$_path/calendar.svg';
+  final clock = '$_path/clock.svg';
+  final camera = '$_path/camera.svg';
 }

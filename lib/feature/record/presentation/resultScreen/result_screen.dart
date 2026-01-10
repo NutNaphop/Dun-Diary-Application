@@ -1,0 +1,148 @@
+import 'dart:io';
+
+import 'package:dun_diary_app/core/services/navigation_service.dart';
+import 'package:dun_diary_app/feature/record/presentation/resultScreen/result_viewModel.dart';
+import 'package:dun_diary_app/shared/constant/app_icons.dart';
+import 'package:dun_diary_app/shared/style/color.dart';
+import 'package:dun_diary_app/shared/style/drop_shadow.dart';
+import 'package:dun_diary_app/shared/widgets/custom/button/custom_button.dart';
+import 'package:dun_diary_app/shared/widgets/custom/card/custom_card.dart';
+import 'package:dun_diary_app/shared/widgets/custom/card/stat_row.dart';
+import 'package:dun_diary_app/shared/widgets/custom/scaffold/custom_scaffold.dart';
+import 'package:dun_diary_app/shared/widgets/custom/scaffold/main_appbar.dart';
+import 'package:dun_diary_app/shared/widgets/custom/svg/custom_svg_widget.dart';
+import 'package:dun_diary_app/shared/widgets/ui/image/image_display.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+class ResultScreen extends StatefulWidget {
+  final File? image;
+
+  const ResultScreen({super.key, this.image});
+
+  static Widget create() {
+    return ChangeNotifierProvider(
+      create: (context) => ResultViewmodel(),
+      child: const ResultScreen(),
+    );
+  }
+
+  static Widget createWithArg(File image) {
+    return ChangeNotifierProvider(
+      create: (context) => ResultViewmodel(),
+      child: ResultScreen(image: image),
+    );
+  }
+
+  @override
+  State<ResultScreen> createState() => _ResultScreenState();
+}
+
+class _ResultScreenState extends State<ResultScreen> {
+  @override
+  void initState() {
+    super.initState();
+    if (widget.image != null) {
+      final image = widget.image!;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) return;
+        context.read<ResultViewmodel>().setSelectImage(image);
+        context.read<ResultViewmodel>().sendImageToModel(image);
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final viewModel = context.watch<ResultViewmodel>();
+
+    return CustomScaffold(
+      appBar: MainAppBar(
+        title: "บันทึกความดัน",
+        showBack: true,
+        onBackPressed: () => NavigationService.instance.goBack(),
+      ),
+      body: !viewModel.isAnalysisCompleted
+          ? Center(child: ImageDisplay(image: null))
+          : Container(
+              padding: EdgeInsets.only(top: 33, bottom: 30),
+              child: Column(
+                spacing: 21,
+                children: [
+                  ImageDisplay(image: viewModel.selectedImage),
+                  CustomCard(
+                    contentPadding: EdgeInsets.all(10),
+                    content: Column(
+                      children: [
+                        StatRow(
+                          leading: SVGImage(
+                            path: AppIcons.duotone.graphUp,
+                            size: 34,
+                            color: CustomColor.purple1,
+                          ),
+                          label: 'SYS',
+                          description: 'ความดันโลหิตขณะหัวใจบีบตัว',
+                          value: viewModel.sysValue,
+                        ),
+                        StatRow(
+                          leading: SVGImage(
+                            path: AppIcons.duotone.graphDown,
+                            size: 34,
+                            color: CustomColor.blue1,
+                          ),
+                          label: 'DIA',
+                          description: 'ความดันโลหิตขณะหัวใจคลายตัว',
+                          value: viewModel.diaValue,
+                        ),
+                        StatRow(
+                          leading: SVGImage(
+                            path: AppIcons.duotone.heartPulse,
+                            size: 34,
+                            color: CustomColor.pink1,
+                          ),
+                          label: 'PUL',
+                          description: 'อัตราการเต้นของหัวใจ',
+                          value: viewModel.pulValue,
+                        ),
+                      ],
+                    ),
+                  ),
+                  Spacer(),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    spacing: 22,
+                    children: [
+                      Expanded(
+                        child: CustomButton(
+                          text: "ยกเลิก",
+                          type: CustomButtonType.outline,
+                          boxShadow: [DropShadow.drop_thumb],
+                          borderColor: CustomColor.gray400,
+                          onPressed: () {
+                            NavigationService.instance.goBack();
+                          },
+                        ),
+                      ),
+                      Expanded(
+                        child: CustomButton(
+                          type: CustomButtonType.fill,
+                          boxShadow: [DropShadow.drop_thumb],
+                          text: "บันทึก",
+                          onPressed: () {
+                            viewModel.submitRecord();
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+    );
+  }
+}
