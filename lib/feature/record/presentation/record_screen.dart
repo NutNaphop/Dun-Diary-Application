@@ -88,7 +88,7 @@ class _RecordScreenState extends State<RecordScreen> {
             ),
 
             const SizedBox(height: 20),
-
+              
             Selector<RecordViewmodel, int>(
               selector: (_, viewModel) => viewModel.level,
               builder: (context, level, child) => CustomCard(

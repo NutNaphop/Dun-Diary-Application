@@ -19,7 +19,6 @@ class BloodPressureRepository {
       await _localDataSource.addRecord(record);
       print("✅ Repository: Saved locally. ID: ${record.id}");
       await syncAllPending();
-
     } catch (e) {
       print("❌ Save Error: $e");
       rethrow;
@@ -63,7 +62,19 @@ class BloodPressureRepository {
     }
   }
 
+  // Get latest record
+  BPRecord? getLatestRecord() {
+    return _localDataSource.getLatestRecord();
+  }
+
   Stream<dynamic> watchRecords() {
     return _localDataSource.watchRecords();
+  }
+
+  // Debug function to delete all local data
+  void deleteAllLocalData() {
+    _localDataSource.getAllRecords().forEach((record) {
+      record.delete();
+    });
   }
 }

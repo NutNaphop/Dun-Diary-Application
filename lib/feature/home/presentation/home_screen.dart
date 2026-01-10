@@ -43,6 +43,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     final hasRecords = context.select((HomeViewmodel vm) => vm.hasRecords);
+    final latestRecord = context.select((HomeViewmodel vm) => vm.latestRecord);
     final viewModel = context.read<HomeViewmodel>(); // เอาไว้กดปุ่ม
 
     return CustomScaffold(
@@ -55,8 +56,8 @@ class _HomeScreenState extends State<HomeScreen> {
             size: 32,
             onPressed: () {
               // viewModel.toggleHasRecord();
-              viewModel.showFlushbar(context);
-              ;
+              // viewModel.showFlushbar(context);
+              viewModel.deleteLocalData();
             },
           ),
         ],
@@ -115,7 +116,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                       label: 'SYS',
                       description: 'ความดันโลหิตขณะหัวใจบีบตัว',
-                      value: '115',
+                      value: latestRecord?.sys.toString() ?? '-',
                     ),
                     StatRow(
                       leading: SVGImage(
@@ -125,7 +126,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                       label: 'DIA',
                       description: 'ความดันโลหิตขณะหัวใจคลายตัว',
-                      value: '75',
+                      value: latestRecord?.dia.toString() ?? '-', 
                     ),
                     StatRow(
                       leading: SVGImage(
@@ -135,7 +136,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                       label: 'PUL',
                       description: 'อัตราการเต้นของหัวใจ',
-                      value: '72',
+                      value: latestRecord?.pulse.toString() ?? '-', 
                     ),
                   ] else ...[
                     NoFoundCard(
