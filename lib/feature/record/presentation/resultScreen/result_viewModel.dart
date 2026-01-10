@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:dun_diary_app/core/services/flushbar_service.dart';
 import 'package:dun_diary_app/core/services/model_service.dart';
 import 'package:dun_diary_app/core/services/navigation_service.dart';
 import 'package:dun_diary_app/data/blood_pressure/model/result_model.dart';
@@ -24,7 +25,7 @@ class ResultViewmodel extends ChangeNotifier {
 
   bool _isAnalysisCompleted = false;
   bool get isAnalysisCompleted => _isAnalysisCompleted;
-
+  
   @override
   void dispose() {
     super.dispose();
@@ -41,6 +42,13 @@ class ResultViewmodel extends ChangeNotifier {
       );
       final res = BPParser.mapToYoloBoxResponse(yoloResult);
       _result = BPParser.parse(res);
+
+      if (sysValue == "-" || diaValue == "-" || pulValue == "-") {
+        NavigationService.instance.goBack();
+        FlushbarService.instance.showError("ไม่สามารถอ่านค่าจากรูปภาพได้");
+        return;
+      }
+
       _isAnalysisCompleted = true ;
       notifyListeners();
     }
