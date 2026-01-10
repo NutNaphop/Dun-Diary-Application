@@ -10,7 +10,7 @@ class BloodPressureLocalDataSource {
   Future<void> addRecord(BPRecord record) async {
     await _box.add(record);
   }
-
+  
   List<BPRecord> getAllRecords() {
     // เรียงจากใหม่ไปเก่า
     final list = _box.values.toList();
@@ -18,6 +18,14 @@ class BloodPressureLocalDataSource {
     return list;
   }
   
+  // Get Latest Record
+  BPRecord? getLatestRecord() {
+    if (_box.isEmpty) return null;
+    return _box.values.reduce((curr, next) => 
+        curr.createdAt.compareTo(next.createdAt) > 0 ? curr : next
+    );
+  }
+
   // ฟังก์ชันช่วยสำหรับ Sync
   List<BPRecord> getUnsyncedRecords() {
     return _box.values.where((r) => !r.isSynced).toList();

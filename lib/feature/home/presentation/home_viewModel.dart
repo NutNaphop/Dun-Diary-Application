@@ -6,6 +6,7 @@ import 'package:dun_diary_app/core/network/network_info.dart';
 import 'package:dun_diary_app/core/services/dialog_service.dart';
 import 'package:dun_diary_app/core/services/flushbar_service.dart';
 import 'package:dun_diary_app/core/services/snackbar_service.dart';
+import 'package:dun_diary_app/data/blood_pressure/model/bp_record.dart';
 import 'package:dun_diary_app/data/blood_pressure/repository/blood_pressure_repository.dart';
 import 'package:flutter/material.dart';
 
@@ -15,6 +16,7 @@ class HomeViewmodel extends ChangeNotifier with RecordNavigationMixin {
   final NetworkInfo _networkInfo;
 
   StreamSubscription? _netSubscription; // ตัวดักฟัง
+  StreamSubscription? _dbSubscription;
 
   HomeViewmodel({
     required BloodPressureRepository recordRepo,
@@ -24,7 +26,12 @@ class HomeViewmodel extends ChangeNotifier with RecordNavigationMixin {
        _authService = authService,
        _networkInfo = networkInfo {
     _startAutoDetect();
+    _initData();
   }
+
+  
+  BPRecord? _latestRecord;
+  BPRecord? get latestRecord => _latestRecord;
 
   bool _hasRecords = false;
   bool get hasRecords => _hasRecords;
@@ -32,6 +39,7 @@ class HomeViewmodel extends ChangeNotifier with RecordNavigationMixin {
   @override
   void dispose() {
     _netSubscription?.cancel();
+    _dbSubscription?.cancel();
     super.dispose();
   }
 
@@ -52,8 +60,6 @@ class HomeViewmodel extends ChangeNotifier with RecordNavigationMixin {
         // Step 2: สั่ง Migrate (Repo จะเช็คเองว่ามีข้อมูลต้องย้ายไหม)
         // await _repository.migrateData();
         await _recordRepo.syncAllPending();
-
-        notifyListeners(); // รีเฟรชหน้าจอเผื่อข้อมูลเปลี่ยน
       } else {}
     });
   }
@@ -61,6 +67,20 @@ class HomeViewmodel extends ChangeNotifier with RecordNavigationMixin {
   void toggleHasRecord() {
     _hasRecords = !_hasRecords;
     print(_hasRecords);
+    notifyListeners();
+  }
+
+  void _initData() {
+    _updateLatestRecord();
+    // ดักฟังการเปลี่ยนแปลงข้อมูล (Add/Update/Delete) แล้วอัปเดตหน้าจอทันที
+    _dbSubscription = _recordRepo.watchRecords().listen((_) {
+      _updateLatestRecord();
+    });
+  }
+
+  void _updateLatestRecord() {
+    _latestRecord = _recordRepo.getLatestRecord();
+    _hasRecords = _latestRecord != null;
     notifyListeners();
   }
 
@@ -75,6 +95,9 @@ class HomeViewmodel extends ChangeNotifier with RecordNavigationMixin {
   void showFlushbar(BuildContext context) {
     FlushbarService.instance.showError("Got Error", context: context);
   }
-
-  notifyListeners();
+  
+  // Debug function delete local storage data
+  void deleteLocalData() {
+    _recordRepo.deleteAllLocalData();
+  }
 }
