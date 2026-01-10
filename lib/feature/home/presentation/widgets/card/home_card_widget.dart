@@ -1,8 +1,8 @@
 import 'package:dun_diary_app/shared/constant/app_image.dart';
 import 'package:dun_diary_app/shared/style/dimension.dart';
-import 'package:dun_diary_app/shared/widgets/card/card_item.dart';
-import 'package:dun_diary_app/shared/widgets/svg/custom_svg_widget.dart';
-import 'package:dun_diary_app/shared/widgets/text/text_widget.dart';
+import 'package:dun_diary_app/shared/widgets/custom/card/card_item.dart';
+import 'package:dun_diary_app/shared/widgets/custom/svg/custom_svg_widget.dart';
+import 'package:dun_diary_app/shared/widgets/custom/text/text_widget.dart';
 import 'package:flutter/material.dart';
 
 class NoFoundCard extends StatelessWidget {
@@ -28,8 +28,8 @@ class NoFoundCard extends StatelessWidget {
         children: [
           SVGImage(path: AppImage.cuate, size: 80,),
           SizedBox(height: 20),
-          CustomText(text: title, fontSize: Dimension.fontSizeMedium,fontWeight: Dimension.fontWeightSemiBold), 
-          CustomText(text: subtitle, fontSize: Dimension.fontSizeSmall, fontWeight: Dimension.fontWeightRegular,),
+          CustomText(text: title, fontSize: Dimension.fontSizes.md,fontWeight: Dimension.fontWeights.semiBold), 
+          CustomText(text: subtitle, fontSize: Dimension.fontSizes.sm, fontWeight: Dimension.fontWeights.regular),
         ]),
     );
   }
@@ -57,8 +57,8 @@ class ContentCard extends StatelessWidget {
         subtitle: description,
         trailing: CustomText(
           text: value,
-          fontSize: Dimension.fontSizeHeading1,
-          fontWeight: Dimension.fontWeightSemiBold,
+          fontSize: Dimension.fontSizes.h1,
+          fontWeight: Dimension.fontWeights.semiBold,
         ),
         hasDivider: label != 'PUL',
       );
