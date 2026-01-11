@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:dun_diary_app/core/services/navigation_service.dart';
 import 'package:dun_diary_app/feature/record/presentation/resultScreen/result_viewModel.dart';
 import 'package:dun_diary_app/shared/constant/app_icons.dart';
+import 'package:dun_diary_app/shared/constant/app_strings.dart';
 import 'package:dun_diary_app/shared/style/color.dart';
 import 'package:dun_diary_app/shared/style/drop_shadow.dart';
 import 'package:dun_diary_app/shared/widgets/custom/button/custom_button.dart';
@@ -63,7 +64,7 @@ class _ResultScreenState extends State<ResultScreen> {
 
     return CustomScaffold(
       appBar: MainAppBar(
-        title: "บันทึกความดัน",
+        title: AppStrings.result.recordBloodPressure,
         showBack: true,
         onBackPressed: () => NavigationService.instance.goBack(),
       ),
@@ -85,8 +86,8 @@ class _ResultScreenState extends State<ResultScreen> {
                             size: 34,
                             color: CustomColor.purple1,
                           ),
-                          label: 'SYS',
-                          description: 'ความดันโลหิตขณะหัวใจบีบตัว',
+                          label: AppStrings.bloodPressure.sysShortLabel,
+                          description: AppStrings.bloodPressure.sysDesc,
                           value: viewModel.sysValue,
                         ),
                         StatRow(
@@ -95,8 +96,8 @@ class _ResultScreenState extends State<ResultScreen> {
                             size: 34,
                             color: CustomColor.blue1,
                           ),
-                          label: 'DIA',
-                          description: 'ความดันโลหิตขณะหัวใจคลายตัว',
+                          label: AppStrings.bloodPressure.diaShortLabel,
+                          description: AppStrings.bloodPressure.diaDesc,
                           value: viewModel.diaValue,
                         ),
                         StatRow(
@@ -105,8 +106,8 @@ class _ResultScreenState extends State<ResultScreen> {
                             size: 34,
                             color: CustomColor.pink1,
                           ),
-                          label: 'PUL',
-                          description: 'อัตราการเต้นของหัวใจ',
+                          label: AppStrings.bloodPressure.pulseShortLabel,
+                          description: AppStrings.bloodPressure.pulseDesc,
                           value: viewModel.pulValue,
                         ),
                       ],
@@ -119,7 +120,7 @@ class _ResultScreenState extends State<ResultScreen> {
                     children: [
                       Expanded(
                         child: CustomButton(
-                          text: "ยกเลิก",
+                          text: AppStrings.common.cancel,
                           type: CustomButtonType.outline,
                           boxShadow: [DropShadow.drop_thumb],
                           borderColor: CustomColor.gray400,
@@ -132,7 +133,7 @@ class _ResultScreenState extends State<ResultScreen> {
                         child: CustomButton(
                           type: CustomButtonType.fill,
                           boxShadow: [DropShadow.drop_thumb],
-                          text: "บันทึก",
+                          text: AppStrings.common.save,
                           onPressed: () {
                             viewModel.submitRecord();
                           },

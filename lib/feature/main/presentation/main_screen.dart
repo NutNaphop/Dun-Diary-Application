@@ -1,4 +1,5 @@
 import 'package:dun_diary_app/feature/history/presentation/history_screen.dart';
+import 'package:dun_diary_app/shared/constant/app_strings.dart';
 import 'package:dun_diary_app/shared/style/color.dart';
 import 'package:dun_diary_app/shared/style/dimension.dart';
 import 'package:dun_diary_app/shared/widgets/custom/text/text_widget.dart';
@@ -16,9 +17,9 @@ class MainScreen extends StatelessWidget {
   List<Widget> get _pages => [
     HomeScreen.create(),
     HistoryScreen(),
-    Center(child: Text("หน้าเพิ่ม")),
-    Center(child: Text("หน้าสถิติ")),
-    Center(child: Text("หน้าโปรไฟล์")),
+    Center(child: Text(AppStrings.main.addPage)),
+    Center(child: Text(AppStrings.main.statPage)),
+    Center(child: Text(AppStrings.main.profilePage)),
   ];
 
   @override
@@ -38,9 +39,7 @@ class MainScreen extends StatelessWidget {
               height: 50,
               child: FittedBox(
                 child: FloatingActionButton(
-                  onPressed: () => {
-                    viewModel.redirectToRecord()
-                  },
+                  onPressed: () => {viewModel.redirectToRecord()},
                   backgroundColor: CustomColor.primaryColor,
                   shape: const CircleBorder(),
                   elevation: 4,
@@ -75,11 +74,11 @@ class MainScreen extends StatelessWidget {
               items: [
                 _buildNavItem(
                   'assets/icons/bottom_navigation/home_smile.svg',
-                  "หน้าหลัก",
+                  AppStrings.bottomNavigation.home,
                 ),
                 _buildNavItem(
                   'assets/icons/bottom_navigation/clipboard_list.svg',
-                  "รายการ",
+                  AppStrings.bottomNavigation.history,
                 ),
                 // เว้นว่างตรงกลางไว้สำหรับ FAB (Dummy Item)
                 const BottomNavigationBarItem(
@@ -88,11 +87,11 @@ class MainScreen extends StatelessWidget {
                 ),
                 _buildNavItem(
                   'assets/icons/bottom_navigation/chart_square.svg',
-                  "สถิติ",
+                  AppStrings.bottomNavigation.statistic,
                 ),
                 _buildNavItem(
                   'assets/icons/bottom_navigation/user_circle.svg',
-                  "โปรไฟล์",
+                  AppStrings.bottomNavigation.profile,
                 ),
               ],
             ),
@@ -127,7 +126,7 @@ class MainScreen extends StatelessWidget {
         ),
         CustomText(
           text: label,
-          fontSize: Dimension.fontSizes.esm ,
+          fontSize: Dimension.fontSizes.esm,
           fontWeight: Dimension.fontWeights.medium,
           color: color,
         ),

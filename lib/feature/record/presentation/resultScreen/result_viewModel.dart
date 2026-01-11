@@ -4,6 +4,7 @@ import 'package:dun_diary_app/core/services/flushbar_service.dart';
 import 'package:dun_diary_app/core/services/model_service.dart';
 import 'package:dun_diary_app/core/services/navigation_service.dart';
 import 'package:dun_diary_app/data/blood_pressure/model/result_model.dart';
+import 'package:dun_diary_app/shared/constant/app_strings.dart';
 import 'package:dun_diary_app/shared/utils/blood_pressure_utils.dart';
 import 'package:dun_diary_app/shared/utils/bp_parser.dart';
 import 'package:flutter/material.dart';
@@ -25,14 +26,13 @@ class ResultViewmodel extends ChangeNotifier {
 
   bool _isAnalysisCompleted = false;
   bool get isAnalysisCompleted => _isAnalysisCompleted;
-  
+
   @override
   void dispose() {
     super.dispose();
     ModelService.instance.dispose();
     _result.clear();
     _selectedImage = null;
-    
   }
 
   Future sendImageToModel(File image) async {
@@ -45,26 +45,30 @@ class ResultViewmodel extends ChangeNotifier {
 
       if (sysValue == "-" || diaValue == "-" || pulValue == "-") {
         NavigationService.instance.goBack();
-        FlushbarService.instance.showError("ไม่สามารถอ่านค่าจากรูปภาพได้");
+        FlushbarService.instance.showError(AppStrings.record.canNotReadImage);
         return;
       }
 
-      _isAnalysisCompleted = true ;
+      _isAnalysisCompleted = true;
       notifyListeners();
     }
   }
 
-  void setSelectImage(File img){
+  void setSelectImage(File img) {
     _selectedImage = img;
     notifyListeners();
   }
 
-  void submitRecord(){
-    final bp = BloodPressureUtils.parseStringToBloodPressure(sysValue, diaValue, pulValue);
+  void submitRecord() {
+    final bp = BloodPressureUtils.parseStringToBloodPressure(
+      sysValue,
+      diaValue,
+      pulValue,
+    );
     NavigationService.instance.goBack(result: bp);
     notifyListeners();
   }
-  
+
   Future<void> loadMockImage() async {
     try {
       final byteData = await rootBundle.load('assets/images/mock_bp.webp');

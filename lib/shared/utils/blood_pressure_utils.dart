@@ -1,14 +1,19 @@
 import 'package:dun_diary_app/data/blood_pressure/model/record_model.dart';
+import 'package:dun_diary_app/shared/constant/app_strings.dart';
 
 class BloodPressureUtils {
-  static BloodPressure parseStringToBloodPressure(String sys, String dia, String pul) {
+  static BloodPressure parseStringToBloodPressure(
+    String sys,
+    String dia,
+    String pul,
+  ) {
     final parseSys = int.tryParse(sys) ?? 0;
     final parseDia = int.tryParse(dia) ?? 0;
     final parsePul = int.tryParse(pul) ?? 0;
 
-
     return BloodPressure(sys: parseSys, dia: parseDia, pul: parsePul);
   }
+
   static BloodPressure parseIntToBloodPressure(int sys, int dia, int pul) {
     return BloodPressure(sys: sys, dia: dia, pul: pul);
   }
@@ -56,19 +61,19 @@ class BloodPressureUtils {
   static String mapLevelLabel(int level) {
     switch (level) {
       case 0:
-        return "ต่ำ";
+        return AppStrings.bloodPressure.low;
 
       case 1:
-        return "ปกติ";
+        return AppStrings.bloodPressure.normal;
 
       case 2:
-        return "เริ่มสูง";
+        return AppStrings.bloodPressure.preHigh;
 
       case 3:
-        return "สูง";
+        return AppStrings.bloodPressure.high;
 
       default:
-        return "อันตราย";
+        return AppStrings.bloodPressure.danger;
     }
   }
 

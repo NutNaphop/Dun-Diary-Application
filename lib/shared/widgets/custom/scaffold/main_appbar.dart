@@ -1,4 +1,5 @@
 import 'package:dun_diary_app/shared/constant/app_icons.dart';
+import 'package:dun_diary_app/shared/constant/app_strings.dart';
 import 'package:dun_diary_app/shared/style/color.dart';
 import 'package:dun_diary_app/shared/style/dimension.dart';
 import 'package:dun_diary_app/shared/widgets/custom/svg/custom_svg_widget.dart';
@@ -49,7 +50,7 @@ class MainAppBar extends StatelessWidget implements PreferredSizeWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     CustomText(
-                      text: "สวัสดี",
+                      text: AppStrings.common.greeting,
                       fontSize: 12,
                       fontWeight: Dimension.fontWeights.regular,
                       color: CustomColor.gray900,
@@ -87,7 +88,7 @@ class MainAppBar extends StatelessWidget implements PreferredSizeWidget {
         fontSize: Dimension.fontSizes.h2,
         fontWeight: Dimension.fontWeights.semiBold,
       ),
-      backgroundColor: Colors.white, 
+      backgroundColor: Colors.white,
       surfaceTintColor: Colors.transparent,
       elevation: 0,
       actions: actions,
