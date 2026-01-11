@@ -45,7 +45,7 @@ class _ResultScreenState extends State<ResultScreen> {
     super.initState();
     if (widget.image != null) {
       final image = widget.image!;
-      WidgetsBinding.instance.addPostFrameCallback((_) {
+      WidgetsBinding.instance.addPostFrameCallback((_) async {
         if (!mounted) return;
         context.read<ResultViewmodel>().setSelectImage(image);
         context.read<ResultViewmodel>().sendImageToModel(image);
