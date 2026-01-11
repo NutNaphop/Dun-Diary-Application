@@ -4,6 +4,7 @@ import 'package:dun_diary_app/data/blood_pressure/repository/blood_pressure_repo
 import 'package:dun_diary_app/feature/home/presentation/home_viewModel.dart';
 import 'package:dun_diary_app/feature/home/presentation/widgets/card/home_card_widget.dart';
 import 'package:dun_diary_app/shared/constant/app_icons.dart';
+import 'package:dun_diary_app/shared/constant/app_strings.dart';
 import 'package:dun_diary_app/shared/style/color.dart';
 import 'package:dun_diary_app/shared/style/dimension.dart';
 import 'package:dun_diary_app/shared/style/drop_shadow.dart';
@@ -74,7 +75,7 @@ class _HomeScreenState extends State<HomeScreen> {
               children: [
                 Expanded(
                   child: CustomButton(
-                    text: 'เริ่มบันทึกความดัน',
+                    text: AppStrings.home.startRecord,
                     textStyle: TextStyle(
                       color: CustomColor.gray900,
                       fontSize: Dimension.fontSizes.h2,
@@ -102,7 +103,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
             // --- ส่วนการ์ดแสดงผลสุขภาพ (Health Status Card) ---
             CustomCard(
-              title: 'สุขภาพของคุณวันนี้',
+              title: AppStrings.home.healthToday,
               contentPadding: EdgeInsets.all(10),
               content: Column(
                 mainAxisSize: MainAxisSize.max,
@@ -114,8 +115,8 @@ class _HomeScreenState extends State<HomeScreen> {
                         size: 34,
                         color: CustomColor.purple1,
                       ),
-                      label: 'SYS',
-                      description: 'ความดันโลหิตขณะหัวใจบีบตัว',
+                      label: AppStrings.bloodPressure.sysShortLabel,
+                      description: AppStrings.bloodPressure.sysDesc,
                       value: latestRecord?.sys.toString() ?? '-',
                     ),
                     StatRow(
@@ -124,9 +125,9 @@ class _HomeScreenState extends State<HomeScreen> {
                         size: 34,
                         color: CustomColor.blue1,
                       ),
-                      label: 'DIA',
-                      description: 'ความดันโลหิตขณะหัวใจคลายตัว',
-                      value: latestRecord?.dia.toString() ?? '-', 
+                      label: AppStrings.bloodPressure.diaShortLabel,
+                      description: AppStrings.bloodPressure.diaDesc,
+                      value: latestRecord?.dia.toString() ?? '-',
                     ),
                     StatRow(
                       leading: SVGImage(
@@ -134,15 +135,14 @@ class _HomeScreenState extends State<HomeScreen> {
                         size: 34,
                         color: CustomColor.pink1,
                       ),
-                      label: 'PUL',
-                      description: 'อัตราการเต้นของหัวใจ',
-                      value: latestRecord?.pulse.toString() ?? '-', 
+                      label: AppStrings.bloodPressure.pulseShortLabel,
+                      description: AppStrings.bloodPressure.pulseDesc,
+                      value: latestRecord?.pulse.toString() ?? '-',
                     ),
                   ] else ...[
                     NoFoundCard(
-                      title: "ยังไม่มีเนื้อหา",
-                      subtitle:
-                          "บันทึกความดันของวันนี้ เพื่อให้ข้อมูลสุขภาพสมบูรณ์",
+                      title: AppStrings.home.noContent,
+                      subtitle: AppStrings.home.recordTodayTogether,
                     ),
                   ],
                 ],

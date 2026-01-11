@@ -1,3 +1,4 @@
+import 'package:dun_diary_app/shared/constant/app_strings.dart';
 import 'package:dun_diary_app/shared/style/dimension.dart';
 import 'package:dun_diary_app/shared/widgets/ui/wheel_number/wheel_number.dart';
 import 'package:dun_diary_app/shared/widgets/custom/text/text_widget.dart';
@@ -32,9 +33,33 @@ class BpCardLayout extends StatelessWidget {
         children: [
           Row(
             children: [
-              Expanded(child: _buildBpColumn("SYS", sys, onSysChanged, wheelWidth, itemHeight)),
-              Expanded(child: _buildBpColumn("DIA", dia, onDiaChanged, wheelWidth, itemHeight)),
-              Expanded(child: _buildBpColumn("PUL", pul, onPulChanged, wheelWidth, itemHeight)),
+              Expanded(
+                child: _buildBpColumn(
+                  AppStrings.bloodPressure.sysShortLabel,
+                  sys,
+                  onSysChanged,
+                  wheelWidth,
+                  itemHeight,
+                ),
+              ),
+              Expanded(
+                child: _buildBpColumn(
+                  AppStrings.bloodPressure.diaShortLabel,
+                  dia,
+                  onDiaChanged,
+                  wheelWidth,
+                  itemHeight,
+                ),
+              ),
+              Expanded(
+                child: _buildBpColumn(
+                  AppStrings.bloodPressure.pulseShortLabel,
+                  pul,
+                  onPulChanged,
+                  wheelWidth,
+                  itemHeight,
+                ),
+              ),
             ],
           ),
         ],
@@ -42,7 +67,13 @@ class BpCardLayout extends StatelessWidget {
     );
   }
 
-  Widget _buildBpColumn(String title, int value, ValueChanged<int> onChanged, double width, double height) {
+  Widget _buildBpColumn(
+    String title,
+    int value,
+    ValueChanged<int> onChanged,
+    double width,
+    double height,
+  ) {
     return Column(
       spacing: 20,
       children: [
@@ -54,10 +85,7 @@ class BpCardLayout extends StatelessWidget {
         SizedBox(
           width: width,
           height: height * 3,
-          child: WheelNumber(
-            initialValue: value,
-            onChanged: onChanged,
-          ),
+          child: WheelNumber(initialValue: value, onChanged: onChanged),
         ),
       ],
     );

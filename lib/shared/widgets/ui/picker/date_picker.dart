@@ -1,4 +1,5 @@
 import 'package:dun_diary_app/shared/constant/app_icons.dart';
+import 'package:dun_diary_app/shared/constant/app_strings.dart';
 import 'package:dun_diary_app/shared/utils/date_utils.dart';
 import 'package:dun_diary_app/shared/widgets/custom/svg/custom_svg_widget.dart';
 import 'package:dun_diary_app/shared/widgets/ui/picker/widgets/picker_slot.dart';
@@ -17,7 +18,7 @@ class DatePicker extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return PickerSlot(
-      label: "วันที่",
+      label: AppStrings.common.date,
       trailingIcon: SVGImage(path: AppIcons.outline.calendar, size: 20,),
       displayText: DateTimeUtils.formatToThaiDate(selectedDate),
       onTap: () => _selectDate(context),

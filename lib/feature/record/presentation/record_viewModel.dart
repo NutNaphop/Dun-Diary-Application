@@ -8,6 +8,7 @@ import 'package:dun_diary_app/core/services/navigation_service.dart';
 import 'package:dun_diary_app/data/blood_pressure/model/bp_record.dart';
 import 'package:dun_diary_app/data/blood_pressure/model/record_model.dart';
 import 'package:dun_diary_app/data/blood_pressure/repository/blood_pressure_repository.dart';
+import 'package:dun_diary_app/shared/constant/app_strings.dart';
 import 'package:dun_diary_app/shared/utils/blood_pressure_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -25,7 +26,6 @@ class RecordViewmodel extends ChangeNotifier {
   }) : _repository = repository,
        _authService = authService,
        _mediaService = mediaService;
-
 
   BloodPressure _bpValue = BloodPressure(sys: 120, dia: 80, pul: 70);
   BloodPressure get bpValue => _bpValue;
@@ -113,7 +113,7 @@ class RecordViewmodel extends ChangeNotifier {
       NavigationService.instance.goBack(result: true);
     } catch (e) {
       print("❌ ViewModel Save Error: $e");
-      FlushbarService.instance.showError("เกิดข้อผิดพลาดในการบันทึกข้อมูล");
+      FlushbarService.instance.showError(AppStrings.record.errorRecord);
       _isLoading = false;
       notifyListeners();
     } finally {

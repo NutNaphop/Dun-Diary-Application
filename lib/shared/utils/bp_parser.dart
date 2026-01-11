@@ -1,4 +1,3 @@
-import 'package:dun_diary_app/data/blood_pressure/model/record_model.dart';
 import 'package:dun_diary_app/data/blood_pressure/model/result_model.dart';
 
 class BPParser {

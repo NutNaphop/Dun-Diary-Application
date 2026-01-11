@@ -1,4 +1,5 @@
 import 'package:dun_diary_app/shared/constant/app_image.dart';
+import 'package:dun_diary_app/shared/constant/app_strings.dart';
 import 'package:dun_diary_app/shared/style/dimension.dart';
 import 'package:dun_diary_app/shared/widgets/custom/card/card_item.dart';
 import 'package:dun_diary_app/shared/widgets/custom/svg/custom_svg_widget.dart';
@@ -6,16 +7,11 @@ import 'package:dun_diary_app/shared/widgets/custom/text/text_widget.dart';
 import 'package:flutter/material.dart';
 
 class NoFoundCard extends StatelessWidget {
-  
-  final String title; 
+  final String title;
   final String subtitle;
 
-  const NoFoundCard({
-    super.key,
-    this.title = "",
-    this.subtitle = ""
-    });
-    
+  const NoFoundCard({super.key, this.title = "", this.subtitle = ""});
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -26,11 +22,20 @@ class NoFoundCard extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          SVGImage(path: AppImage.cuate, size: 80,),
+          SVGImage(path: AppImage.cuate, size: 80),
           SizedBox(height: 20),
-          CustomText(text: title, fontSize: Dimension.fontSizes.md,fontWeight: Dimension.fontWeights.semiBold), 
-          CustomText(text: subtitle, fontSize: Dimension.fontSizes.sm, fontWeight: Dimension.fontWeights.regular),
-        ]),
+          CustomText(
+            text: title,
+            fontSize: Dimension.fontSizes.md,
+            fontWeight: Dimension.fontWeights.semiBold,
+          ),
+          CustomText(
+            text: subtitle,
+            fontSize: Dimension.fontSizes.sm,
+            fontWeight: Dimension.fontWeights.regular,
+          ),
+        ],
+      ),
     );
   }
 }
@@ -41,27 +46,26 @@ class ContentCard extends StatelessWidget {
   final String description;
   final String value;
 
-    const ContentCard({
-      super.key,
-      required this.leading,
-      required this.label,
-      required this.description,
-      required this.value
-      });
+  const ContentCard({
+    super.key,
+    required this.leading,
+    required this.label,
+    required this.description,
+    required this.value,
+  });
 
   @override
   Widget build(BuildContext context) {
     return CardItem(
-        leading: leading,
-        title: label,
-        subtitle: description,
-        trailing: CustomText(
-          text: value,
-          fontSize: Dimension.fontSizes.h1,
-          fontWeight: Dimension.fontWeights.semiBold,
-        ),
-        hasDivider: label != 'PUL',
-      );
+      leading: leading,
+      title: label,
+      subtitle: description,
+      trailing: CustomText(
+        text: value,
+        fontSize: Dimension.fontSizes.h1,
+        fontWeight: Dimension.fontWeights.semiBold,
+      ),
+      hasDivider: label != AppStrings.bloodPressure.pulseShortLabel,
+    );
   }
-
 }

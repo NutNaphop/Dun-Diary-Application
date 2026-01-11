@@ -5,6 +5,7 @@ import 'package:dun_diary_app/core/services/navigation_service.dart';
 import 'package:dun_diary_app/core/services/snackbar_service.dart';
 import 'package:dun_diary_app/data/blood_pressure/model/bp_record.dart';
 import 'package:dun_diary_app/register_provider.dart';
+import 'package:dun_diary_app/shared/constant/app_strings.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -25,7 +26,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Dun Diary',
+      title: AppStrings.common.appName,
       debugShowCheckedModeBanner: false,
       navigatorKey: NavigationService.instance.navigatorKey,
       scaffoldMessengerKey: SnackBarService.instance.scaffoldMessengerKey,

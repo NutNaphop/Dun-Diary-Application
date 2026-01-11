@@ -6,6 +6,7 @@ import 'package:dun_diary_app/data/blood_pressure/repository/blood_pressure_repo
 import 'package:dun_diary_app/feature/record/presentation/record_viewModel.dart';
 import 'package:dun_diary_app/feature/record/presentation/widgets/bp_card/bp_card_layout.dart';
 import 'package:dun_diary_app/shared/constant/app_icons.dart';
+import 'package:dun_diary_app/shared/constant/app_strings.dart';
 import 'package:dun_diary_app/shared/style/color.dart';
 import 'package:dun_diary_app/shared/style/drop_shadow.dart';
 import 'package:dun_diary_app/shared/utils/blood_pressure_utils.dart';
@@ -63,7 +64,7 @@ class _RecordScreenState extends State<RecordScreen> {
     final viewModel = context.read<RecordViewmodel>();
     return CustomScaffold(
       appBar: MainAppBar(
-        title: "บันทึกความดัน",
+        title: AppStrings.record.recordBloodPressure,
         showBack: true,
         backIconPath: AppIcons.outline.x,
         onBackPressed: () => NavigationService.instance.goBack(),
@@ -88,7 +89,7 @@ class _RecordScreenState extends State<RecordScreen> {
             ),
 
             const SizedBox(height: 20),
-              
+
             Selector<RecordViewmodel, int>(
               selector: (_, viewModel) => viewModel.level,
               builder: (context, level, child) => CustomCard(
@@ -149,7 +150,7 @@ class _RecordScreenState extends State<RecordScreen> {
                   items: [
                     CustomPopupMenuItem(
                       value: ImageSource.camera,
-                      title: 'ถ่ายรูปผลวัด',
+                      title: AppStrings.record.snapPhoto,
                       icon: SVGImage(
                         path: AppIcons.duotone.camera,
                         size: 22,
@@ -158,7 +159,7 @@ class _RecordScreenState extends State<RecordScreen> {
                     ),
                     CustomPopupMenuItem(
                       value: ImageSource.gallery,
-                      title: 'เลือกรูปจากคลัง',
+                      title: AppStrings.record.uploadPhoto,
                       icon: SVGImage(
                         path: AppIcons.duotone.image,
                         size: 22,
@@ -171,7 +172,9 @@ class _RecordScreenState extends State<RecordScreen> {
                 Selector<RecordViewmodel, bool>(
                   selector: (_, viewModel) => viewModel.isLoading,
                   builder: (context, isLoading, child) => CustomButton(
-                    text: isLoading ? "กำลังบันทึก..." : "บันทึก",
+                    text: isLoading
+                        ? AppStrings.common.saving
+                        : AppStrings.common.save,
                     type: CustomButtonType.fill,
                     backgroundColor: isLoading
                         ? CustomColor.gray400
