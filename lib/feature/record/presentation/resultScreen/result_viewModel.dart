@@ -7,6 +7,8 @@ import 'package:dun_diary_app/data/blood_pressure/model/result_model.dart';
 import 'package:dun_diary_app/shared/constant/app_strings.dart';
 import 'package:dun_diary_app/shared/utils/blood_pressure_utils.dart';
 import 'package:dun_diary_app/shared/utils/bp_parser.dart';
+import 'package:dun_diary_app/shared/utils/image_utils.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
@@ -37,14 +39,45 @@ class ResultViewmodel extends ChangeNotifier {
 
   Future sendImageToModel(File image) async {
     if (_selectedImage != null) {
+      File fileToSendToAI; // ตัวแปรสำหรับเก็บไฟล์ที่จะส่งเข้า Model
+
+      try {
+        // Fix image rotation
+        final rawBytes = await _selectedImage!.readAsBytes();
+
+        // ย้ายการประมวลผลรูปภาพไปทำใน Isolate (Background Thread)
+        final fixedBytes = await compute(
+          ImageUtils.processImageInIsolate,
+          rawBytes,
+        );
+
+        if (fixedBytes != null) {
+          // Temp image file
+          final tempDir = await getTemporaryDirectory();
+          final tempFileName =
+              'fixed_image_${DateTime.now().millisecondsSinceEpoch}.jpg';
+          final tempFile = File('${tempDir.path}/$tempFileName');
+          fileToSendToAI = await tempFile.writeAsBytes(fixedBytes);
+        } else {
+          fileToSendToAI = _selectedImage!;
+        }
+      } catch (e) {
+        print("Error fixing image rotation: $e");
+        fileToSendToAI = _selectedImage!;
+      }
+
       final yoloResult = await ModelService.instance.runInference(
-        _selectedImage!,
+        fileToSendToAI,
       );
+
       final res = BPParser.mapToYoloBoxResponse(yoloResult);
       _result = BPParser.parse(res);
 
       if (sysValue == "-" || diaValue == "-" || pulValue == "-") {
-        NavigationService.instance.goBack();
+        Column(children: [Text(sysValue), Text(diaValue), Text(pulValue)]);
+        // NavigationService.instance.goBack();
+        _isAnalysisCompleted = true;
+        notifyListeners();
         FlushbarService.instance.showError(AppStrings.record.canNotReadImage);
         return;
       }
