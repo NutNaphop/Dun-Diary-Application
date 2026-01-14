@@ -27,7 +27,7 @@ class CustomText extends StatelessWidget {
         color: color,
         fontSize: fontSize,
         fontWeight: fontWeight,
-        fontFamily: "NotoSansThai",
+        fontFamily: "NotoSanThai",
       ),
       textAlign: textAlign,
     );
