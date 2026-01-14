@@ -75,7 +75,7 @@ class ResultViewmodel extends ChangeNotifier {
 
       if (sysValue == "-" || diaValue == "-" || pulValue == "-") {
         Column(children: [Text(sysValue), Text(diaValue), Text(pulValue)]);
-        // NavigationService.instance.goBack();
+        NavigationService.instance.goBack();
         _isAnalysisCompleted = true;
         notifyListeners();
         FlushbarService.instance.showError(AppStrings.record.canNotReadImage);
