@@ -29,7 +29,6 @@ class HomeViewmodel extends ChangeNotifier with RecordNavigationMixin {
     _initData();
   }
 
-  
   BPRecord? _latestRecord;
   BPRecord? get latestRecord => _latestRecord;
 
@@ -79,7 +78,7 @@ class HomeViewmodel extends ChangeNotifier with RecordNavigationMixin {
   }
 
   void _updateLatestRecord() {
-    _latestRecord = _recordRepo.getLatestRecord();
+    _latestRecord = _recordRepo.getLatestTodayRecord();
     _hasRecords = _latestRecord != null;
     notifyListeners();
   }
@@ -95,7 +94,7 @@ class HomeViewmodel extends ChangeNotifier with RecordNavigationMixin {
   void showFlushbar(BuildContext context) {
     FlushbarService.instance.showError("Got Error", context: context);
   }
-  
+
   // Debug function delete local storage data
   void deleteLocalData() {
     _recordRepo.deleteAllLocalData();
