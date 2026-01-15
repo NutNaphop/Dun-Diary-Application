@@ -1,4 +1,5 @@
 import 'package:dun_diary_app/core/auth/auth_service.dart';
+import 'package:dun_diary_app/core/network/network_info.dart';
 import 'package:dun_diary_app/core/services/media_service.dart';
 import 'package:dun_diary_app/core/services/navigation_service.dart';
 import 'package:dun_diary_app/data/blood_pressure/model/record_model.dart';
@@ -33,6 +34,7 @@ class RecordScreen extends StatefulWidget {
         repository: context.read<BloodPressureRepository>(),
         authService: context.read<AuthService>(),
         mediaService: context.read<MediaService>(),
+        networkInfo: context.read<NetworkInfo>(),
       ),
       child: const RecordScreen(),
     );
@@ -45,6 +47,7 @@ class RecordScreen extends StatefulWidget {
           repository: context.read<BloodPressureRepository>(),
           authService: context.read<AuthService>(),
           mediaService: context.read<MediaService>(),
+          networkInfo: context.read<NetworkInfo>(),
         );
         viewModel.setBPValue(bp);
         return viewModel;
