@@ -14,11 +14,21 @@ class BloodPressureRepository {
   }) : _localDataSource = localDataSource,
        _remoteDataSource = remoteDataSource;
 
-  Future<void> saveRecord(BPRecord record) async {
+  Future<void> saveRecord(BPRecord record, bool isOnline) async {
     try {
       await _localDataSource.addRecord(record);
       print("✅ Repository: Saved locally. ID: ${record.id}");
-      await syncAllPending();
+
+      if (isOnline) await syncAllPending();
+
+      // Loop to show id in queuebox
+      final remainingQueueIDs = _localDataSource.getAllRecordIdsInQueueBox();
+      print(
+        "✅ Sync completed. Remaining in QueueBox: ${remainingQueueIDs.length}",
+      );
+      for (final id in remainingQueueIDs) {
+        print("   - $id");
+      }
     } catch (e) {
       print("❌ Save Error: $e");
       rethrow;
@@ -36,28 +46,37 @@ class BloodPressureRepository {
       return;
     }
 
-    // 1. หาข้อมูลที่ยังค้างท่ออยู่
-    final pendingRecords = _localDataSource.getUnsyncedRecords();
-    if (pendingRecords.isEmpty) {
+    // 1. Get into Queuebox
+    final pendingQueueID = _localDataSource.getAllRecordIdsInQueueBox();
+
+    if (pendingQueueID.isEmpty) {
       print("✅ Sync: No pending records");
       return;
     }
 
-    print("☁️ Syncing ${pendingRecords.length} records...");
+    print("☁️ Syncing ${pendingQueueID.length} records...");
 
-    // 2. วนลูปส่งทีละตัว
-    for (final record in pendingRecords) {
+    // 2. Loop through each ID and send to Firebase
+    for (final recordID in pendingQueueID) {
       try {
+        final record = _localDataSource.getRecordById(recordID);
+
+        if (record == null) {
+          print("⚠️ Record with ID $recordID not found locally. Skipping...");
+          continue;
+        }
+
         // Path: users/{uid}/records/{record_id}
         await _remoteDataSource.saveRecordToFirebase(record, user.uid);
 
         // 3. ถ้าส่งผ่าน -> กลับมาติ๊กถูกในเครื่อง (Local)
         record.isSynced = true;
         await _localDataSource.updateRecord(record);
+        await _localDataSource.deleteRecordIdFromQueueBox(record.id);
 
         print(" -> Synced record: ${record.id}");
       } catch (e) {
-        print("❌ Failed to sync record ${record.id}: $e");
+        print("❌ Failed to sync record ${recordID}: $e");
       }
     }
   }
@@ -69,6 +88,15 @@ class BloodPressureRepository {
 
   Stream<dynamic> watchRecords() {
     return _localDataSource.watchRecords();
+  }
+
+  BPRecord? getLatestTodayRecord() {
+    return _localDataSource.getLatestTodayRecord();
+  }
+
+  // Save id into Queuebox
+  Future<void> saveRecordIdToQueueBox(String recordId) async {
+    await _localDataSource.saveRecordIdToQueueBox(recordId);
   }
 
   // Debug function to delete all local data

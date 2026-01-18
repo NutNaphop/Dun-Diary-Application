@@ -1,5 +1,5 @@
 import 'dart:io';
-import 'package:image_picker/image_picker.dart'; 
+import 'package:image_picker/image_picker.dart';
 
 class MediaService {
   final ImagePicker _picker = ImagePicker();
@@ -12,7 +12,7 @@ class MediaService {
       // imageQuality: 80 คือบีบอัดรูปนิดหน่อยให้ไม่หนักเครื่องเกินไป (แนะนำ)
       final XFile? pickedFile = await _picker.pickImage(
         source: source,
-        imageQuality: 80, 
+        imageQuality: 80,
         preferredCameraDevice: CameraDevice.rear,
       );
 
@@ -22,7 +22,6 @@ class MediaService {
       }
 
       return File(pickedFile.path);
-
     } catch (e) {
       print("Error picking image: $e");
       return null;

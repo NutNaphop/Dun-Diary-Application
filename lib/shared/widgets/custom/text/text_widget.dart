@@ -1,6 +1,5 @@
 import 'package:dun_diary_app/shared/style/color.dart';
 import 'package:dun_diary_app/shared/style/dimension.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter/material.dart';
 
 // Main Custom Text
@@ -24,10 +23,11 @@ class CustomText extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(
       text,
-      style: GoogleFonts.notoSansThai(
+      style: TextStyle(
+        color: color,
         fontSize: fontSize,
         fontWeight: fontWeight,
-        color: color,
+        fontFamily: "NotoSanThai",
       ),
       textAlign: textAlign,
     );

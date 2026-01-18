@@ -1,4 +1,5 @@
 import 'package:dun_diary_app/shared/constant/app_icons.dart';
+import 'package:dun_diary_app/shared/constant/app_strings.dart';
 import 'package:dun_diary_app/shared/style/color.dart';
 import 'package:dun_diary_app/shared/style/dimension.dart';
 import 'package:dun_diary_app/shared/widgets/ui/guage/guage_indicator.dart';
@@ -31,12 +32,12 @@ class BloodPressureGauge extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               CustomText(
-                text: 'ต่ำ',
+                text: AppStrings.bloodPressure.low,
                 fontSize: Dimension.fontSizes.sm,
                 fontWeight: Dimension.fontWeights.regular,
               ),
               CustomText(
-                text: 'สูง',
+                text: AppStrings.bloodPressure.high,
                 fontSize: Dimension.fontSizes.sm,
                 fontWeight: Dimension.fontWeights.regular,
               ),
@@ -113,7 +114,7 @@ class BloodPressureGauge extends StatelessWidget {
                       minHeight: 0,
                       maxHeight: double.infinity,
                       child: CustomText(
-                        text: 'ค่าเฉลี่ย',
+                        text: AppStrings.bloodPressure.average,
                         fontSize: Dimension.fontSizes.sm,
                         fontWeight: Dimension.fontWeights.regular,
                         textAlign: TextAlign.center,

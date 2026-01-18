@@ -69,7 +69,9 @@ class _WheelNumberState extends State<WheelNumber> {
           children: [
             ListWheelScrollView.useDelegate(
               controller: _controller,
-              physics: const FixedExtentScrollPhysics(parent: BouncingScrollPhysics()),
+              physics: const FixedExtentScrollPhysics(
+                parent: BouncingScrollPhysics(),
+              ),
               itemExtent: itemExtent,
               perspective: 0.001,
               diameterRatio: 100,
