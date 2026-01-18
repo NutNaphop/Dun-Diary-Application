@@ -1,108 +1,129 @@
-import 'package:dun_diary_app/data/blood_pressure/model/record_model.dart';
+import 'dart:math' as math;
+
 import 'package:dun_diary_app/data/blood_pressure/model/result_model.dart';
 
+// YOLOBOX Box[0:left, 1:top, 2:right, 3:bottom]
+
 class BPParser {
-  
-  /// ฟังก์ชันหลักสำหรับแปลงค่าจาก YOLO -> BPFormat
-  /// คืนค่าเป็น List ว่าง [] ถ้าอ่านค่าไม่สำเร็จ
   static List<BPFormat> parse(List<YoloV8Response> detections) {
-    // 1. เตรียมโครงสร้างข้อมูลผลลัพธ์
-    final result = [
-      BPFormat(bpType: BPType.SYS, item: BPItem(posX: 0, posY: 0, value: '')),
-      BPFormat(bpType: BPType.DIA, item: BPItem(posX: 0, posY: 0, value: '')),
-      BPFormat(bpType: BPType.PUL, item: BPItem(posX: 0, posY: 0, value: ''))
-    ];
+    // 1. Filter "10" out 
+    List<YoloV8Response> rawDigits = detections
+        .where((d) => d.label != "10")
+        .toList();
 
-    try {
-      // 2. หาตำแหน่ง Marker (เส้นบรรทัด) ที่ Label == "10"
-      final markers = _findMarkers(detections);
-      
-      // Safety Check: ถ้าเจอ Marker ไม่ครบ 3 อัน (SYS, DIA, PUL) แสดงว่าอ่านผิด
-      if (markers.length < 3) {
-        print("⚠️ BPParser Error: Detected only ${markers.length} markers (Expected 3).");
-        return []; 
-      }
+    if (rawDigits.isEmpty) return [];
 
-      // 3. อัปเดตตำแหน่งแกน Y อ้างอิงให้กับ result แต่ละตัว
-      for (int i = 0; i < 3; i++) {
-        result[i].item.posX = markers[i][0]; // X
-        result[i].item.posY = markers[i][1]; // Y
-      }
+    // --- STEP 1: Noise Filter ---
+    // Find Median Height
+    rawDigits.sort(
+      (a, b) => (a.box[3] - a.box[1]).compareTo(b.box[3] - b.box[1]),
+    );
 
-      // 4. เอาตัวเลขที่อ่านได้ (ที่ไม่ใช่ Marker) มาหยอดใส่ช่อง
-      return _mapDigitsToZones(detections, result);
+    double medianHeight =
+        rawDigits[rawDigits.length ~/ 2].box[3] -
+        rawDigits[rawDigits.length ~/ 2].box[1];
 
-    } catch (e, stackTrace) {
-      print("❌ BPParser Exception: $e");
-      print(stackTrace);
-      return []; // คืนค่าว่างดีกว่าทำแอปเด้ง
-    }
-  }
+    List<YoloV8Response> digits = rawDigits.where((d) {
+      double h = d.box[3] - d.box[1];
+      double w = d.box[2] - d.box[0];
 
-  static List<YoloV8Response> mapToYoloBoxResponse(List<Map<String,dynamic>> detections) {
-    return detections.map((e) {
-        final box = List<double>.from(e["box"]);
-        return YoloV8Response(
-          classId: e['tag'] ?? "No Found",
-          label: e['tag'],
-          score: box.length > 4 ? box[4] : 0.0,
-          box: box,
-        );
-      }).toList();
-  }
+      // Rule 1: ความสูงต้องไม่น้อยกว่า 50% ของ Median Height
+      if (h < medianHeight * 0.5) return false;
 
-  /// หาตำแหน่งของ Marker (Label "10") และเรียงจากบนลงล่าง
-  static List<List<double>> _findMarkers(List<YoloV8Response> detections) {
-    // กรองเอาเฉพาะตัวที่เป็น Marker "10"
-    final markerObjects = detections.where((d) => d.label == "10").toList();
+      // Rule 2: ต้องไม่กว้างเกิน 2.5 เท่าของความสูง
+      if (w > h * 2.5) return false;
 
-    // ดึงเฉพาะพิกัด [x, y] ออกมา (สมมติว่า box[0]=x, box[1]=y)
-    List<List<double>> coordinates = markerObjects.map((item) {
-      return [item.box[0].toDouble(), item.box[1].toDouble()]; 
+      return true;
     }).toList();
 
-    // เรียงตามแกน Y (บน -> ล่าง)
-    coordinates.sort((a, b) => a[1].compareTo(b[1]));
+    if (digits.isEmpty) return [];
 
-    return coordinates;
+    // --- STEP 2: Geometric Zoning ---
+    // หาขอบบนสุด และ ล่างสุด ของกลุ่มตัวเลข
+    double minY = digits.map((e) => _getCenterY(e)).reduce(math.min);
+    double maxY = digits.map((e) => _getCenterY(e)).reduce(math.max);
+
+    // ความสูงรวมของพื้นที่ตัวเลข
+    double totalSpan = maxY - minY;
+
+    // ถ้ามีตัวเลขแค่บรรทัดเดียว หรือน้อยมาก ให้ถือเป็น SYS ไว้ก่อน
+    if (totalSpan < medianHeight) {
+      return [
+        BPFormat(
+          bpType: BPType.SYS,
+          item: BPItem(posX: 0, posY: 0, value: _joinDigits(digits)),
+        ),
+        BPFormat(
+          bpType: BPType.DIA,
+          item: BPItem(posX: 0, posY: 0, value: ""),
+        ),
+        BPFormat(
+          bpType: BPType.PUL,
+          item: BPItem(posX: 0, posY: 0, value: ""),
+        ),
+      ];
+    }
+
+    List<YoloV8Response> sysList = [];
+    List<YoloV8Response> diaList = [];
+    List<YoloV8Response> pulList = [];
+
+    // จุดตัดแบ่งโซน (Cutoff Points)
+    // Zone 1 (SYS) 35%
+    double cut1 = minY + (totalSpan * 0.35);
+    // Zone 2 (DIA) 70%
+    double cut2 = minY + (totalSpan * 0.70);
+
+    for (var d in digits) {
+      double y = _getCenterY(d);
+      if (y <= cut1) {
+        sysList.add(d);
+      } else if (y <= cut2) {
+        diaList.add(d);
+      } else {
+        pulList.add(d);
+      }
+    }
+
+    // --- STEP 3: Map Result ---
+    return [
+      BPFormat(
+        bpType: BPType.SYS,
+        item: BPItem(posX: 0, posY: 0, value: _joinDigits(sysList)),
+      ),
+      BPFormat(
+        bpType: BPType.DIA,
+        item: BPItem(posX: 0, posY: 0, value: _joinDigits(diaList)),
+      ),
+      BPFormat(
+        bpType: BPType.PUL,
+        item: BPItem(posX: 0, posY: 0, value: _joinDigits(pulList)),
+      ),
+    ];
   }
 
-  /// จัดกลุ่มตัวเลขเข้าสู่โซน SYS, DIA, PUL
-  static List<BPFormat> _mapDigitsToZones(List<YoloV8Response> detections, List<BPFormat> templates) {
-    // 1. แยกเอาเฉพาะตัวเลข (Digit) ที่ไม่ใช่ Marker
-    final digits = detections.where((d) => d.label != "10").toList();
-
-    // ดึงค่า Y ของเส้นแบ่งแต่ละโซนมา (ใช้ Y ของ Marker เป็นเกณฑ์)
-    final sysY = templates[0].item.posY; 
-    final diaY = templates[1].item.posY; 
-    final pulY = templates[2].item.posY;
-
-    // 2. กรองตัวเลขเข้าแต่ละลิสต์ตามพิกัด Y
-    // SYS: อยู่ระหว่างเส้น 1 กับ 2
-    final sysList = digits.where((e) => e.box[1] >= sysY && e.box[1] < diaY).toList();
-    
-    // DIA: อยู่ระหว่างเส้น 2 กับ 3
-    final diaList = digits.where((e) => e.box[1] >= diaY && e.box[1] < pulY).toList();
-    
-    // PUL: อยู่ใต้เส้น 3 ลงไป
-    final pulList = digits.where((e) => e.box[1] >= pulY).toList();
-
-    // 3. เรียงลำดับตัวเลขจากซ้ายไปขวา (Sort X) และประกอบร่างเป็น String
-    templates[0].item.value = _joinDigits(sysList);
-    templates[1].item.value = _joinDigits(diaList);
-    templates[2].item.value = _joinDigits(pulList);
-
-    return templates;
+  static double _getCenterY(YoloV8Response d) =>
+      d.box[1] + (d.box[3] - d.box[1]) / 2;
+      
+  static List<YoloV8Response> mapToYoloBoxResponse(
+    List<Map<String, dynamic>> detections,
+  ) {
+    return detections.map((e) {
+      final box = List<double>.from(e["box"]);
+      return YoloV8Response(
+        classId: e['tag'] ?? "No Found",
+        label: e['tag'],
+        score: box.length > 4 ? box[4] : 0.0,
+        box: box,
+      );
+    }).toList();
   }
 
-  /// Helper สำหรับเรียงซ้ายไปขวาแล้วต่อ String
   static String _joinDigits(List<YoloV8Response> digits) {
     if (digits.isEmpty) return "";
-    
-    // เรียงตามแกน X (ซ้าย -> ขวา)
+
     digits.sort((a, b) => a.box[0].compareTo(b.box[0]));
-    
-    // เอา label มาต่อกัน
+
     return digits.map((e) => e.label).join("");
   }
 

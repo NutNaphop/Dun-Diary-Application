@@ -1,4 +1,5 @@
 import 'package:dun_diary_app/shared/constant/app_icons.dart';
+import 'package:dun_diary_app/shared/constant/app_strings.dart';
 import 'package:dun_diary_app/shared/utils/date_utils.dart';
 import 'package:dun_diary_app/shared/widgets/custom/svg/custom_svg_widget.dart';
 import 'package:dun_diary_app/shared/widgets/ui/picker/widgets/picker_slot.dart';
@@ -17,7 +18,7 @@ class TimePicker extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return PickerSlot(
-      label: "เวลา",
+      label: AppStrings.common.time,
       trailingIcon: SVGImage(path: AppIcons.outline.clock, size: 20),
       displayText: DateTimeUtils.formatToTime(selectedDate),
       onTap: () => _selectTime(context),

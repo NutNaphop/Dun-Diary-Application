@@ -2,12 +2,14 @@ import 'dart:io';
 
 import 'package:dun_diary_app/core/auth/auth_service.dart';
 import 'package:dun_diary_app/core/constant/app_routes.dart';
+import 'package:dun_diary_app/core/network/network_info.dart';
 import 'package:dun_diary_app/core/services/flushbar_service.dart';
 import 'package:dun_diary_app/core/services/media_service.dart';
 import 'package:dun_diary_app/core/services/navigation_service.dart';
 import 'package:dun_diary_app/data/blood_pressure/model/bp_record.dart';
 import 'package:dun_diary_app/data/blood_pressure/model/record_model.dart';
 import 'package:dun_diary_app/data/blood_pressure/repository/blood_pressure_repository.dart';
+import 'package:dun_diary_app/shared/constant/app_strings.dart';
 import 'package:dun_diary_app/shared/utils/blood_pressure_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -17,15 +19,17 @@ class RecordViewmodel extends ChangeNotifier {
   final BloodPressureRepository _repository;
   final AuthService _authService;
   final MediaService _mediaService;
+  final NetworkInfo _networkInfo;
 
   RecordViewmodel({
     required BloodPressureRepository repository,
     required AuthService authService,
     required MediaService mediaService,
+    required NetworkInfo networkInfo,
   }) : _repository = repository,
        _authService = authService,
-       _mediaService = mediaService;
-
+       _mediaService = mediaService,
+       _networkInfo = networkInfo;
 
   BloodPressure _bpValue = BloodPressure(sys: 120, dia: 80, pul: 70);
   BloodPressure get bpValue => _bpValue;
@@ -103,17 +107,21 @@ class RecordViewmodel extends ChangeNotifier {
         sys: _bpValue.sys,
         dia: _bpValue.dia,
         pulse: _bpValue.pul,
-        createdAt: DateTime.now(),
+        createdAt: _recordDate,
         isSynced: false,
         note: "",
       );
 
-      // 4. ส่งให้ Repo บันทึก
-      await _repository.saveRecord(newRecord);
+      // 4. Save record id into boxQueue
+      await _repository.saveRecordIdToQueueBox(newRecord.id);
+
+      // 5. Save record into Local storage
+      await _repository.saveRecord(newRecord, await _networkInfo.isConnected);
+
       NavigationService.instance.goBack(result: true);
     } catch (e) {
       print("❌ ViewModel Save Error: $e");
-      FlushbarService.instance.showError("เกิดข้อผิดพลาดในการบันทึกข้อมูล");
+      FlushbarService.instance.showError(AppStrings.record.errorRecord);
       _isLoading = false;
       notifyListeners();
     } finally {
