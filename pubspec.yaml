@@ -50,6 +50,8 @@ dependencies:
   image_picker: ^1.2.1
   flutter_vision: ^2.0.0
   another_flushbar: ^1.12.32
+  table_calendar: ^3.2.0
+  intl: ^0.20.2
 
 dev_dependencies:
   flutter_test:
