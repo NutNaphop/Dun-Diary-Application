@@ -31,6 +31,7 @@ class DayPickerView extends StatelessWidget {
       currentDay: now,
       headerVisible: false,
       daysOfWeekHeight: 40,
+      startingDayOfWeek: StartingDayOfWeek.monday,
       rowHeight: 45,
       enabledDayPredicate: (day) =>
           !CalendarUtils.isFuture(day) && day.month == focusedDay.month,

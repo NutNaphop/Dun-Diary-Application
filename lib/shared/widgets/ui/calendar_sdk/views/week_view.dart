@@ -64,9 +64,10 @@ class WeekPickerView extends StatelessWidget {
     bool isToday = CalendarUtils.isSameDay(day, now);
     bool isFuture = CalendarUtils.isFuture(day);
     bool isOutside = day.month != focusedDay.month;
-
-    // เช็คเพิ่ม: วันนี้อยู่ในสัปดาห์ปัจจุบันหรือไม่?
     bool isCurrentWeekContext = CalendarUtils.isSameWeek(day, now);
+
+    // ตรวจสอบว่าวันนี้น่าจะกดได้หรือไม่ (สอดคล้องกับ enabledDayPredicate)
+    bool isEnabled = !isFuture || isCurrentWeekContext;
 
     // Background Hilight
     BorderRadiusGeometry borderRadius = BorderRadius.zero;
@@ -86,7 +87,7 @@ class WeekPickerView extends StatelessWidget {
 
     // *** แก้ไข Logic สีตัวอักษร ***
     Color textColor;
-    if (isFuture && !isCurrentWeekContext || isOutside) {
+    if (!isEnabled || isOutside) {
       textColor = CustomColor.gray400;
     }
     else if (isSelectedWeek) {

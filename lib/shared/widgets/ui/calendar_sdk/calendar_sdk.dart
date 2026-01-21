@@ -46,7 +46,9 @@ class CalendarSDK extends StatelessWidget {
                     // 1. Drop Down Header
                     CalendarHeader(
                       currentDate: viewModel.focusedDate,
-                      style: CalendarUtils.getHeaderStyle(viewModel.currentView),
+                      style: CalendarUtils.getHeaderStyle(
+                        viewModel.currentView,
+                      ),
                       isSubPage: CalendarUtils.isSubPage(
                         type,
                         viewModel.currentView,
@@ -54,7 +56,8 @@ class CalendarSDK extends StatelessWidget {
                       onYearTap: viewModel.currentView == CalendarView.year
                           ? () {}
                           : viewModel.onHeaderYearTap,
-                      onMonthTap: (viewModel.currentView == CalendarView.month ||
+                      onMonthTap:
+                          (viewModel.currentView == CalendarView.month ||
                               type == CalendarType.year)
                           ? () {}
                           : viewModel.onHeaderMonthTap,
@@ -69,9 +72,14 @@ class CalendarSDK extends StatelessWidget {
 
                     // 3. Footer Button (Select)
                     CalendarFooter(
-                      onSelect: () => Navigator.pop(context, viewModel.selectedDate),
-                      onGoToToday: viewModel.onGoToToday,
-                      todayButtonText: CalendarUtils.getTodayButtonText(type),
+                      isSubPage: CalendarUtils.isSubPage(
+                        type,
+                        viewModel.currentView,
+                      ),
+                      onSelect: () =>
+                          Navigator.pop(context, viewModel.selectedDate),
+                      onGoToPresent: viewModel.onGoToToday,
+                      goToPresentLabel: CalendarUtils.getTodayButtonText(type),
                     ),
                   ],
                 ),
@@ -110,7 +118,7 @@ class CalendarSDK extends StatelessWidget {
 
       case CalendarView.year:
         return YearPickerView(
-          selectedYear: viewModel.selectedDate.year,
+          selectedYear: viewModel.focusedDate.year,
           onYearSelected: viewModel.onYearSelected,
         );
     }

@@ -1,66 +1,43 @@
+import 'package:dun_diary_app/shared/constant/app_strings.dart';
+import 'package:dun_diary_app/shared/style/color.dart';
+import 'package:dun_diary_app/shared/style/drop_shadow.dart';
+import 'package:dun_diary_app/shared/widgets/custom/button/custom_button.dart';
 import 'package:flutter/material.dart';
 
 class CalendarFooter extends StatelessWidget {
+  final bool isSubPage;
   final VoidCallback onSelect;
-  final VoidCallback onGoToToday;
-  final String todayButtonText;
+  final VoidCallback onGoToPresent;
+  final String goToPresentLabel;
 
   const CalendarFooter({
     super.key,
+    this.isSubPage = false,
     required this.onSelect,
-    required this.onGoToToday,
-    required this.todayButtonText,
+    required this.onGoToPresent,
+    required this.goToPresentLabel,
   });
 
   @override
   Widget build(BuildContext context) {
     return Column(
+      spacing: 6,
       children: [
-        Padding(
-          padding: const EdgeInsets.fromLTRB(10, 0, 16, 16),
-          child: SizedBox(
-            width: double.infinity,
-            height: 50,
-            child: ElevatedButton(
-              onPressed: onSelect,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(
-                  0xFF009688,
-                ), // สี Teal ตามภาพ
-                foregroundColor: Colors.white,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(30),
-                ),
-                elevation: 0,
-              ),
-              child: const Text(
-                'เลือก',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-          ),
+        CustomButton(
+          text: AppStrings.calendar.select,
+          type: CustomButtonType.fill,
+          backgroundColor: CustomColor.accentColor,
+          boxShadow: [DropShadow.drop_thumb],
+          onPressed: onSelect,
         ),
-        InkWell(
-          onTap: onGoToToday,
-          borderRadius: BorderRadius.circular(20),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 16,
-              vertical: 8,
-            ),
-            child: Text(
-              todayButtonText,
-              style: const TextStyle(
-                color: Color(0xFF009688), // สีเดียวกับธีม (Teal)
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
+        if (!isSubPage) ...[
+          CustomButton(
+            text: goToPresentLabel,
+            type: CustomButtonType.outline,
+            boxShadow: [DropShadow.drop_thumb],
+            onPressed: onGoToPresent,
           ),
-        ),
+        ],
       ],
     );
   }

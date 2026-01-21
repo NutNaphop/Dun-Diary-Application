@@ -21,6 +21,7 @@ class YearPickerView extends StatelessWidget {
     final startYear = currentYear - 5;
     final totalYears = 7;
 
+
     return GridView.builder(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
@@ -53,11 +54,7 @@ class YearPickerView extends StatelessWidget {
           borderRadius: BorderRadius.circular(20),
 
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 2),
-
-          // ✨ ใส่ Margin ดันขึ้นเหมือนกัน
-          margin: const EdgeInsets.only(bottom: 8),
-
-          dotOffset: 0,
+          dotOffset: -8,
 
           onTap: isFuture ? null : () => onYearSelected(year),
         );

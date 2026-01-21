@@ -1,21 +1,23 @@
+import 'package:dun_diary_app/shared/constant/app_strings.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import '../models/calendar_types.dart';
 
 class CalendarUtils {
   // ชื่อเดือนภาษาไทย
-  static const List<String> thaiMonths = [
-    'มกราคม',
-    'กุมภาพันธ์',
-    'มีนาคม',
-    'เมษายน',
-    'พฤษภาคม',
-    'มิถุนายน',
-    'กรกฎาคม',
-    'สิงหาคม',
-    'กันยายน',
-    'ตุลาคม',
-    'พฤศจิกายน',
-    'ธันวาคม',
+  static List<String> thaiMonths = [
+    AppStrings.calendar.january,
+    AppStrings.calendar.february,
+    AppStrings.calendar.march,
+    AppStrings.calendar.april,
+    AppStrings.calendar.may,
+    AppStrings.calendar.june,
+    AppStrings.calendar.july,
+    AppStrings.calendar.august,
+    AppStrings.calendar.september,
+    AppStrings.calendar.october,
+    AppStrings.calendar.november,
+    AppStrings.calendar.december,
   ];
 
   // สูตรแปลง ค.ศ. -> พ.ศ.
@@ -32,23 +34,6 @@ class CalendarUtils {
     return checkDate.isAfter(today);
   }
 
-  static String formatMonthYear(DateTime date) {
-    return '${thaiMonths[date.month - 1]} ${toBuddhistYear(date.year)}';
-  }
-
-  // Helper สำหรับดึงวันแรกและวันสุดท้ายของสัปดาห์ (ใช้ใน Week View)
-  static DateTimeRange getWeekRange(DateTime date) {
-    // หาว่าวันจันทร์ของสัปดาห์นี้คือวันไหน (weekday 1 = Mon)
-    final startOfWeek = date.subtract(Duration(days: date.weekday - 1));
-    final endOfWeek = startOfWeek.add(const Duration(days: 6));
-
-    // ตัดเวลาทิ้ง (normalize) ให้เหลือแค่ 00:00:00
-    return DateTimeRange(
-      start: DateTime(startOfWeek.year, startOfWeek.month, startOfWeek.day),
-      end: DateTime(endOfWeek.year, endOfWeek.month, endOfWeek.day),
-    );
-  }
-
   // เช็คว่า day1 และ day2 อยู่ในสัปดาห์เดียวกันหรือไม่
   static bool isSameWeek(DateTime day1, DateTime day2) {
     // หาวันจันทร์ของทั้งคู่
@@ -59,11 +44,20 @@ class CalendarUtils {
     return isSameDay(start1, start2);
   }
 
-  // (Optional) Helper ของ table_calendar เผื่อยังไม่ได้ import
   static bool isSameDay(DateTime? a, DateTime? b) {
     if (a == null || b == null) return false;
     return a.year == b.year && a.month == b.month && a.day == b.day;
   }
+  static String formatMonthYear(DateTime date) {
+    return '${thaiMonths[date.month - 1]} ${toBuddhistYear(date.year)}';
+  }
+
+  // Helper สำหรับดึงวันแรกและวันสุดท้ายของสัปดาห์ (ใช้ใน Week View)
+  static DateTimeRange getWeekRange(DateTime date) {
+    // ใช้ getCustomWeekRange เพื่อให้ Logic การคำนวณเป็นมาตรฐานเดียวกัน
+    return getCustomWeekRange(date, startDayOfWeek: DateTime.monday);
+  }
+
 
   // Helper สำหรับจัดการวันที่ไม่ให้เกินจำนวนวันในเดือน (เช่น 31 ก.พ. -> 28 ก.พ.)
   static DateTime clampDay(int year, int month, int day) {
@@ -72,15 +66,56 @@ class CalendarUtils {
     return DateTime(year, month, clampedDay);
   }
 
+  /// หาช่วงวันที่ของสัปดาห์ (Start - End) โดยอิงจากวันที่ส่งเข้ามา
+  static DateTimeRange getCustomWeekRange(DateTime date, {int startDayOfWeek = DateTime.monday}) {
+    // 1. คำนวณหาว่าต้องย้อนกลับไปกี่วันถึงจะเจอวันเริ่มสัปดาห์
+    int daysToSubtract = (date.weekday - startDayOfWeek + 7) % 7;
+
+    // 2. หาวันเริ่มต้น (ตัดเวลาทิ้งให้เหลือแค่ 00:00:00)
+    DateTime start = DateTime(date.year, date.month, date.day).subtract(Duration(days: daysToSubtract));
+
+    // 3. หาวันสิ้นสุด (บวกไปอีก 6 วัน)
+    DateTime end = start.add(const Duration(days: 6));
+    return DateTimeRange(start: start, end: end);
+  }
+
+  // Debug Function
+  static String debugRange(DateTimeRange range) {
+    String f(DateTime d) =>
+        "${d.day.toString().padLeft(2, '0')}/${d.month.toString().padLeft(2, '0')}/${toBuddhistYear(d.year)}";
+    return "Start: ${f(range.start)} | End: ${f(range.end)}";
+  }
+
+  static String formatWeekRange(DateTime date) {
+    final start = date.subtract(Duration(days: date.weekday - 1)); // หาวันจันทร์
+    final end = start.add(const Duration(days: 6)); // หาวันอาทิตย์
+
+    final df = DateFormat('d', 'th'); // วันที่
+    final mf = DateFormat('MMMM', 'th'); // เดือนเต็ม
+    final y = CalendarUtils.toBuddhistYear(date.year);
+
+    // กรณีข้ามเดือน
+    if (start.month != end.month) {
+      final mfStart = DateFormat('MMM', 'th'); // เดือนย่อ
+      final mfEnd = DateFormat('MMM', 'th');
+      return "${df.format(start)} ${mfStart.format(start)} - ${df.format(end)} ${mfEnd.format(end)} $y";
+    }
+
+    // กรณีเดือนเดียวกัน
+    return "${df.format(start)} - ${df.format(end)} ${mf.format(end)} $y";
+  }
+
   // Helper สำหรับข้อความปุ่ม "ไปที่..."
   static String getTodayButtonText(CalendarType type) {
     switch (type) {
       case CalendarType.year:
-        return 'ไปที่ปีปัจจุบัน';
+        return AppStrings.calendar.selectPresentYear;
       case CalendarType.month:
-        return 'ไปที่เดือนปัจจุบัน';
-      default:
-        return 'ไปที่วันนี้';
+        return AppStrings.calendar.selectPresentMonth;
+      case CalendarType.week:
+        return AppStrings.calendar.selectPresentWeek;
+      case CalendarType.day:
+        return AppStrings.calendar.selectPresentDay;
     }
   }
 
@@ -109,5 +144,4 @@ class CalendarUtils {
         return currentView != CalendarView.year;
     }
   }
-  
 }

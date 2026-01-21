@@ -6,6 +6,9 @@ class AppStrings {
   static const bottomNavigation = _BottomNavigationStrings();
   static const bloodPressure = _BloodPressureStrings();
 
+  // SDK
+  static const calendar = _CalendarStrings();
+  
   // Feature
   static const main = _MainStrings();
   static const home = _HomeStrings();
@@ -110,4 +113,30 @@ class _ResultStrings {
   const _ResultStrings();
 
   final String recordBloodPressure = "บันทึกความดัน";
+}
+
+class _CalendarStrings {
+  const _CalendarStrings();
+
+  final String day = "วัน";
+  final String week = "สัปดาห์";
+  final String month = "เดือน";
+  final String year = "ปี";
+  final String select = "เลือก";
+  final String selectPresentDay = "เลือกวันที่ปัจจุบัน";
+  final String selectPresentWeek = "เลือกสัปดาห์ปัจจุบัน";
+  final String selectPresentMonth = "เลือกเดือนปัจจุบัน";
+  final String selectPresentYear = "เลือกปีปัจจุบัน";
+  final String january = "มกราคม";
+  final String february = "กุมภาพันธ์";
+  final String march = "มีนาคม";
+  final String april = "เมษายน";
+  final String may = "พฤษภาคม";
+  final String june = "มิถุนายน";
+  final String july = "กรกฎาคม";
+  final String august = "สิงหาคม";
+  final String september = "กันยายน";
+  final String october = "ตุลาคม";
+  final String november = "พฤศจิกายน";
+  final String december = "ธันวาคม";
 }
