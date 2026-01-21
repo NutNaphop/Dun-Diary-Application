@@ -1,9 +1,13 @@
+// lib/shared/widgets/ui/calendar_sdk/views/year_view.dart
+
+import 'package:dun_diary_app/shared/style/color.dart';
+import 'package:dun_diary_app/shared/widgets/ui/calendar_sdk/components/calendar_base_cell.dart';
 import 'package:flutter/material.dart';
 import '../utils/calendar_utils.dart';
 
 class YearPickerView extends StatelessWidget {
-  final int selectedYear; // ปี ค.ศ. ที่เลือกอยู่ปัจจุบัน
-  final Function(int) onYearSelected; // ส่งปี ค.ศ. กลับไป
+  final int selectedYear;
+  final Function(int) onYearSelected;
 
   const YearPickerView({
     super.key,
@@ -13,77 +17,51 @@ class YearPickerView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // กำหนดช่วงปีที่จะแสดง (เช่น ย้อนหลัง 100 ปี จากปีปัจจุบัน)
     final currentYear = DateTime.now().year;
     final startYear = currentYear - 5;
-    final totalYears =  5; 
+    final totalYears = 7;
 
     return GridView.builder(
       shrinkWrap: true,
-      physics: NeverScrollableScrollPhysics(),
+      physics: const NeverScrollableScrollPhysics(),
       padding: const EdgeInsets.all(8.0),
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 3, // 3 คอลัมน์ตามรูป
-        childAspectRatio: 2.0, // สัดส่วนกว้าง x สูง ของปุ่ม
-        mainAxisSpacing: 12,
-        crossAxisSpacing: 12,
+        crossAxisCount: 3,
+        mainAxisExtent: 40,
+        mainAxisSpacing: 20,
       ),
       itemCount: totalYears,
       itemBuilder: (context, index) {
-        // คำนวณปีของปุ่มนี้ (เรียงจากปีปัจจุบันถอยหลัง หรือเรียงจากอดีตขึ้นมาก็ได้)
-        // ในที่นี้ขอเรียงจากปัจจุบันถอยหลังให้หาง่ายๆ หรือจะเรียงปกติก็ได้
-        // เอาแบบเรียงปกติ: startYear + index
         final int year = startYear + index;
 
-        // เช็คสถานะ
         final isSelected = year == selectedYear;
-        final isFuture = year > currentYear; // กฎเหล็ก: ห้ามเลือกปีอนาคต
+        final isFuture = year > currentYear;
 
-        return _buildYearButton(year, isSelected, isFuture);
-      },
-    );
-  }
+        // Logic Current (ปีปัจจุบัน)
+        final isCurrent = year == currentYear;
 
-  Widget _buildYearButton(int year, bool isSelected, bool isFuture) {
-    // แปลงเป็น พ.ศ. เพื่อแสดงผล
-    final buddhistYear = CalendarUtils.toBuddhistYear(year);
+        // ใช้ Component ใหม่ (Reused)
+        return CalendarBaseCell(
+          text: '${CalendarUtils.toBuddhistYear(year)}', // แสดงปี พ.ศ.
+          textColor: isFuture ? CustomColor.gray500 : CustomColor.gray900,
+          backgroundColor: isSelected
+              ? CustomColor.secondaryColor
+              : Colors.transparent,
+          isToday: isCurrent, // ปีปัจจุบัน
 
-    return InkWell(
-      onTap: isFuture
-          ? null // ถ้าเป็นอนาคต กดไม่ได้
-          : () => onYearSelected(year),
-      borderRadius: BorderRadius.circular(20),
-      child: Container(
-        decoration: BoxDecoration(
-          color: isSelected
-              ? Colors.teal
-              : Colors.transparent, // สีเขียวถ้าเลือกอยู่
+          shape: BoxShape.rectangle,
           borderRadius: BorderRadius.circular(20),
-          border: isSelected
-              ? null
-              : isFuture
-              ? null
-              : Border.all(
-                  color: Colors.grey.shade200,
-                ), // กรอบจางๆ สำหรับปีปกติ
-        ),
-        alignment: Alignment.center,
-        child: Text(
-          '$buddhistYear',
-          style: TextStyle(
-            fontSize: 18,
-            fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-            color: isSelected
-                ? Colors
-                      .white // ตัวหนังสือขาวถ้าเลือก
-                : isFuture
-                ? Colors
-                      .grey
-                      .shade300 // สีเทาจางถ้ากดไม่ได้
-                : Colors.black87,
-          ),
-        ),
-      ),
+
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 2),
+
+          // ✨ ใส่ Margin ดันขึ้นเหมือนกัน
+          margin: const EdgeInsets.only(bottom: 8),
+
+          dotOffset: 0,
+
+          onTap: isFuture ? null : () => onYearSelected(year),
+        );
+      },
     );
   }
 }

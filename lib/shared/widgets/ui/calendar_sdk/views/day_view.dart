@@ -5,13 +5,13 @@ import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 import '../utils/calendar_utils.dart';
 
-class WeekPickerView extends StatelessWidget {
+class DayPickerView extends StatelessWidget {
   final DateTime selectedDate;
   final DateTime focusedDay;
   final Function(DateTime, DateTime) onDaySelected;
   final Function(DateTime) onPageChanged;
 
-  const WeekPickerView({
+  const DayPickerView({
     super.key,
     required this.selectedDate,
     required this.focusedDay,
@@ -29,20 +29,14 @@ class WeekPickerView extends StatelessWidget {
       lastDay: CalendarConfig.lastDay,
       focusedDay: focusedDay,
       currentDay: now,
-      startingDayOfWeek: StartingDayOfWeek.monday,
       headerVisible: false,
       daysOfWeekHeight: 40,
-      rowHeight: 52,
-      enabledDayPredicate: (day) {
-        bool isFuture = CalendarUtils.isFuture(day);
-        bool isCurrentWeek = CalendarUtils.isSameWeek(day, now);
-        return !isFuture || isCurrentWeek;
-      },
-
+      rowHeight: 45,
+      enabledDayPredicate: (day) =>
+          !CalendarUtils.isFuture(day) && day.month == focusedDay.month,
       onDaySelected: onDaySelected,
       onPageChanged: onPageChanged,
-      selectedDayPredicate: (day) =>
-          CalendarUtils.isSameWeek(day, selectedDate),
+      selectedDayPredicate: (day) => isSameDay(day, selectedDate),
 
       calendarStyle: const CalendarStyle(
         outsideDaysVisible: true,
@@ -60,39 +54,21 @@ class WeekPickerView extends StatelessWidget {
 
   Widget _buildCustomDayCell(DateTime day) {
     final now = DateTime.now();
-    bool isSelectedWeek = CalendarUtils.isSameWeek(day, selectedDate);
-    bool isToday = CalendarUtils.isSameDay(day, now);
+    bool isSelected = isSameDay(day, selectedDate);
+    bool isToday = isSameDay(day, now);
     bool isFuture = CalendarUtils.isFuture(day);
     bool isOutside = day.month != focusedDay.month;
 
-    // เช็คเพิ่ม: วันนี้อยู่ในสัปดาห์ปัจจุบันหรือไม่?
-    bool isCurrentWeekContext = CalendarUtils.isSameWeek(day, now);
-
-    // Background Hilight
-    BorderRadiusGeometry borderRadius = BorderRadius.zero;
-    if (isSelectedWeek) {
-      if (day.weekday == DateTime.monday) {
-        borderRadius = const BorderRadius.horizontal(left: Radius.circular(50));
-      } else if (day.weekday == DateTime.sunday) {
-        borderRadius = const BorderRadius.horizontal(
-          right: Radius.circular(50),
-        );
-      }
-    }
-
-    Color backgroundColor = isSelectedWeek
+    Color backgroundColor = isSelected && !isOutside
         ? CustomColor.secondaryColor
         : Colors.transparent;
 
-    // *** แก้ไข Logic สีตัวอักษร ***
     Color textColor;
-    if (isFuture && !isCurrentWeekContext || isOutside) {
-      textColor = CustomColor.gray400;
-    }
-    else if (isSelectedWeek) {
+    if (isOutside || isFuture) {
+      textColor = CustomColor.gray500;
+    } else if (isSelected) {
       textColor = CustomColor.gray900;
-    }
-    else {
+    } else {
       textColor = CustomColor.gray900;
     }
 
@@ -101,11 +77,10 @@ class WeekPickerView extends StatelessWidget {
       textColor: textColor,
       backgroundColor: backgroundColor,
       isToday: isToday,
-      shape: BoxShape.rectangle,
-      borderRadius: borderRadius,
-      margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 0),
+      shape: BoxShape.circle,
+      margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 0),
       dotOffset: 1,
-      fontWeight: isSelectedWeek ? FontWeight.bold : FontWeight.normal,
+      fontWeight: FontWeight.normal,
     );
   }
 }

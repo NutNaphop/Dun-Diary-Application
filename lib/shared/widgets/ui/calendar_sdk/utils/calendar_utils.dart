@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../models/calendar_types.dart';
 
 class CalendarUtils {
   // ชื่อเดือนภาษาไทย
@@ -27,13 +28,14 @@ class CalendarUtils {
   static bool isFuture(DateTime date) {
     final now = DateTime.now();
     final today = DateTime(now.year, now.month, now.day);
-    return date.isAfter(today);
+    final checkDate = DateTime(date.year, date.month, date.day);
+    return checkDate.isAfter(today);
   }
 
   static String formatMonthYear(DateTime date) {
     return '${thaiMonths[date.month - 1]} ${toBuddhistYear(date.year)}';
   }
-  
+
   // Helper สำหรับดึงวันแรกและวันสุดท้ายของสัปดาห์ (ใช้ใน Week View)
   static DateTimeRange getWeekRange(DateTime date) {
     // หาว่าวันจันทร์ของสัปดาห์นี้คือวันไหน (weekday 1 = Mon)
@@ -62,4 +64,50 @@ class CalendarUtils {
     if (a == null || b == null) return false;
     return a.year == b.year && a.month == b.month && a.day == b.day;
   }
+
+  // Helper สำหรับจัดการวันที่ไม่ให้เกินจำนวนวันในเดือน (เช่น 31 ก.พ. -> 28 ก.พ.)
+  static DateTime clampDay(int year, int month, int day) {
+    final daysInMonth = DateUtils.getDaysInMonth(year, month);
+    final clampedDay = day > daysInMonth ? daysInMonth : day;
+    return DateTime(year, month, clampedDay);
+  }
+
+  // Helper สำหรับข้อความปุ่ม "ไปที่..."
+  static String getTodayButtonText(CalendarType type) {
+    switch (type) {
+      case CalendarType.year:
+        return 'ไปที่ปีปัจจุบัน';
+      case CalendarType.month:
+        return 'ไปที่เดือนปัจจุบัน';
+      default:
+        return 'ไปที่วันนี้';
+    }
+  }
+
+  static CalendarHeaderStyle getHeaderStyle(CalendarView currentView) {
+    switch (currentView) {
+      case CalendarView.day:
+        return CalendarHeaderStyle.day;
+      case CalendarView.week:
+        return CalendarHeaderStyle.week;
+      case CalendarView.month:
+        return CalendarHeaderStyle.month;
+      case CalendarView.year:
+        return CalendarHeaderStyle.year;
+    }
+  }
+
+  static bool isSubPage(CalendarType calendarType, CalendarView currentView) {
+    switch (calendarType) {
+      case CalendarType.day:
+        return currentView != CalendarView.day;
+      case CalendarType.week:
+        return currentView != CalendarView.week;
+      case CalendarType.month:
+        return currentView != CalendarView.month;
+      case CalendarType.year:
+        return currentView != CalendarView.year;
+    }
+  }
+  
 }
