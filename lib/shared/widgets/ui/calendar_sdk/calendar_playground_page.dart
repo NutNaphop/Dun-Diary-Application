@@ -2,7 +2,6 @@ import 'package:dun_diary_app/shared/widgets/ui/calendar_sdk/calendar_sdk.dart';
 import 'package:dun_diary_app/shared/widgets/ui/calendar_sdk/models/calendar_types.dart';
 import 'package:dun_diary_app/shared/widgets/ui/calendar_sdk/utils/calendar_utils.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
 class CalendarPlaygroundPage extends StatefulWidget {
   const CalendarPlaygroundPage({super.key});
@@ -17,6 +16,8 @@ class _CalendarPlaygroundPageState extends State<CalendarPlaygroundPage> {
   DateTime? _weekDate; // เก็บค่าวันของ Week Picker
   DateTime? _monthDate; // เก็บค่าวันของ Month Picker
   DateTime? _yearDate; // เก็บค่าวันของ Year Picker
+  DateTimeRange? _weekRange; // เก็บค่าช่วงวันของ Week Finder
+  DateTime? _weekFinderDate; // วันที่ใช้สำหรับทดสอบหาช่วงสัปดาห์
 
   @override
   Widget build(BuildContext context) {
@@ -67,7 +68,7 @@ class _CalendarPlaygroundPageState extends State<CalendarPlaygroundPage> {
               // แสดงผลลัพธ์เป็นช่วงวันที่
               resultText: _weekDate == null
                   ? "ยังไม่ได้เลือก"
-                  : _formatWeekRange(_weekDate!),
+                  : CalendarUtils.formatWeekRange(_weekDate!),
               onTap: () async {
                 // เรียก SDK โหมด WEEK
                 final result = await showDialog<DateTime>(
@@ -149,6 +150,32 @@ class _CalendarPlaygroundPageState extends State<CalendarPlaygroundPage> {
                 }
               },
             ),
+
+            // --- ZONE 4: Week finder by date ---
+            _buildTestCard(
+              title: "4. หาช่วงอาทิตย์จากวัน",
+              icon: Icons.view_day,
+              color: Colors.pink,
+              resultText: _weekRange == null
+                  ? "ยังไม่ได้เลือกวันที่"
+                  : "วันที่เลือก: ${_weekFinderDate!.day}/${_weekFinderDate!.month}\n${CalendarUtils.debugRange(_weekRange!)}",
+              onTap: () async {
+                final result = await showDialog<DateTime>(
+                  context: context,
+                  builder: (context) => CalendarSDK(
+                    type: CalendarType.day,
+                    initialDate: _weekFinderDate ?? DateTime.now(),
+                  ),
+                );
+
+                if (result != null) {
+                  setState(() {
+                    _weekFinderDate = result; // เก็บวันที่เลือกแยกไว้ดู
+                    _weekRange = CalendarUtils.getWeekRange(result); // หาช่วงสัปดาห์
+                  });
+                }
+              },
+            ),
           ],
         ),
       ),
@@ -226,27 +253,5 @@ class _CalendarPlaygroundPageState extends State<CalendarPlaygroundPage> {
         ),
       ),
     );
-  }
-
-  // Helper แปลงวันที่เป็นช่วงสัปดาห์ (เช่น 19 - 25 มกราคม 2569)
-  String _formatWeekRange(DateTime date) {
-    // หาวันจันทร์
-    final start = date.subtract(Duration(days: date.weekday - 1));
-    // หาวันอาทิตย์
-    final end = start.add(const Duration(days: 6));
-
-    final df = DateFormat('d', 'th'); // วันที่
-    final mf = DateFormat('MMMM', 'th'); // เดือนเต็ม
-    final y = CalendarUtils.toBuddhistYear(date.year);
-
-    // กรณีข้ามเดือน (เช่น 29 ม.ค. - 4 ก.พ.)
-    if (start.month != end.month) {
-      final mfStart = DateFormat('MMM', 'th'); // เดือนย่อ
-      final mfEnd = DateFormat('MMM', 'th');
-      return "${df.format(start)} ${mfStart.format(start)} - ${df.format(end)} ${mfEnd.format(end)} $y";
-    }
-
-    // กรณีเดือนเดียวกัน
-    return "${df.format(start)} - ${df.format(end)} ${mf.format(end)} $y";
   }
 }

@@ -33,7 +33,7 @@ class MonthPickerView extends StatelessWidget {
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 3,
         mainAxisExtent: 40,
-        mainAxisSpacing: 20,
+        mainAxisSpacing: 10,
       ),
       itemCount: 12,
       itemBuilder: (context, index) {
@@ -42,9 +42,9 @@ class MonthPickerView extends StatelessWidget {
         // Logic Future
         bool isFuture = false;
         if (viewingYear > currentYear) {
-          isFuture = false;
+          isFuture = true;
         } else if (viewingYear == currentYear && monthIndex > currentMonth) {
-          isFuture = false;
+          isFuture = true;
         }
 
         final isSelected =
