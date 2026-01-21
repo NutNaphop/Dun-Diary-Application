@@ -1,21 +1,27 @@
+// lib/shared/widgets/ui/calendar_sdk/views/month_view.dart
+
+import 'package:dun_diary_app/shared/style/color.dart';
+import 'package:dun_diary_app/shared/widgets/ui/calendar_sdk/components/calendar_base_cell.dart';
 import 'package:flutter/material.dart';
+
 import '../utils/calendar_utils.dart';
 
 class MonthPickerView extends StatelessWidget {
-  final int selectedMonth; // เดือนที่เลือกอยู่ (1-12)
-  final int viewingYear;   // ปีที่กำลังดูอยู่ (สำคัญมาก เอาไว้เช็คว่าอนาคตไหม)
-  final Function(int) onMonthSelected; // ส่งค่าเดือนที่เลือกกลับไป
+  final int selectedMonth;
+  final int selectedYear;
+  final int viewingYear;
+  final Function(int) onMonthSelected;
 
   const MonthPickerView({
     super.key,
     required this.selectedMonth,
+    required this.selectedYear,
     required this.viewingYear,
     required this.onMonthSelected,
   });
 
   @override
   Widget build(BuildContext context) {
-    // ดึงวันเวลาปัจจุบันเพื่อใช้เทียบเงื่อนไข
     final now = DateTime.now();
     final currentYear = now.year;
     final currentMonth = now.month;
@@ -23,65 +29,50 @@ class MonthPickerView extends StatelessWidget {
     return GridView.builder(
       padding: const EdgeInsets.all(16.0),
       shrinkWrap: true,
-      physics: NeverScrollableScrollPhysics(),
+      physics: const NeverScrollableScrollPhysics(),
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 3, // 3 คอลัมน์
-        childAspectRatio: 1.5, // สัดส่วนปุ่ม (กว้างกว่าสูงนิดหน่อย)
-        mainAxisSpacing: 12,
-        crossAxisSpacing: 12,
+        crossAxisCount: 3,
+        mainAxisExtent: 40,
+        mainAxisSpacing: 20,
       ),
-      itemCount: 12, // มีแค่ 12 เดือน
+      itemCount: 12,
       itemBuilder: (context, index) {
-        final monthIndex = index + 1; // แปลง index 0-11 เป็นเดือน 1-12
-        
-        // เช็คเงื่อนไข: เป็นเดือนในอนาคตหรือไม่?
-        // Logic: ถ้าปีที่ดูอยู่ > ปีปัจจุบัน (เป็นไปไม่ได้เพราะดักที่ YearView แล้ว)
-        //       หรือ (ถ้าปีเท่ากัน และ เดือนมากกว่าเดือนปัจจุบัน) -> ห้ามกด
+        final monthIndex = index + 1;
+
+        // Logic Future
         bool isFuture = false;
         if (viewingYear > currentYear) {
-          isFuture = true;
+          isFuture = false;
         } else if (viewingYear == currentYear && monthIndex > currentMonth) {
-          isFuture = true;
+          isFuture = false;
         }
 
-        final isSelected = monthIndex == selectedMonth;
+        final isSelected =
+            monthIndex == selectedMonth && viewingYear == selectedYear;
 
-        return _buildMonthButton(monthIndex, isSelected, isFuture);
+        // Logic Current (เดือนปัจจุบันของปีปัจจุบัน)
+        final isCurrent =
+            (viewingYear == currentYear && monthIndex == currentMonth);
+
+        return CalendarBaseCell(
+          text: CalendarUtils.thaiMonths[monthIndex - 1],
+          textColor: isFuture ? CustomColor.gray500 : CustomColor.gray900,
+          backgroundColor: isSelected
+              ? CustomColor.secondaryColor
+              : Colors.transparent,
+          isToday: isCurrent,
+          shape: BoxShape.rectangle,
+          borderRadius: BorderRadius.circular(20),
+          padding: const EdgeInsets.symmetric(
+            horizontal: 10,
+            vertical: 2,
+          ), // ทำแคปซูล
+          // margin: const EdgeInsets.only(bottom: 8),
+          dotOffset: -8, // ยัด Offset 0 ให้จุดติดขอบล่างสุด (ใต้แคปซูล)
+
+          onTap: isFuture ? null : () => onMonthSelected(monthIndex),
+        );
       },
-    );
-  }
-
-  Widget _buildMonthButton(int monthIndex, bool isSelected, bool isFuture) {
-    // ดึงชื่อเดือนไทยจาก Utils
-    final monthName = CalendarUtils.thaiMonths[monthIndex - 1];
-
-    return InkWell(
-      onTap: isFuture 
-          ? null 
-          : () => onMonthSelected(monthIndex),
-      borderRadius: BorderRadius.circular(12),
-      child: Container(
-        decoration: BoxDecoration(
-          color: isSelected ? Colors.teal : Colors.transparent,
-          borderRadius: BorderRadius.circular(12),
-          border: isSelected || isFuture
-              ? null
-              : Border.all(color: Colors.grey.shade300), // กรอบจางๆ
-        ),
-        alignment: Alignment.center,
-        child: Text(
-          monthName,
-          style: TextStyle(
-            fontSize: 16,
-            fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-            color: isSelected 
-                ? Colors.white 
-                : isFuture 
-                    ? Colors.grey.shade300 
-                    : Colors.black87,
-          ),
-        ),
-      ),
     );
   }
 }

@@ -1,14 +1,15 @@
+import 'package:dun_diary_app/core/services/navigation_service.dart';
 import 'package:dun_diary_app/shared/style/color.dart';
 import 'package:dun_diary_app/shared/style/dimension.dart';
 import 'package:dun_diary_app/shared/widgets/custom/text/text_widget.dart';
 import 'package:flutter/material.dart';
+import '../models/calendar_types.dart';
 import '../utils/calendar_utils.dart';
-
-enum CalendarHeaderStyle { week, month, year }
 
 class CalendarHeader extends StatelessWidget {
   final DateTime currentDate;
   final CalendarHeaderStyle style;
+  final bool isSubPage;
   final VoidCallback? onMonthTap;
   final VoidCallback? onYearTap;
 
@@ -16,58 +17,56 @@ class CalendarHeader extends StatelessWidget {
     super.key,
     required this.currentDate,
     required this.style,
+    this.isSubPage = false,
     this.onMonthTap,
     this.onYearTap,
   });
 
   @override
   Widget build(BuildContext context) {
+    Widget centerContent;
+
     // เตรียมข้อมูล
     final monthName = CalendarUtils.thaiMonths[currentDate.month - 1];
     final yearBuddhist = CalendarUtils.toBuddhistYear(currentDate.year);
 
+    if (style == CalendarHeaderStyle.year) {
+      centerContent = Center(child: _buildTitleHeader('เลือกปี'));
+    } else if (style == CalendarHeaderStyle.month && isSubPage) {
+      centerContent = _buildTitleHeader('เลือกเดือน');
+    } else {
+      centerContent = Row(
+        mainAxisSize: MainAxisSize.min, // จัดกึ่งกลาง
+        children: [
+
+          // --- Case: Day or week View ---
+          if (style == CalendarHeaderStyle.week || style == CalendarHeaderStyle.day) ...[
+            _buildDropdownButton(text: monthName, onTap: onMonthTap),
+            const SizedBox(width: 12),
+            _buildDropdownButton(text: '$yearBuddhist', onTap: onYearTap),
+          ],
+          
+          // --- Case: Month View (Main Page) ---
+          if (style == CalendarHeaderStyle.month) ...[
+            _buildDropdownButton(text: '$yearBuddhist', onTap: onYearTap),
+          ],
+        ],
+      );
+    }
+
     return Padding(
       padding: EdgeInsetsGeometry.zero,
       child: Stack(
-        alignment: Alignment.center,
+        alignment: isSubPage ? Alignment.center : Alignment.centerLeft,
         children: [
-          // 1. ส่วนเนื้อหา Header (Dropdowns หรือ Title)
-          Row(
-            children: [
-              // --- Case: Week View (โชว์ เดือน + ปี) ---
-              if (style == CalendarHeaderStyle.week) ...[
-                _buildDropdownButton(text: monthName, onTap: onMonthTap),
-                const SizedBox(width: 12),
-                _buildDropdownButton(text: '$yearBuddhist', onTap: onYearTap),
-              ],
-
-              // --- Case: Month View (โชว์ ปี อย่างเดียว) ---
-              if (style == CalendarHeaderStyle.month) ...[
-                _buildDropdownButton(text: '$yearBuddhist', onTap: onYearTap),
-              ],
-            ],
-          ),
-
-          // --- Case: Year View (โชว์ Title "เลือกปี" ตรงกลาง) ---
-          if (style == CalendarHeaderStyle.year)
-            const Text(
-              "เลือกปี",
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                color: Colors.black87,
-              ),
-            ),
-
-          // 2. ปุ่มปิด (Close Button) - อยู่ขวาสุดเสมอ
+          centerContent,
           Align(
             alignment: Alignment.centerRight,
             child: IconButton(
-              icon: const Icon(Icons.close, color: Colors.grey),
-              onPressed: () => Navigator.pop(context),
+              icon: const Icon(Icons.close, color: CustomColor.gray600),
+              onPressed: () => NavigationService.instance.goBack(),
               padding: EdgeInsets.zero,
-              constraints:
-                  const BoxConstraints(), // ลบ padding พื้นฐานออกให้ชิดขวา
+              constraints: const BoxConstraints(),
             ),
           ),
         ],
@@ -95,10 +94,24 @@ class CalendarHeader extends StatelessWidget {
               color: CustomColor.gray900,
             ),
             const SizedBox(width: 4),
-            const Icon(Icons.keyboard_arrow_down, size: 20, color: CustomColor.gray900),
+            const Icon(
+              Icons.keyboard_arrow_down,
+              size: 20,
+              color: CustomColor.gray900,
+            ),
           ],
         ),
       ),
+    );
+  }
+
+  // Title Header replace dropdown
+  Widget _buildTitleHeader(String headerText) {
+    return CustomText(
+      text: headerText,
+      fontSize: Dimension.fontSizes.h1,
+      fontWeight: Dimension.fontWeights.bold,
+      color: CustomColor.gray900,
     );
   }
 }
