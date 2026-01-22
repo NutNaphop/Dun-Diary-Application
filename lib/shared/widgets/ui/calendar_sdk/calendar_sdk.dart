@@ -1,3 +1,4 @@
+import 'package:dun_diary_app/shared/widgets/ui/calendar_sdk/utils/calendar_config.dart';
 import 'package:dun_diary_app/shared/widgets/ui/calendar_sdk/views/day_view.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -13,11 +14,15 @@ import 'views/year_view.dart';
 class CalendarSDK extends StatelessWidget {
   final CalendarType type;
   final DateTime? initialDate;
+  final DateTime? firstDate;
+  final DateTime? lastDate;
 
   const CalendarSDK({
     super.key,
     this.type = CalendarType.week,
     this.initialDate,
+    this.firstDate,
+    this.lastDate,
   });
 
   @override
@@ -117,8 +122,14 @@ class CalendarSDK extends StatelessWidget {
         );
 
       case CalendarView.year:
+        final now = CalendarConfig.now;
+        final int endYear = lastDate?.year ?? now.year;
+        final int startYear = firstDate?.year ?? now.year;
+
         return YearPickerView(
           selectedYear: viewModel.focusedDate.year,
+          startYear: startYear,
+          endYear: endYear,
           onYearSelected: viewModel.onYearSelected,
         );
     }
