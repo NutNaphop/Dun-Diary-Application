@@ -1,4 +1,5 @@
 import 'package:dun_diary_app/core/services/navigation_service.dart';
+import 'package:dun_diary_app/shared/constant/app_strings.dart';
 import 'package:dun_diary_app/shared/style/color.dart';
 import 'package:dun_diary_app/shared/style/dimension.dart';
 import 'package:dun_diary_app/shared/widgets/custom/text/text_widget.dart';
@@ -31,21 +32,23 @@ class CalendarHeader extends StatelessWidget {
     final yearBuddhist = CalendarUtils.toBuddhistYear(currentDate.year);
 
     if (style == CalendarHeaderStyle.year) {
-      centerContent = Center(child: _buildTitleHeader('เลือกปี'));
+      centerContent = Center(
+        child: _buildTitleHeader(AppStrings.calendar.selectYear),
+      );
     } else if (style == CalendarHeaderStyle.month && isSubPage) {
-      centerContent = _buildTitleHeader('เลือกเดือน');
+      centerContent = _buildTitleHeader(AppStrings.calendar.selectMonth);
     } else {
       centerContent = Row(
         mainAxisSize: MainAxisSize.min, // จัดกึ่งกลาง
         children: [
-
           // --- Case: Day or week View ---
-          if (style == CalendarHeaderStyle.week || style == CalendarHeaderStyle.day) ...[
+          if (style == CalendarHeaderStyle.week ||
+              style == CalendarHeaderStyle.day) ...[
             _buildDropdownButton(text: monthName, onTap: onMonthTap),
             const SizedBox(width: 12),
             _buildDropdownButton(text: '$yearBuddhist', onTap: onYearTap),
           ],
-          
+
           // --- Case: Month View (Main Page) ---
           if (style == CalendarHeaderStyle.month) ...[
             _buildDropdownButton(text: '$yearBuddhist', onTap: onYearTap),
