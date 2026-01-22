@@ -1,3 +1,4 @@
+import 'package:dun_diary_app/shared/widgets/ui/calendar_sdk/utils/calendar_config.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'models/calendar_types.dart';
@@ -14,7 +15,7 @@ class CalendarViewModel extends ChangeNotifier {
     required this.type,
     required DateTime initialDate,
   }) {
-    initializeDateFormatting('th_TH');
+    initializeDateFormatting(CalendarConfig.locale);
     _selectedDate = initialDate;
     _focusedDate = initialDate;
     _initView();
