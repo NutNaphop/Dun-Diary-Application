@@ -102,7 +102,16 @@ class BloodPressureRepository {
   // Debug function to delete all local data
   void deleteAllLocalData() {
     _localDataSource.getAllRecords().forEach((record) {
-      record.delete();
+      _localDataSource.deleteRecord(record.id);
     });
+  }
+
+  // Metadata Year Management
+  int getMinYear() {
+    return _localDataSource.getMinYear();
+  }
+
+  List<int> getActiveYears() {
+    return _localDataSource.getActiveYears();
   }
 }

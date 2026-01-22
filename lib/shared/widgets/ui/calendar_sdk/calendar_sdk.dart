@@ -45,7 +45,7 @@ class CalendarSDK extends StatelessWidget {
               child: Container(
                 width: 350,
                 child: Column(
-                  spacing: 20,
+                  spacing: 10,
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     // 1. Drop Down Header

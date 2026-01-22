@@ -123,6 +123,8 @@ class _CalendarStrings {
   final String month = "เดือน";
   final String year = "ปี";
   final String select = "เลือก";
+  final String selectMonth = "เลือกเดือน";
+  final String selectYear = "เลือกปี";
   final String selectPresentDay = "เลือกวันที่ปัจจุบัน";
   final String selectPresentWeek = "เลือกสัปดาห์ปัจจุบัน";
   final String selectPresentMonth = "เลือกเดือนปัจจุบัน";

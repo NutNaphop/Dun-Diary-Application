@@ -29,7 +29,7 @@ class _YearPickerViewState extends State<YearPickerView> {
   void initState() {
     super.initState();
 
-    final int selectedIndex = widget.endYear - widget.selectedYear;
+    final int selectedIndex = widget.selectedYear - widget.startYear;
     final int safeIndex = selectedIndex < 0 ? 0 : selectedIndex;
     final int initialPage = (safeIndex / yearsPerPage).floor();
     _pageController = PageController(initialPage: initialPage);
@@ -73,7 +73,7 @@ class _YearPickerViewState extends State<YearPickerView> {
                 itemCount: itemsInPage,
                 itemBuilder: (context, i) {
                   final int globalIndex = startIndex + i;
-                  final int year = widget.endYear - globalIndex;
+                  final int year = widget.startYear + globalIndex;
 
                   final isSelected = year == widget.selectedYear;
                   final isFuture = year > currentYear;

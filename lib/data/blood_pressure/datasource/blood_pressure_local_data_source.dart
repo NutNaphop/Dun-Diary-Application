@@ -4,11 +4,25 @@ import 'package:hive_flutter/hive_flutter.dart';
 
 class BloodPressureLocalDataSource {
   final Box<BPRecord> _box;
+  final Box _metaBox;
 
-  BloodPressureLocalDataSource() : _box = Hive.box(HiveBoxName.bpRecord);
+  BloodPressureLocalDataSource()
+    : _metaBox = Hive.box(HiveBoxName.metaBox),
+      _box = Hive.box(HiveBoxName.bpRecord);
 
+  // --- Record Management ---
   Future<void> addRecord(BPRecord record) async {
     await _box.put(record.id, record);
+    await _updateMetaOnAdd(record.createdAt.year);
+  }
+
+  Future<void> deleteRecord(String id) async {
+    final record = _box.get(id);
+    if (record != null) {
+      final year = record.createdAt.year;
+      await _box.delete(id);
+      await _updateMetaOnDelete(year);
+    }
   }
 
   List<BPRecord> getAllRecords() {
@@ -86,5 +100,66 @@ class BloodPressureLocalDataSource {
   // Watch Record
   Stream<dynamic> watchRecords() {
     return _box.watch();
+  }
+
+  // --- Metadata ---
+  Future<void> _updateMetaOnAdd(int year) async {
+    final rawMap = _metaBox.get(HiveKeys.meta.yearCounts, defaultValue: {});
+    final Map<int, int> yearCounts = Map<int, int>.from(rawMap);
+
+    if (yearCounts.containsKey(year)) {
+      yearCounts[year] = yearCounts[year]! + 1;
+    } else {
+      yearCounts[year] = 1;
+    }
+    await _metaBox.put(HiveKeys.meta.yearCounts, yearCounts);
+    final int currentMin = _metaBox.get(
+      HiveKeys.meta.minYear,
+      defaultValue: DateTime.now().year,
+    );
+    if (year < currentMin) {
+      await _metaBox.put(HiveKeys.meta.minYear, year);
+    }
+  }
+
+  Future<void> _updateMetaOnDelete(int year) async {
+    final rawMap = _metaBox.get(HiveKeys.meta.yearCounts, defaultValue: {});
+    final Map<int, int> yearCounts = Map<int, int>.from(rawMap);
+
+    if (yearCounts.containsKey(year)) {
+      final int newCount = yearCounts[year]! - 1;
+
+      if (newCount <= 0) {
+        yearCounts.remove(year);
+        final int currentMin = _metaBox.get(
+          HiveKeys.meta.minYear,
+          defaultValue: DateTime.now().year,
+        );
+        
+        // Check is year is currentMin ?
+        if (year == currentMin) {
+          if (yearCounts.isNotEmpty) {
+            final List<int> sortedYears = yearCounts.keys.toList()..sort();
+            final int newMin = sortedYears.first;
+            await _metaBox.put(HiveKeys.meta.minYear, newMin);
+          } else {
+            await _metaBox.put(HiveKeys.meta.minYear, DateTime.now().year);
+          }
+        }
+      } else {
+        yearCounts[year] = newCount;
+      }
+      await _metaBox.put(HiveKeys.meta.yearCounts, yearCounts);
+    }
+  }
+
+  int getMinYear() {
+    return _metaBox.get(HiveKeys.meta.minYear, defaultValue: DateTime.now().year);
+  }
+
+  List<int> getActiveYears() {
+    final rawMap = _metaBox.get(HiveKeys.meta.yearCounts, defaultValue: {});
+    final Map<int, int> yearCounts = Map<int, int>.from(rawMap);
+    return yearCounts.keys.toList()..sort();
   }
 }

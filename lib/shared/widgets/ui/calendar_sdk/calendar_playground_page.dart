@@ -1,3 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dun_diary_app/data/blood_pressure/datasource/blood_pressure_local_data_source.dart';
+import 'package:dun_diary_app/data/blood_pressure/datasource/blood_pressure_remote_data_source.dart';
+import 'package:dun_diary_app/data/blood_pressure/repository/blood_pressure_repository.dart';
 import 'package:dun_diary_app/shared/widgets/ui/calendar_sdk/calendar_sdk.dart';
 import 'package:dun_diary_app/shared/widgets/ui/calendar_sdk/models/calendar_types.dart';
 import 'package:dun_diary_app/shared/widgets/ui/calendar_sdk/utils/calendar_utils.dart';
@@ -18,6 +22,13 @@ class _CalendarPlaygroundPageState extends State<CalendarPlaygroundPage> {
   DateTime? _yearDate; // เก็บค่าวันของ Year Picker
   DateTimeRange? _weekRange; // เก็บค่าช่วงวันของ Week Finder
   DateTime? _weekFinderDate; // วันที่ใช้สำหรับทดสอบหาช่วงสัปดาห์
+
+  final _repository = BloodPressureRepository(
+    localDataSource: BloodPressureLocalDataSource(),
+    remoteDataSource: BloodPressureRemoteDataSource(
+      firestore: FirebaseFirestore.instance,
+    ),
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -48,6 +59,8 @@ class _CalendarPlaygroundPageState extends State<CalendarPlaygroundPage> {
                   builder: (context) => CalendarSDK(
                     type: CalendarType.day,
                     initialDate: _dayDate ?? DateTime.now(),
+                    firstDate: DateTime(_repository.getMinYear()),
+                    lastDate: DateTime.now(),
                   ),
                 );
 
@@ -65,22 +78,20 @@ class _CalendarPlaygroundPageState extends State<CalendarPlaygroundPage> {
               title: "1. เลือกสัปดาห์ (Week)",
               icon: Icons.view_week,
               color: Colors.teal,
-              // แสดงผลลัพธ์เป็นช่วงวันที่
               resultText: _weekDate == null
                   ? "ยังไม่ได้เลือก"
                   : CalendarUtils.formatWeekRange(_weekDate!),
               onTap: () async {
-                // เรียก SDK โหมด WEEK
                 final result = await showDialog<DateTime>(
                   context: context,
                   builder: (context) => CalendarSDK(
                     type: CalendarType.week,
-                    // ส่งค่าเดิมเข้าไป (ถ้ามี) หรือส่งค่าปัจจุบัน
                     initialDate: _weekDate ?? DateTime.now(),
+                    firstDate: DateTime(_repository.getMinYear()),
+                    lastDate: DateTime.now(),
                   ),
                 );
 
-                // รับค่ากลับมาใส่ตัวแปร _weekDate
                 if (result != null) {
                   setState(() {
                     _weekDate = result;
@@ -96,18 +107,17 @@ class _CalendarPlaygroundPageState extends State<CalendarPlaygroundPage> {
               title: "2. เลือกเดือน (Month)",
               icon: Icons.calendar_view_month,
               color: Colors.orange,
-              // แสดงผลลัพธ์เป็น เดือน ปี
               resultText: _monthDate == null
                   ? "ยังไม่ได้เลือก"
                   : "${CalendarUtils.thaiMonths[_monthDate!.month - 1]} ${CalendarUtils.toBuddhistYear(_monthDate!.year)}",
               onTap: () async {
-                // เรียก SDK โหมด MONTH
                 final result = await showDialog<DateTime>(
                   context: context,
                   builder: (context) => CalendarSDK(
                     type: CalendarType.month,
-                    // ส่งค่าเดิมเข้าไป (ถ้ามี)
                     initialDate: _monthDate ?? DateTime.now(),
+                    firstDate: DateTime(_repository.getMinYear()),
+                    lastDate: DateTime.now(),
                   ),
                 );
 
@@ -139,6 +149,8 @@ class _CalendarPlaygroundPageState extends State<CalendarPlaygroundPage> {
                     type: CalendarType.year,
                     // ส่งค่าเดิมเข้าไป (ถ้ามี)
                     initialDate: _yearDate ?? DateTime.now(),
+                    firstDate: DateTime(_repository.getMinYear()),
+                    lastDate: DateTime.now(),
                   ),
                 );
 
@@ -165,13 +177,17 @@ class _CalendarPlaygroundPageState extends State<CalendarPlaygroundPage> {
                   builder: (context) => CalendarSDK(
                     type: CalendarType.day,
                     initialDate: _weekFinderDate ?? DateTime.now(),
+                    firstDate: DateTime(_repository.getMinYear()),
+                    lastDate: DateTime.now(),
                   ),
                 );
 
                 if (result != null) {
                   setState(() {
                     _weekFinderDate = result; // เก็บวันที่เลือกแยกไว้ดู
-                    _weekRange = CalendarUtils.getWeekRange(result); // หาช่วงสัปดาห์
+                    _weekRange = CalendarUtils.getWeekRange(
+                      result,
+                    ); // หาช่วงสัปดาห์
                   });
                 }
               },
