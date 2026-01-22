@@ -36,6 +36,23 @@ class _YearPickerViewState extends State<YearPickerView> {
   }
 
   @override
+  void didUpdateWidget(covariant YearPickerView oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.selectedYear != widget.selectedYear) {
+      final int selectedIndex = widget.selectedYear - widget.startYear;
+      final int targetPage = (selectedIndex / yearsPerPage).floor();
+
+      if (_pageController.hasClients && _pageController.page?.round() != targetPage) {
+        _pageController.animateToPage(
+          targetPage,
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeInOut,
+        );
+      }
+    }
+  }
+
+  @override
   void dispose() {
     _pageController.dispose();
     super.dispose();
