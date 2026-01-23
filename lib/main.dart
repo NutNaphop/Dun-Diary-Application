@@ -48,6 +48,7 @@ initHive() async {
   await Hive.openBox<BPRecord>(HiveBoxName.bpRecord);
   await Hive.openBox(HiveBoxName.settingsBox);
   await Hive.openBox<String>(HiveBoxName.QueueBox);
+  await Hive.openBox(HiveBoxName.metaBox);
 }
 
 // init firebase
