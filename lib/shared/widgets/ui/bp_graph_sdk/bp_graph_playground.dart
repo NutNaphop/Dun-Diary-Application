@@ -1,5 +1,4 @@
 import 'package:dun_diary_app/shared/style/color.dart';
-import 'package:dun_diary_app/shared/style/dimension.dart';
 import 'package:dun_diary_app/shared/widgets/custom/card/custom_card.dart';
 import 'package:dun_diary_app/shared/widgets/custom/text/text_widget.dart';
 import 'package:dun_diary_app/shared/widgets/ui/bp_graph_sdk/bp_graph_playground_viewmodel.dart';
@@ -38,99 +37,79 @@ class _BpGraphPlaygroundView extends StatelessWidget {
         elevation: 0,
         centerTitle: false,
       ),
-      body: Center(
-        child: SingleChildScrollView(
-          physics: const BouncingScrollPhysics(),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Header Section
-              Padding(
-                padding: const EdgeInsets.all(20),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    CustomText(
-                      text: "Blood Pressure Trends",
-                      fontSize: Dimension.fontSizes.h2,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ],
-                ),
+      body: SingleChildScrollView(
+        physics: const BouncingScrollPhysics(),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const SizedBox(height: 10),
+
+            // Modern Horizontal Filter Bar
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              physics: const BouncingScrollPhysics(),
+              child: Row(
+                children: [
+                  _FilterButton(
+                    label: "รายชั่วโมง",
+                    isSelected:
+                        viewModel.selectedFilter == GraphFilterType.time,
+                    onPressed: () => viewModel.setFilter(GraphFilterType.time),
+                  ),
+                  _FilterButton(
+                    label: "7 วันล่าสุด",
+                    isSelected: viewModel.selectedFilter == GraphFilterType.day,
+                    onPressed: () => viewModel.setFilter(GraphFilterType.day),
+                  ),
+                  _FilterButton(
+                    label: "รายสัปดาห์",
+                    isSelected:
+                        viewModel.selectedFilter == GraphFilterType.week,
+                    onPressed: () => viewModel.setFilter(GraphFilterType.week),
+                  ),
+                  _FilterButton(
+                    label: "รายเดือน",
+                    isSelected:
+                        viewModel.selectedFilter == GraphFilterType.month,
+                    onPressed: () => viewModel.setFilter(GraphFilterType.month),
+                  ),
+                  _FilterButton(
+                    label: "ไม่มีข้อมูล",
+                    isSelected:
+                        viewModel.selectedFilter == GraphFilterType.empty,
+                    onPressed: () => viewModel.setFilter(GraphFilterType.empty),
+                  ),
+                ],
               ),
+            ),
 
-              const SizedBox(height: 10),
+            const SizedBox(height: 24),
 
-              // Modern Horizontal Filter Bar
-              SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                physics: const BouncingScrollPhysics(),
-                child: Row(
-                  children: [
-                    _FilterButton(
-                      label: "รายชั่วโมง",
-                      isSelected:
-                          viewModel.selectedFilter == GraphFilterType.time,
-                      onPressed: () =>
-                          viewModel.setFilter(GraphFilterType.time),
-                    ),
-                    _FilterButton(
-                      label: "7 วันล่าสุด",
-                      isSelected:
-                          viewModel.selectedFilter == GraphFilterType.day,
-                      onPressed: () => viewModel.setFilter(GraphFilterType.day),
-                    ),
-                    _FilterButton(
-                      label: "รายสัปดาห์",
-                      isSelected:
-                          viewModel.selectedFilter == GraphFilterType.week,
-                      onPressed: () =>
-                          viewModel.setFilter(GraphFilterType.week),
-                    ),
-                    _FilterButton(
-                      label: "รายเดือน",
-                      isSelected:
-                          viewModel.selectedFilter == GraphFilterType.month,
-                      onPressed: () =>
-                          viewModel.setFilter(GraphFilterType.month),
-                    ),
-                    _FilterButton(
-                      label: "ไม่มีข้อมูล",
-                      isSelected:
-                          viewModel.selectedFilter == GraphFilterType.empty,
-                      onPressed: () =>
-                          viewModel.setFilter(GraphFilterType.empty),
-                    ),
-                  ],
-                ),
-              ),
-
-              const SizedBox(height: 24),
-
-              // Graph Card Section
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: CustomCard(
-                  title: _getCardTitle(viewModel.selectedFilter),
-                  contentPadding: const EdgeInsets.all(20),
-                  content: Container(
-                    height: 320,
-                    width: double.infinity,
-                    padding: const EdgeInsets.only(top: 20, right: 10),
-                    child: BpGraphSdk(
-                      data: viewModel.currentData,
-                      onPointTap: (select) {
-                        print(select);
-                      },
-                    ),
+            // Graph Card Section
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: CustomCard(
+                title: _getCardTitle(viewModel.selectedFilter),
+                contentPadding: const EdgeInsets.all(20),
+                content: Container(
+                  height: viewModel.selectedFilter != GraphFilterType.empty
+                      ? 350
+                      : 250,
+                  width: double.infinity,
+                  padding: const EdgeInsets.only(top: 20, right: 10),
+                  child: BpGraphSdk(
+                    data: viewModel.currentData,
+                    onPointTap: (select) {
+                      print(select);
+                    },
                   ),
                 ),
               ),
+            ),
 
-              const SizedBox(height: 40),
-            ],
-          ),
+            const SizedBox(height: 40),
+          ],
         ),
       ),
     );
@@ -141,13 +120,13 @@ class _BpGraphPlaygroundView extends StatelessWidget {
       case GraphFilterType.time:
         return "ข้อมูลรายชั่วโมง";
       case GraphFilterType.day:
-        return "ข้อมูล 7 วันล่าสุด";
+        return "วันที่ 1 ถึง 7 มกราคม 2568";
       case GraphFilterType.week:
-        return "ข้อมูลรายสัปดาห์";
+        return "มกราคม 2568";
       case GraphFilterType.month:
-        return "ข้อมูลรายเดือน (2568)";
+        return "2568";
       case GraphFilterType.empty:
-        return "ไม่มีข้อมูล";
+        return "13 ธันวาคม - 19 ธันวาคม 2568";
     }
   }
 }

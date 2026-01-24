@@ -6,7 +6,7 @@ enum GraphFilterType { time, day, week, month, empty }
 class BpGraphPlaygroundViewModel extends ChangeNotifier {
   GraphFilterType _selectedFilter = GraphFilterType.month;
   GraphFilterType get selectedFilter => _selectedFilter;
-
+  
   void setFilter(GraphFilterType filter) {
     _selectedFilter = filter;
     notifyListeners();

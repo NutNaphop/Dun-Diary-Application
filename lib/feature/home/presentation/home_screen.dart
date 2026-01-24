@@ -2,14 +2,15 @@ import 'package:dun_diary_app/core/auth/auth_service.dart';
 import 'package:dun_diary_app/core/network/network_info.dart';
 import 'package:dun_diary_app/data/blood_pressure/repository/blood_pressure_repository.dart';
 import 'package:dun_diary_app/feature/home/presentation/home_viewModel.dart';
-import 'package:dun_diary_app/feature/home/presentation/widgets/card/home_card_widget.dart';
 import 'package:dun_diary_app/shared/constant/app_icons.dart';
+import 'package:dun_diary_app/shared/constant/app_image.dart';
 import 'package:dun_diary_app/shared/constant/app_strings.dart';
 import 'package:dun_diary_app/shared/style/color.dart';
 import 'package:dun_diary_app/shared/style/dimension.dart';
 import 'package:dun_diary_app/shared/style/drop_shadow.dart';
 import 'package:dun_diary_app/shared/widgets/custom/button/custom_button.dart';
 import 'package:dun_diary_app/shared/widgets/custom/card/custom_card.dart';
+import 'package:dun_diary_app/shared/widgets/custom/card/no_content_card.dart';
 import 'package:dun_diary_app/shared/widgets/custom/card/stat_row.dart';
 import 'package:dun_diary_app/shared/widgets/custom/scaffold/custom_scaffold.dart';
 import 'package:dun_diary_app/shared/widgets/custom/scaffold/main_appbar.dart';
@@ -104,7 +105,7 @@ class _HomeScreenState extends State<HomeScreen> {
             // --- ส่วนการ์ดแสดงผลสุขภาพ (Health Status Card) ---
             CustomCard(
               title: AppStrings.home.healthToday,
-              contentPadding: EdgeInsets.all(10),
+              contentPadding: const EdgeInsets.all(20),
               content: Column(
                 mainAxisSize: MainAxisSize.max,
                 children: [
@@ -140,9 +141,11 @@ class _HomeScreenState extends State<HomeScreen> {
                       value: latestRecord?.pulse.toString() ?? '-',
                     ),
                   ] else ...[
-                    NoFoundCard(
+                    NoContentCard(
                       title: AppStrings.home.noContent,
                       subtitle: AppStrings.home.recordTodayTogether,
+                      imagePath: AppImage.cuate,
+                      imageSize: 80,
                     ),
                   ],
                 ],
