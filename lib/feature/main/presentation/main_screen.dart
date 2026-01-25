@@ -17,7 +17,7 @@ class MainScreen extends StatelessWidget {
 
   // 1. กำหนดหน้าที่จะแสดงในแต่ละ Tab เรียงตามลำดับ
   List<Widget> get _pages => [
-    HomeScreen.create(),
+    BpGraphPlayground(),
     HistoryScreen(),
     Center(child: Text(AppStrings.main.addPage)),
     Center(child: CalendarPlaygroundPage()),

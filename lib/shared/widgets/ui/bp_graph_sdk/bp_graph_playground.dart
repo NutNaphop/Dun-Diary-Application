@@ -34,6 +34,13 @@ class _BpGraphPlaygroundView extends StatelessWidget {
           fontWeight: FontWeight.bold,
         ),
         backgroundColor: CustomColor.accentColor,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.refresh_rounded, color: Colors.white),
+            onPressed: () => viewModel.replayAnimation(),
+            tooltip: 'เล่นแอนิเมชันใหม่',
+          ),
+        ],
         elevation: 0,
         centerTitle: false,
       ),
@@ -99,6 +106,7 @@ class _BpGraphPlaygroundView extends StatelessWidget {
                   width: double.infinity,
                   padding: const EdgeInsets.only(top: 20, right: 10),
                   child: BpGraphSdk(
+                    key: ValueKey(viewModel.refreshCounter),
                     data: viewModel.currentData,
                     onPointTap: (select) {
                       print(select);
