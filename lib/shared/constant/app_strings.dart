@@ -8,7 +8,8 @@ class AppStrings {
 
   // SDK
   static const calendar = _CalendarStrings();
-  
+  static const bpGraphSdk = _BPGraphStrings();
+
   // Feature
   static const main = _MainStrings();
   static const home = _HomeStrings();
@@ -22,7 +23,7 @@ class _CommonStrings {
   final String appName = "Dun Diary";
   final String welcomeMessage = "Welcome to Dun Diary";
   final String greeting = "สวัสดี";
-  
+
   final date = "วันที่";
   final time = "เวลา";
 
@@ -69,7 +70,7 @@ class _BloodPressureStrings {
   final String pulseUnit = "bpm";
   final String pulseDesc = "อัตราการเต้นของหัวใจ";
 
-  final String average = "ค่าเฉลี่ย"; 
+  final String average = "ค่าเฉลี่ย";
   final String weightLabel = "น้ำหนักตัว";
   final String weightUnit = "kg";
 
@@ -141,4 +142,11 @@ class _CalendarStrings {
   final String october = "ตุลาคม";
   final String november = "พฤศจิกายน";
   final String december = "ธันวาคม";
+}
+
+class _BPGraphStrings {
+  const _BPGraphStrings();
+
+  final noHaveData = "ยังไม่มีข้อมูล";
+  final recordToSeeTrend = "บันทึกค่าความดัน เพื่อดูสรุปสถิติและแนวโน้มสุขภาพของคุณ";
 }
