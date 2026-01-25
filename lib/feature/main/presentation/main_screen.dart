@@ -3,6 +3,7 @@ import 'package:dun_diary_app/shared/constant/app_strings.dart';
 import 'package:dun_diary_app/shared/style/color.dart';
 import 'package:dun_diary_app/shared/style/dimension.dart';
 import 'package:dun_diary_app/shared/widgets/custom/text/text_widget.dart';
+import 'package:dun_diary_app/shared/widgets/ui/bp_graph_sdk/bp_graph_playground.dart';
 import 'package:dun_diary_app/shared/widgets/ui/calendar_sdk/calendar_playground_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -20,7 +21,7 @@ class MainScreen extends StatelessWidget {
     HistoryScreen(),
     Center(child: Text(AppStrings.main.addPage)),
     Center(child: CalendarPlaygroundPage()),
-    Center(child: Text(AppStrings.main.profilePage)),
+    BpGraphPlayground(),
   ];
 
   @override
