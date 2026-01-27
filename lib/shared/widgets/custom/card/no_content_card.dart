@@ -8,14 +8,16 @@ class NoContentCard extends StatelessWidget {
   final String title;
   final String subtitle;
   final String imagePath;
-  final double imageSize;
+  final double imageWidth;
+  final double imageHeight;
 
   const NoContentCard({
     super.key,
     this.title = "",
     this.subtitle = "",
     this.imagePath = AppImage.cuate,
-    this.imageSize = 80,
+    this.imageWidth = 80,
+    this.imageHeight = 80,
   });
 
   @override
@@ -29,7 +31,7 @@ class NoContentCard extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          SVGImage(path: imagePath, size: imageSize),
+          SVGImage(path: imagePath, width: imageWidth, height: imageHeight),
           SizedBox(height: 20),
           CustomText(
             text: title,

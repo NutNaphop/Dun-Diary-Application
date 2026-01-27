@@ -3,13 +3,15 @@ import 'package:flutter_svg/svg.dart';
 
 class SVGImage extends StatelessWidget {
   final String path;
-  final double? size;
+  final double? width;
+  final double? height;
   final Color? color;
 
   const SVGImage({
     super.key,
     required this.path,
-    this.size = 24,
+    this.width = 24,
+    this.height = 24,
     this.color,
   });
 
@@ -17,8 +19,8 @@ class SVGImage extends StatelessWidget {
   Widget build(BuildContext context) {
     return SvgPicture.asset(
       path,
-      width: size,
-      height: size,
+      width: width,
+      height: height,
       colorFilter: color != null ? ColorFilter.mode(color!, BlendMode.srcIn) : null,
     );
   }
@@ -26,14 +28,16 @@ class SVGImage extends StatelessWidget {
 
 class IconButtonSVG extends StatelessWidget {
   final String path;
-  final double? size;
+  final double? width;
+  final double? height;
   final Color? color;
   final VoidCallback? onPressed;
 
   const IconButtonSVG({
     super.key,
     required this.path,
-    this.size = 24,
+    this.width = 24,
+    this.height = 24,
     this.color,
     this.onPressed,
   });
@@ -41,7 +45,7 @@ class IconButtonSVG extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return IconButton(
-      icon: SVGImage(path: path, size: size, color: color),
+      icon: SVGImage(path: path, width: width, height: height, color: color),
       onPressed: onPressed,
     );
   }

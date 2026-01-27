@@ -156,7 +156,8 @@ class _RecordScreenState extends State<RecordScreen> {
                       title: AppStrings.record.snapPhoto,
                       icon: SVGImage(
                         path: AppIcons.duotone.camera,
-                        size: 22,
+                        width: 22,
+                        height: 22,
                         color: CustomColor.accentColor,
                       ),
                     ),
@@ -165,7 +166,8 @@ class _RecordScreenState extends State<RecordScreen> {
                       title: AppStrings.record.uploadPhoto,
                       icon: SVGImage(
                         path: AppIcons.duotone.image,
-                        size: 22,
+                        width: 22,
+                        height: 22,
                         color: CustomColor.accentColor,
                       ),
                     ),

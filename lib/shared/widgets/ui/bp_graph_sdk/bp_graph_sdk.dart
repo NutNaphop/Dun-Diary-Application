@@ -80,7 +80,7 @@ class _BpGraphSdkState extends State<BpGraphSdk>
                       title: AppStrings.bpGraphSdk.noHaveData,
                       subtitle: AppStrings.bpGraphSdk.recordToSeeTrend,
                       imagePath: AppImage.noMatchFound,
-                      imageSize: 110,
+                      imageWidth: 110,
                     )
                   : Stack(
                       clipBehavior: Clip.none,

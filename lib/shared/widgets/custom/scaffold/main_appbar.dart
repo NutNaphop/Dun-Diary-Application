@@ -77,7 +77,8 @@ class MainAppBar extends StatelessWidget implements PreferredSizeWidget {
       leading: showBack && onBackPressed != null
           ? IconButtonSVG(
               path: backIconPath ?? AppIcons.outline.leftArrow,
-              size: 22,
+              width: 22,
+              height: 22,
               color: CustomColor.gray900,
               onPressed: onBackPressed,
             )
