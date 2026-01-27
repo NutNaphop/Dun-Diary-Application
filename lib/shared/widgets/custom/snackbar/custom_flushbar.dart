@@ -62,7 +62,12 @@ class CustomFlushbar {
       // ไอคอน
       icon: Padding(
         padding: const EdgeInsets.only(left: 8.0),
-        child: SVGImage(path: iconPath, size: 28, color: textColor),
+        child: SVGImage(
+          path: iconPath,
+          height: 28,
+          width: 28,
+          color: textColor,
+        ),
       ),
 
       // --- Design ---
@@ -77,10 +82,10 @@ class CustomFlushbar {
       padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 8),
 
       shouldIconPulse: false,
-      animationDuration: const Duration(milliseconds: 700), 
-      forwardAnimationCurve: Curves.easeOut, 
-      reverseAnimationCurve: Curves.easeIn, 
-      
+      animationDuration: const Duration(milliseconds: 700),
+      forwardAnimationCurve: Curves.easeOut,
+      reverseAnimationCurve: Curves.easeIn,
+
       // --- Interaction ---
       boxShadows: [DropShadow.drop_thumb],
       duration: const Duration(seconds: 3),
@@ -96,7 +101,8 @@ class CustomFlushbar {
           },
           icon: SVGImage(
             path: AppIcons.outline.x,
-            size: 24,
+            width: 24,
+            height: 24,
             color: textColor,
           ),
         ),
