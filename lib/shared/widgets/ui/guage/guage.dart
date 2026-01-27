@@ -86,7 +86,8 @@ class BloodPressureGauge extends StatelessWidget {
                 alignment: Alignment(alignmentValue, 0),
                 child: SVGImage(
                   path: AppIcons.duotone.starCircle,
-                  size: 24,
+                  width: 24,
+                  height: 24,
                   color: CustomColor.white,
                 ),
               ),

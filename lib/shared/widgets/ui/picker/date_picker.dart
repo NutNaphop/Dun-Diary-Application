@@ -19,7 +19,11 @@ class DatePicker extends StatelessWidget {
   Widget build(BuildContext context) {
     return PickerSlot(
       label: AppStrings.common.date,
-      trailingIcon: SVGImage(path: AppIcons.outline.calendar, size: 20,),
+      trailingIcon: SVGImage(
+        path: AppIcons.outline.calendar,
+        width: 20,
+        height: 20,
+      ),
       displayText: DateTimeUtils.formatToThaiDate(selectedDate),
       onTap: () => _selectDate(context),
     );

@@ -39,7 +39,8 @@ class CustomBoxIcon extends StatelessWidget {
           path: (isActive && activeIconPath != null)
               ? activeIconPath!
               : iconPath,
-          size: iconSize,
+          width: iconSize,
+          height: iconSize,
           color: iconColor,
           onPressed: onPressed,
         ),

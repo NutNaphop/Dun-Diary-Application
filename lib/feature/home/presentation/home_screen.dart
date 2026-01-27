@@ -55,7 +55,8 @@ class _HomeScreenState extends State<HomeScreen> {
         actions: [
           IconButtonSVG(
             path: AppIcons.fill.notification,
-            size: 32,
+            height: 32,
+            width: 32,
             onPressed: () {
               // viewModel.toggleHasRecord();
               // viewModel.showFlushbar(context);
@@ -84,12 +85,14 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     leadingIcon: SVGImage(
                       path: AppIcons.duotone.pulse,
-                      size: 45,
+                      width: 35,
+                      height: 35,
                       color: CustomColor.primaryColor,
                     ),
                     trailingIcon: SVGImage(
                       path: AppIcons.duotone.addCircle,
-                      size: 28,
+                      width: 28,
+                      height: 28,
                       color: CustomColor.primaryColor,
                     ),
                     padding: EdgeInsets.symmetric(vertical: 20, horizontal: 15),
@@ -113,7 +116,8 @@ class _HomeScreenState extends State<HomeScreen> {
                     StatRow(
                       leading: SVGImage(
                         path: AppIcons.duotone.graphUp,
-                        size: 34,
+                        width: 34,
+                        height: 34,
                         color: CustomColor.purple1,
                       ),
                       label: AppStrings.bloodPressure.sysShortLabel,
@@ -123,7 +127,8 @@ class _HomeScreenState extends State<HomeScreen> {
                     StatRow(
                       leading: SVGImage(
                         path: AppIcons.duotone.graphDown,
-                        size: 34,
+                        width: 34,
+                        height: 34,
                         color: CustomColor.blue1,
                       ),
                       label: AppStrings.bloodPressure.diaShortLabel,
@@ -133,7 +138,8 @@ class _HomeScreenState extends State<HomeScreen> {
                     StatRow(
                       leading: SVGImage(
                         path: AppIcons.duotone.heartPulse,
-                        size: 34,
+                        width: 34,
+                        height: 34,
                         color: CustomColor.pink1,
                       ),
                       label: AppStrings.bloodPressure.pulseShortLabel,
@@ -145,7 +151,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       title: AppStrings.home.noContent,
                       subtitle: AppStrings.home.recordTodayTogether,
                       imagePath: AppImage.cuate,
-                      imageSize: 80,
+                      imageWidth: 80,
                     ),
                   ],
                 ],

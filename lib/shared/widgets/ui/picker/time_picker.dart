@@ -19,7 +19,11 @@ class TimePicker extends StatelessWidget {
   Widget build(BuildContext context) {
     return PickerSlot(
       label: AppStrings.common.time,
-      trailingIcon: SVGImage(path: AppIcons.outline.clock, size: 20),
+      trailingIcon: SVGImage(
+        path: AppIcons.outline.clock,
+        width: 20,
+        height: 20,
+      ),
       displayText: DateTimeUtils.formatToTime(selectedDate),
       onTap: () => _selectTime(context),
     );
