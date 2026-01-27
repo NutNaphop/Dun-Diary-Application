@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:dun_diary_app/feature/main/presentation/main_screen.dart';
 import 'package:dun_diary_app/data/blood_pressure/model/record_model.dart';
 import 'package:dun_diary_app/feature/record/presentation/record_screen.dart';
+import 'package:dun_diary_app/feature/splash_screen/presentation/splash_screen.dart';
 import 'package:dun_diary_app/feature/record/presentation/resultScreen/result_screen.dart';
 import 'package:dun_diary_app/shared/widgets/ui/page/mock_page.dart';
 import 'package:flutter/material.dart';
@@ -18,6 +19,9 @@ class AppRouter {
     final args = settings.arguments;
 
     switch (settings.name) {
+      case AppRoutes.splash:
+        return _buildRoute(const SplashScreen());
+
       // --- Case 1: หน้าปกติ ไม่รับค่า ---
       case AppRoutes.main:
         return _buildRoute(const MainScreen());

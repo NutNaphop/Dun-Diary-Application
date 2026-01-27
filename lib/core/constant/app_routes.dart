@@ -1,7 +1,8 @@
 class AppRoutes {
   AppRoutes._();
 
-  static const String main = '/';
+  static const String splash = '/';
+  static const String main = '/main';
   static const String home = "/home";
 
   static const String profile = "/profile";

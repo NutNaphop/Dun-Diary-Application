@@ -8,6 +8,7 @@ import 'package:dun_diary_app/register_provider.dart';
 import 'package:dun_diary_app/shared/constant/app_strings.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
 
@@ -30,7 +31,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       navigatorKey: NavigationService.instance.navigatorKey,
       scaffoldMessengerKey: SnackBarService.instance.scaffoldMessengerKey,
-      initialRoute: AppRoutes.main,
+      initialRoute: AppRoutes.splash,
       onGenerateRoute: AppRouter.generate,
     );
   }
@@ -38,14 +39,16 @@ class MyApp extends StatelessWidget {
 
 // init service
 initService() async {
-  WidgetsFlutterBinding.ensureInitialized();
+  WidgetsBinding binding = WidgetsFlutterBinding.ensureInitialized();
+  FlutterNativeSplash.preserve(widgetsBinding: binding);
 }
+
 
 // init hive
 initHive() async {
   await Hive.initFlutter();
   Hive.registerAdapter(BPRecordAdapter());
-  await Hive.openBox<BPRecord>(HiveBoxName.bpRecord);
+  await Hive.openBox<BPRecord>(HiveBoxName.bpRecord); 
   await Hive.openBox(HiveBoxName.settingsBox);
   await Hive.openBox<String>(HiveBoxName.QueueBox);
   await Hive.openBox(HiveBoxName.metaBox);

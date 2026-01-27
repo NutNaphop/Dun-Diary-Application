@@ -83,7 +83,8 @@ class _ResultScreenState extends State<ResultScreen> {
                         StatRow(
                           leading: SVGImage(
                             path: AppIcons.duotone.graphUp,
-                            size: 34,
+                            width: 34,
+                            height: 34,
                             color: CustomColor.purple1,
                           ),
                           label: AppStrings.bloodPressure.sysShortLabel,
@@ -93,7 +94,8 @@ class _ResultScreenState extends State<ResultScreen> {
                         StatRow(
                           leading: SVGImage(
                             path: AppIcons.duotone.graphDown,
-                            size: 34,
+                            width: 34,
+                            height: 34,
                             color: CustomColor.blue1,
                           ),
                           label: AppStrings.bloodPressure.diaShortLabel,
@@ -103,7 +105,8 @@ class _ResultScreenState extends State<ResultScreen> {
                         StatRow(
                           leading: SVGImage(
                             path: AppIcons.duotone.heartPulse,
-                            size: 34,
+                            width: 34,
+                            height: 34,
                             color: CustomColor.pink1,
                           ),
                           label: AppStrings.bloodPressure.pulseShortLabel,
