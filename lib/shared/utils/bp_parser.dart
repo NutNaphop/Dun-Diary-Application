@@ -6,7 +6,7 @@ import 'package:dun_diary_app/data/blood_pressure/model/result_model.dart';
 
 class BPParser {
   static List<BPFormat> parse(List<YoloV8Response> detections) {
-    // 1. Filter "10" out 
+    // 1. Filter "10" out
     List<YoloV8Response> rawDigits = detections
         .where((d) => d.label != "10")
         .toList();
@@ -104,16 +104,30 @@ class BPParser {
 
   static double _getCenterY(YoloV8Response d) =>
       d.box[1] + (d.box[3] - d.box[1]) / 2;
-      
+
   static List<YoloV8Response> mapToYoloBoxResponse(
-    List<Map<String, dynamic>> detections,
+    List<dynamic> detections, // รับเป็น dynamic list เพราะมาจาก json
   ) {
     return detections.map((e) {
-      final box = List<double>.from(e["box"]);
+      final map = e as Map<String, dynamic>;
+      final double x1 = (map['x1'] as num).toDouble();
+      final double y1 = (map['y1'] as num).toDouble();
+      final double x2 = (map['x2'] as num).toDouble();
+      final double y2 = (map['y2'] as num).toDouble();
+
+      final box = [x1, y1, x2, y2];
+
+      // 2. ดึง Label (ใช้ className หรือ class ถ้าไม่มี className)
+      // จากตัวอย่างของคุณ className: 8 (เป็น int) เลยต้อง .toString()
+      final String label = (map['className'] ?? map['class']).toString();
+
+      // 3. ดึง Score
+      final double score = (map['confidence'] as num).toDouble();
+
       return YoloV8Response(
-        classId: e['tag'] ?? "No Found",
-        label: e['tag'],
-        score: box.length > 4 ? box[4] : 0.0,
+        classId: map['class'].toString(),
+        label: label,
+        score: score,
         box: box,
       );
     }).toList();

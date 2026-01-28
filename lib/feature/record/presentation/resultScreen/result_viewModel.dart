@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:dun_diary_app/core/services/flushbar_service.dart';
 import 'package:dun_diary_app/core/services/model_service.dart';
+import 'package:dun_diary_app/core/services/model_service.dart';
 import 'package:dun_diary_app/core/services/navigation_service.dart';
 import 'package:dun_diary_app/data/blood_pressure/model/result_model.dart';
 import 'package:dun_diary_app/shared/constant/app_strings.dart';
@@ -37,51 +38,27 @@ class ResultViewmodel extends ChangeNotifier {
     _selectedImage = null;
   }
 
-  Future sendImageToModel(File image) async {
-    if (_selectedImage != null) {
-      File fileToSendToAI; // ตัวแปรสำหรับเก็บไฟล์ที่จะส่งเข้า Model
-
-      try {
-        // Fix image rotation
-        final rawBytes = await _selectedImage!.readAsBytes();
-
-        // ย้ายการประมวลผลรูปภาพไปทำใน Isolate (Background Thread)
-        final fixedBytes = await compute(
-          ImageUtils.processImageInIsolate,
-          rawBytes,
-        );
-
-        if (fixedBytes != null) {
-          // Temp image file
-          final tempDir = await getTemporaryDirectory();
-          final tempFileName =
-              'fixed_image_${DateTime.now().millisecondsSinceEpoch}.jpg';
-          final tempFile = File('${tempDir.path}/$tempFileName');
-          fileToSendToAI = await tempFile.writeAsBytes(fixedBytes);
-        } else {
-          fileToSendToAI = _selectedImage!;
-        }
-      } catch (e) {
-        print("Error fixing image rotation: $e");
-        fileToSendToAI = _selectedImage!;
-      }
-
-      final yoloResult = await ModelService.instance.runInference(
-        fileToSendToAI,
+  Future<void> sendImageToModel(File image) async {
+    try {
+      // 1. อ่าน Bytes จากไฟล์
+      final rawBytes = await image.readAsBytes();
+      final fixedBytes = await compute(
+        ImageUtils.processImageInIsolate,
+        rawBytes,
       );
 
-      final res = BPParser.mapToYoloBoxResponse(yoloResult);
+      final bytesToPredict = fixedBytes ?? rawBytes;
+      final yoloPred = await ModelService.instance.predict(bytesToPredict);
+      final res = BPParser.mapToYoloBoxResponse(yoloPred);
       _result = BPParser.parse(res);
 
       if (sysValue == "-" || diaValue == "-" || pulValue == "-") {
-        Column(children: [Text(sysValue), Text(diaValue), Text(pulValue)]);
-        NavigationService.instance.goBack();
-        _isAnalysisCompleted = true;
-        notifyListeners();
         FlushbarService.instance.showError(AppStrings.record.canNotReadImage);
-        return;
       }
-
+    } catch (e) {
+      print("Error during model inference: $e");
+      FlushbarService.instance.showError("เกิดข้อผิดพลาดในการวิเคราะห์รูปภาพ");
+    } finally {
       _isAnalysisCompleted = true;
       notifyListeners();
     }

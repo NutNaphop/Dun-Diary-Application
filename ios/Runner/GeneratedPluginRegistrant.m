@@ -60,6 +60,12 @@
 @import path_provider_foundation;
 #endif
 
+#if __has_include(<ultralytics_yolo/YOLOPlugin.h>)
+#import <ultralytics_yolo/YOLOPlugin.h>
+#else
+@import ultralytics_yolo;
+#endif
+
 @implementation GeneratedPluginRegistrant
 
 + (void)registerWithRegistry:(NSObject<FlutterPluginRegistry>*)registry {
@@ -72,6 +78,7 @@
   [FlutterVisionPlugin registerWithRegistrar:[registry registrarForPlugin:@"FlutterVisionPlugin"]];
   [FLTImagePickerPlugin registerWithRegistrar:[registry registrarForPlugin:@"FLTImagePickerPlugin"]];
   [PathProviderPlugin registerWithRegistrar:[registry registrarForPlugin:@"PathProviderPlugin"]];
+  [YOLOPlugin registerWithRegistrar:[registry registrarForPlugin:@"YOLOPlugin"]];
 }
 
 @end
