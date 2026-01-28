@@ -1,7 +1,33 @@
+import 'package:dun_diary_app/core/constant/app_routes.dart';
+import 'package:dun_diary_app/core/services/navigation_service.dart';
 import 'package:dun_diary_app/shared/widgets/ui/bp_graph_sdk/models/blood_pressure_graph_models.dart';
 import 'package:flutter/material.dart';
 
-enum GraphFilterType { time, day, week, month, empty }
+enum GraphFilterType {
+  time,
+  week,
+  month,
+  year,
+  empty,
+  emptyWeek,
+  emptyMonth,
+  emptyYear;
+
+  String? get label {
+    switch (this) {
+      case GraphFilterType.time:
+        return "ข้อมูลรายชั่วโมง";
+      case GraphFilterType.empty:
+        return null;
+      case GraphFilterType.emptyWeek || week:
+        return "สัปดาห์";
+      case GraphFilterType.emptyMonth || month:
+        return "เดือน";
+      case GraphFilterType.emptyYear || year:
+        return "ปี";
+    }
+  }
+}
 
 class BpGraphPlaygroundViewModel extends ChangeNotifier {
   GraphFilterType _selectedFilter = GraphFilterType.month;
@@ -20,17 +46,60 @@ class BpGraphPlaygroundViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  void navigationToRecord() {
+    NavigationService.instance.pushNamed(AppRoutes.record);
+  }
+
+  List<BloodPressureGraphData> getMockData() {
+    return List.generate(7, (index) {
+      final levels = [
+        BloodPressureLevel.normal,
+        BloodPressureLevel.preHigh,
+        BloodPressureLevel.normal,
+        BloodPressureLevel.preHigh,
+        BloodPressureLevel.normal,
+        BloodPressureLevel.preHigh,
+        BloodPressureLevel.normal,
+      ];
+      return BloodPressureGraphData(
+        xLabel: '', // ไม่ต้องใช้วันที่สำหรับ Ghost Graph
+        level: levels[index % levels.length],
+        sourceData: 'mock',
+      );
+    });
+  }
+
   List<BloodPressureGraphData> get currentData {
     switch (_selectedFilter) {
       case GraphFilterType.time:
         return [
-          BloodPressureGraphData(xLabel: '08:00', level: BloodPressureLevel.low, sourceData: 'T1'),
-          BloodPressureGraphData(xLabel: '09:00', level: BloodPressureLevel.normal, sourceData: 'T2'),
-          BloodPressureGraphData(xLabel: '10:00', level: BloodPressureLevel.preHigh, sourceData: 'T3'),
-          BloodPressureGraphData(xLabel: '11:00', level: BloodPressureLevel.high, sourceData: 'T4'),
-          BloodPressureGraphData(xLabel: '12:00', level: BloodPressureLevel.veryHigh, sourceData: 'T5'),
+          BloodPressureGraphData(
+            xLabel: '08:00',
+            level: BloodPressureLevel.low,
+            sourceData: 'T1',
+          ),
+          BloodPressureGraphData(
+            xLabel: '09:00',
+            level: BloodPressureLevel.normal,
+            sourceData: 'T2',
+          ),
+          BloodPressureGraphData(
+            xLabel: '10:00',
+            level: BloodPressureLevel.preHigh,
+            sourceData: 'T3',
+          ),
+          BloodPressureGraphData(
+            xLabel: '11:00',
+            level: BloodPressureLevel.high,
+            sourceData: 'T4',
+          ),
+          BloodPressureGraphData(
+            xLabel: '12:00',
+            level: BloodPressureLevel.veryHigh,
+            sourceData: 'T5',
+          ),
         ];
-      case GraphFilterType.day:
+      case GraphFilterType.week:
         return List.generate(7, (index) {
           final levels = BloodPressureLevel.values;
           return BloodPressureGraphData(
@@ -39,7 +108,7 @@ class BpGraphPlaygroundViewModel extends ChangeNotifier {
             sourceData: 'D${index + 1}',
           );
         });
-      case GraphFilterType.week:
+      case GraphFilterType.month:
         final weeks = ['1-7', '8-14', '15-21', '22-28', '29-31', '1-7'];
         return List.generate(6, (index) {
           return BloodPressureGraphData(
@@ -48,8 +117,21 @@ class BpGraphPlaygroundViewModel extends ChangeNotifier {
             sourceData: 'W${index + 1}',
           );
         });
-      case GraphFilterType.month:
-        final months = ['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'];
+      case GraphFilterType.year:
+        final months = [
+          'ม.ค.',
+          'ก.พ.',
+          'มี.ค.',
+          'เม.ย.',
+          'พ.ค.',
+          'มิ.ย.',
+          'ก.ค.',
+          'ส.ค.',
+          'ก.ย.',
+          'ต.ค.',
+          'พ.ย.',
+          'ธ.ค.',
+        ];
         return List.generate(12, (index) {
           return BloodPressureGraphData(
             xLabel: months[index],
@@ -58,6 +140,12 @@ class BpGraphPlaygroundViewModel extends ChangeNotifier {
           );
         });
       case GraphFilterType.empty:
+        return [];
+      case GraphFilterType.emptyWeek:
+        return [];
+      case GraphFilterType.emptyMonth:
+        return [];
+      case GraphFilterType.emptyYear:
         return [];
     }
   }

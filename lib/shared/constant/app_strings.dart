@@ -92,7 +92,7 @@ class _MainStrings {
 class _HomeStrings {
   const _HomeStrings();
 
-  final String greeting = "สวัสดี, ";
+  String greeting(String name) => "สวัสดี, $name";
   final String startRecord = "เริ่มบันทึกความดันโลหิต";
   final String healthToday = "สุขภาพของคุณวันนี้";
   final String noContent = "ยังไม่มีข้อมูลความดันโลหิต";
@@ -147,6 +147,8 @@ class _CalendarStrings {
 class _BPGraphStrings {
   const _BPGraphStrings();
 
-  final noHaveData = "ยังไม่มีข้อมูล";
+  String noDataFor(String type) => "ยังไม่มีข้อมูล$typeนี้";
   final recordToSeeTrend = "บันทึกค่าความดัน เพื่อดูสรุปสถิติและแนวโน้มสุขภาพของคุณ";
+  final graphWillShowHere = "กราฟวิเคราะห์จะปรากฎที่นี่";
+  final addRecordToday = "เพิ่มบันทึกวันนี้";
 }

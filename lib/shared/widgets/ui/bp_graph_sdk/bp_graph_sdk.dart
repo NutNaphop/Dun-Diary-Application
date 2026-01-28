@@ -1,22 +1,27 @@
-import 'package:dun_diary_app/shared/constant/app_image.dart';
 import 'package:dun_diary_app/shared/style/color.dart';
 import 'package:dun_diary_app/shared/style/dimension.dart';
-import 'package:dun_diary_app/shared/widgets/custom/card/no_content_card.dart';
 import 'package:dun_diary_app/shared/widgets/custom/text/text_widget.dart';
 import 'package:dun_diary_app/shared/widgets/ui/bp_graph_sdk/models/blood_pressure_graph_models.dart';
 import 'package:dun_diary_app/shared/widgets/ui/bp_graph_sdk/utils/graph_config.dart';
 import 'package:dun_diary_app/shared/widgets/ui/bp_graph_sdk/utils/graph_utils.dart';
 import 'package:dun_diary_app/shared/widgets/ui/bp_graph_sdk/views/graph_grid_painter.dart';
 import 'package:dun_diary_app/shared/widgets/ui/bp_graph_sdk/views/graph_line_painter.dart';
-import 'package:dun_diary_app/shared/constant/app_strings.dart';
-
+import 'package:dun_diary_app/shared/widgets/ui/bp_graph_sdk/views/no_data_layout.dart';
 import 'package:flutter/material.dart';
 
 class BpGraphSdk extends StatefulWidget {
+  final String? heading;
   final List<BloodPressureGraphData> data;
   final Function(BloodPressureGraphData)? onPointTap;
+  final VoidCallback? onButtonPress;
 
-  const BpGraphSdk({super.key, required this.data, this.onPointTap});
+  const BpGraphSdk({
+    super.key,
+    this.heading,
+    required this.data,
+    this.onPointTap,
+    this.onButtonPress,
+  });
 
   @override
   State<BpGraphSdk> createState() => _BpGraphSdkState();
@@ -51,6 +56,12 @@ class _BpGraphSdkState extends State<BpGraphSdk>
 
   @override
   Widget build(BuildContext context) {
+    final headingDisplayText = widget.heading ?? "";
+    final bool isNoData = widget.data.isEmpty;
+    final List<BloodPressureGraphData> renderData = isNoData
+        ? _getMockData()
+        : widget.data;
+
     return AnimatedBuilder(
       animation: _animation,
       builder: (context, child) {
@@ -69,157 +80,178 @@ class _BpGraphSdkState extends State<BpGraphSdk>
             final stepHeight = GraphUtils.getStepHeight(graphHeight);
             final stepWidth = GraphUtils.getStepWidth(
               graphWidth,
-              widget.data.length,
+              renderData.length,
             );
 
             return SizedBox(
               width: maxWidth,
               height: maxHeight,
-              child: widget.data.isEmpty
-                  ? NoContentCard(
-                      title: AppStrings.bpGraphSdk.noHaveData,
-                      subtitle: AppStrings.bpGraphSdk.recordToSeeTrend,
-                      imagePath: AppImage.noMatchFound,
-                      imageWidth: 110,
-                    )
-                  : Stack(
-                      clipBehavior: Clip.none,
-                      children: [
-                        // 1. Grid & Lines
-                        Positioned(
-                          top: 0,
-                          left: 0,
-                          width: graphWidth,
-                          height: graphHeight,
-                          child: CustomPaint(
-                            painter: GraphGridPainter(),
-                            foregroundPainter: widget.data.isNotEmpty
-                                ? GraphLinePainter(
-                                    widget.data,
-                                    CustomColor.gray200,
-                                    progress: _animation.value,
-                                  )
-                                : null,
-                          ),
-                        ),
-
-                        // 2. Y-Axis Labels
-                        for (int i = 0; i < 5; i++)
+              child: Stack(
+                clipBehavior: Clip.none,
+                children: [
+                  // ครอบส่วนประกอบของกราฟทั้งหมดด้วย Opacity
+                  Positioned.fill(
+                    child: Opacity(
+                      opacity: isNoData ? 0.25 : 1.0,
+                      child: Stack(
+                        clipBehavior: Clip.none,
+                        children: [
+                          // 1. Grid & Lines
                           Positioned(
-                            right: 0,
-                            top:
-                                GraphUtils.getYCoordinate(
-                                  i,
-                                  graphHeight,
-                                  stepHeight,
-                                ) -
-                                10,
-                            width: yLabelWidth,
-                            child: CustomText(
-                              text: BloodPressureLevel.values[i].label,
-                              fontSize: Dimension.fontSizes.rg,
-                              fontWeight: Dimension.fontWeights.regular,
-                              color: CustomColor.gray600,
-                              textAlign: TextAlign.right,
+                            top: 0,
+                            left: 0,
+                            width: graphWidth,
+                            height: graphHeight,
+                            child: CustomPaint(
+                              painter: GraphGridPainter(),
+                              foregroundPainter: GraphLinePainter(
+                                renderData,
+                                CustomColor.gray200,
+                                progress: _animation.value,
+                              ),
                             ),
                           ),
 
-                        // 3. X-Axis Labels
-                        if (widget.data.isNotEmpty)
-                          for (int i = 0; i < widget.data.length; i++)
+                          // 2. Y-Axis Labels
+                          for (int i = 0; i < 5; i++)
                             Positioned(
-                              left:
-                                  GraphUtils.getXCoordinate(
+                              right: 0,
+                              top:
+                                  GraphUtils.getYCoordinate(
                                     i,
-                                    widget.data.length,
-                                    stepWidth,
+                                    graphHeight,
+                                    stepHeight,
                                   ) -
-                                  GraphConfig.yLabelWidthHalf,
-                              top: graphHeight + 8,
+                                  10,
                               width: yLabelWidth,
                               child: CustomText(
-                                text: widget.data[i].xLabel,
-                                fontSize: Dimension.fontSizes.esm,
+                                text: BloodPressureLevel.values[i].label,
+                                fontSize: Dimension.fontSizes.rg,
                                 fontWeight: Dimension.fontWeights.regular,
-                                color: CustomColor.gray500,
-                                textAlign: TextAlign.center,
+                                color: CustomColor.gray600,
+                                textAlign: TextAlign.right,
                               ),
                             ),
 
-                        // 4. Interactive Dots
-                        if (widget.data.isNotEmpty)
-                          ...widget.data.asMap().entries.map((entry) {
-                            final i = entry.key; // ดึง index
-                            final item = entry.value; // ดึงข้อมูล (data[i])
-                            double dotThreshold = 0.0;
+                          // 3. X-Axis Labels
+                          if (!isNoData)
+                            for (int i = 0; i < renderData.length; i++)
+                              Positioned(
+                                left:
+                                    GraphUtils.getXCoordinate(
+                                      i,
+                                      renderData.length,
+                                      stepWidth,
+                                    ) -
+                                    GraphConfig.yLabelWidthHalf,
+                                top: graphHeight + 8,
+                                width: yLabelWidth,
+                                child: CustomText(
+                                  text: renderData[i].xLabel,
+                                  fontSize: Dimension.fontSizes.esm,
+                                  fontWeight: Dimension.fontWeights.regular,
+                                  color: CustomColor.gray500,
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
 
-                            if (widget.data.length > 1) {
-                              dotThreshold = i / (widget.data.length);
+                          // 4. Interactive Dots
+                          if (renderData.isNotEmpty)
+                            ...renderData.asMap().entries.map((entry) {
+                              final i = entry.key;
+                              final item = entry.value;
+                              double dotThreshold = 0.0;
 
-                              double scale = 0.0;
+                              if (renderData.length > 1) {
+                                dotThreshold = i / (renderData.length);
+                                double scale = 0.0;
 
-                              if (_animation.value >= dotThreshold) {
-                                // entryProgress: ค่า 0.0 -> 1.0 สำหรับจุดนี้โดยเฉพาะ
-                                // คูณ widget.data.length เพื่อให้จุดมันเด้งขึ้นมาเร็วๆ ไม่ได้ค่อยๆ ใหญ่พร้อมกันทั้งเส้น
-                                double entryProgress =
-                                    (_animation.value - dotThreshold) *
-                                    widget.data.length;
+                                if (_animation.value >= dotThreshold) {
+                                  double entryProgress =
+                                      (_animation.value - dotThreshold) *
+                                      renderData.length;
+                                  double clampedProgress = entryProgress.clamp(
+                                    0.0,
+                                    1.0,
+                                  );
+                                  scale = Curves.elasticOut.transform(
+                                    clampedProgress,
+                                  );
 
-                                // บีบค่าให้อยู่ในช่วง 0-1
-                                double clampedProgress = entryProgress.clamp(
-                                  0.0,
-                                  1.0,
-                                );
-
-                                // ใส่ Effect เด้งดึ๋ง (Elastic)
-                                scale = Curves.elasticOut.transform(
-                                  clampedProgress,
-                                );
-
-                                return Positioned(
-                                  left:
-                                      GraphUtils.getXCoordinate(
-                                        i,
-                                        widget.data.length,
-                                        stepWidth,
-                                      ) -
-                                      GraphConfig
-                                          .halfPointSize, // minus with half of size
-                                  top:
-                                      GraphUtils.getYCoordinate(
-                                        item.level.index,
-                                        graphHeight,
-                                        stepHeight,
-                                      ) -
-                                      GraphConfig.halfPointSize,
-                                  child: Transform.scale(
-                                    scale: scale,
-                                    child: GestureDetector(
-                                      onTap: () =>
-                                          widget.onPointTap?.call(item),
-                                      child: Container(
-                                        width: GraphConfig.pointSize,
-                                        height: GraphConfig.pointSize,
-                                        decoration: BoxDecoration(
-                                          color: item.level.color,
-                                          shape: BoxShape.circle,
+                                  return Positioned(
+                                    left:
+                                        GraphUtils.getXCoordinate(
+                                          i,
+                                          renderData.length,
+                                          stepWidth,
+                                        ) -
+                                        GraphConfig.halfPointSize,
+                                    top:
+                                        GraphUtils.getYCoordinate(
+                                          item.level.index,
+                                          graphHeight,
+                                          stepHeight,
+                                        ) -
+                                        GraphConfig.halfPointSize,
+                                    child: Transform.scale(
+                                      scale: scale,
+                                      child: GestureDetector(
+                                        onTap: isNoData
+                                            ? null
+                                            : () =>
+                                                  widget.onPointTap?.call(item),
+                                        child: Container(
+                                          width: GraphConfig.pointSize,
+                                          height: GraphConfig.pointSize,
+                                          decoration: BoxDecoration(
+                                            color: isNoData
+                                                ? CustomColor.gray300
+                                                : item.level.color,
+                                            shape: BoxShape.circle,
+                                          ),
                                         ),
                                       ),
                                     ),
-                                  ),
-                                );
+                                  );
+                                }
                               }
-                            }
-
-                            // Return an empty widget when this entry shouldn't render yet
-                            return const SizedBox.shrink();
-                          }).toList(),
-                      ],
+                              return const SizedBox.shrink();
+                            }).toList(),
+                        ],
+                      ),
                     ),
+                  ),
+
+                  if (isNoData)
+                    NoDataLayout(
+                      heading: headingDisplayText,
+                      onButtonPress: widget.onButtonPress,
+                    ),
+                ],
+              ),
             );
           },
         );
       },
     );
   }
+}
+
+List<BloodPressureGraphData> _getMockData() {
+  return List.generate(7, (index) {
+    final levels = [
+      BloodPressureLevel.normal,
+      BloodPressureLevel.preHigh,
+      BloodPressureLevel.normal,
+      BloodPressureLevel.preHigh,
+      BloodPressureLevel.normal,
+      BloodPressureLevel.preHigh,
+      BloodPressureLevel.normal,
+    ];
+    return BloodPressureGraphData(
+      xLabel: '',
+      level: levels[index % levels.length],
+      sourceData: 'mock',
+    );
+  });
 }
