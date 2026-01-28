@@ -39,13 +39,10 @@ class ResultViewmodel extends ChangeNotifier {
   Future<void> sendImageToModel(File image) async {
     try {
       // 1. อ่าน Bytes จากไฟล์
-      final rawBytes = await image.readAsBytes();
-      final fixedBytes = await compute(
-        ImageUtils.processImageInIsolate,
-        rawBytes,
-      );
+      File? processedFile = await ImageUtils.compressAndFix(image);
+      final fileToSend = processedFile ?? image;
+      final bytesToPredict = await fileToSend.readAsBytes();
 
-      final bytesToPredict = fixedBytes ?? rawBytes;
       final yoloPred = await ModelService.instance.predict(bytesToPredict);
       final res = BPParser.mapToYoloBoxResponse(yoloPred);
       _result = BPParser.parse(res);
