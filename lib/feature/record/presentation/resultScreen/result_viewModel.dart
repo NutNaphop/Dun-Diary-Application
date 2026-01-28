@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:dun_diary_app/core/services/flushbar_service.dart';
 import 'package:dun_diary_app/core/services/model_service.dart';
-import 'package:dun_diary_app/core/services/model_service.dart';
 import 'package:dun_diary_app/core/services/navigation_service.dart';
 import 'package:dun_diary_app/data/blood_pressure/model/result_model.dart';
 import 'package:dun_diary_app/shared/constant/app_strings.dart';
@@ -10,7 +9,6 @@ import 'package:dun_diary_app/shared/utils/blood_pressure_utils.dart';
 import 'package:dun_diary_app/shared/utils/bp_parser.dart';
 import 'package:dun_diary_app/shared/utils/image_utils.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
 
