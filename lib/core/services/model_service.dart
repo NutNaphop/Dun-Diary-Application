@@ -1,64 +1,60 @@
+import 'dart:async';
 import 'dart:io';
-import 'dart:typed_data';
-import 'package:flutter_vision/flutter_vision.dart';
+
+import 'package:flutter/services.dart';
+import 'package:ultralytics_yolo/ultralytics_yolo.dart';
+import 'package:ultralytics_yolo/widgets/yolo_controller.dart';
 
 class ModelService {
-  late FlutterVision _vision;
-  bool _isLoaded = false;
-  
-  ModelService._() {
-    _vision = FlutterVision();
-  }
+  YOLO? _yolo;
+  Completer<void>? _loadingCompleter;
+  late YOLOViewController controller;
 
+  ModelService._();
   static final ModelService instance = ModelService._();
 
-  Future<void> loadModel() async {
-    try {
-      if (_isLoaded) return;
+  Future<void> loadYOLO() async {
+    if (_loadingCompleter != null) return _loadingCompleter!.future;
+    _loadingCompleter = Completer<void>();
 
-      await _vision.loadYoloModel(
-        labels: 'assets/models/labels.txt',
-        modelPath: 'assets/models/weights_float32.tflite',
-        modelVersion: "yolov8",
-        quantization: false,
-        numThreads: 2,
+    try {
+      final modelName = "yoloV8F_640_float16.tflite";
+      final modelAssetPath = 'assets/models/$modelName';
+      final tempDir = Directory.systemTemp;
+      final modelFile = File('${tempDir.path}/$modelName');
+      final modelData = await rootBundle.load(modelAssetPath);
+      await modelFile.writeAsBytes(modelData.buffer.asUint8List());
+
+      _yolo = YOLO(
+        modelPath: modelFile.path,
+        task: YOLOTask.detect,
         useGpu: false,
       );
 
-      _isLoaded = true;
+      await _yolo!.loadModel();
+      print("Loaded Model: $modelName");
+      _loadingCompleter!.complete();
     } catch (e) {
-      print("Error");
+      print("Error loading model: $e");
+      _loadingCompleter!.completeError(e);
+      _loadingCompleter = null; // Allow retry on next call
       rethrow;
     }
   }
 
-  Future<List<Map<String, dynamic>>> runInference(File imageFile) async {
-    if (!_isLoaded) await loadModel();
-
-    try {
-      Uint8List imageBytes = await imageFile.readAsBytes();
-      final result = await _vision.yoloOnImage(
-        bytesList: imageBytes,
-        imageHeight: 640,
-        imageWidth: 640,
-        iouThreshold: 0.5,
-        confThreshold: 0.5,
-        classThreshold: 0.5,
-      );
-      return result;
-    } catch (e) {
-      print("Error");
-      rethrow;
-    }
+  Future<List<dynamic>> predict(Uint8List image) async {
+    await loadYOLO();
+    final results = await _yolo!.predict(
+      image,
+      confidenceThreshold: 0.5,
+      iouThreshold: 0.5,
+    );
+    return results['boxes'];
   }
 
-  Future<void> dispose() async {
-    try {
-      await _vision.closeYoloModel();
-      _isLoaded = false;
-      print("Model Closed");
-    } catch (e) {
-      print("Error closing model: $e");
-    }
+  // dispose
+  void dispose() {
+    _yolo?.dispose();
+    _loadingCompleter = null;
   }
 }
