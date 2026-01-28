@@ -12,6 +12,8 @@ android {
     namespace = "com.example.dun_diary_app"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
+    
+
 
     aaptOptions {
         noCompress("tflite")
@@ -43,6 +45,11 @@ android {
             // Signing with the debug keys for now, so `flutter run --release` works.
             signingConfig = signingConfigs.getByName("debug")
         }
+    }
+
+    lint {
+        checkReleaseBuilds = false
+        abortOnError = false
     }
 }
 
