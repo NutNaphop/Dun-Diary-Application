@@ -15,14 +15,24 @@ import 'main_view_model.dart';
 class MainScreen extends StatelessWidget {
   const MainScreen({super.key});
 
-  // 1. กำหนดหน้าที่จะแสดงในแต่ละ Tab เรียงตามลำดับ
-  List<Widget> get _pages => [
-    HomeScreen.create(),
-    HistoryScreen(),
-    Center(child: Text(AppStrings.main.addPage)),
-    Center(child: CalendarPlaygroundPage()),
-    BpGraphPlayground(),
-  ];
+  // Helper method สำหรับสร้างหน้าตาม Index
+  // วิธีนี้จะทำให้เกิดการสร้างใหม่เมื่อเปิด และ Dispose เมื่อปิดแท็บ
+  Widget _buildBody(int index) {
+    switch (index) {
+      case 0:
+        return HomeScreen.create();
+      case 1:
+        return HistoryScreen();
+      case 2:
+        return Center(child: Text(AppStrings.main.addPage));
+      case 3:
+        return Center(child: CalendarPlaygroundPage());
+      case 4:
+        return BpGraphPlayground();
+      default:
+        return const SizedBox.shrink();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -32,8 +42,8 @@ class MainScreen extends StatelessWidget {
       child: Consumer<MainViewModel>(
         builder: (context, viewModel, child) {
           return Scaffold(
-            // 2. ใช้ IndexedStack เพื่อรักษาสถานะของแต่ละหน้า
-            body: IndexedStack(index: viewModel.currentIndex, children: _pages),
+            // 2. เปลี่ยนมาใช้การ Render เฉพาะหน้าที่เลือก
+            body: _buildBody(viewModel.currentIndex),
 
             // เพิ่ม FloatingActionButton ตรงกลาง
             floatingActionButton: SizedBox(
