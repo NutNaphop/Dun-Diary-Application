@@ -8,7 +8,9 @@ class ImageUtils {
       final fixedImage = img.bakeOrientation(
         originalImage,
       ); // Rotate image from EXIF
-      return img.encodeJpg(fixedImage); // Encode to jpg
+  
+      final resizedImage = img.copyResize(fixedImage, width: 640, height: 640);
+      return img.encodeJpg(resizedImage, quality: 90); 
     }
     return null;
   }

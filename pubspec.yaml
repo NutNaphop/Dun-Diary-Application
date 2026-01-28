@@ -53,6 +53,7 @@ dependencies:
   table_calendar: ^3.2.0
   intl: ^0.20.2
   flutter_native_splash: ^2.4.7
+  ultralytics_yolo: ^0.2.0
 
 dev_dependencies:
   flutter_test:
