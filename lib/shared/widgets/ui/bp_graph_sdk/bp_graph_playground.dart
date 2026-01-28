@@ -59,33 +59,55 @@ class _BpGraphPlaygroundView extends StatelessWidget {
               child: Row(
                 children: [
                   _FilterButton(
-                    label: "รายชั่วโมง",
+                    label: "รายชั่วโมง (มี)",
                     isSelected:
                         viewModel.selectedFilter == GraphFilterType.time,
                     onPressed: () => viewModel.setFilter(GraphFilterType.time),
                   ),
                   _FilterButton(
-                    label: "7 วันล่าสุด",
-                    isSelected: viewModel.selectedFilter == GraphFilterType.day,
-                    onPressed: () => viewModel.setFilter(GraphFilterType.day),
-                  ),
-                  _FilterButton(
-                    label: "รายสัปดาห์",
+                    label: "สัปดาห์ (มี)",
                     isSelected:
                         viewModel.selectedFilter == GraphFilterType.week,
                     onPressed: () => viewModel.setFilter(GraphFilterType.week),
                   ),
                   _FilterButton(
-                    label: "รายเดือน",
+                    label: "เดือน (มี)",
                     isSelected:
                         viewModel.selectedFilter == GraphFilterType.month,
                     onPressed: () => viewModel.setFilter(GraphFilterType.month),
+                  ),
+                  _FilterButton(
+                    label: "ปี (มี)",
+                    isSelected:
+                        viewModel.selectedFilter == GraphFilterType.year,
+                    onPressed: () => viewModel.setFilter(GraphFilterType.year),
                   ),
                   _FilterButton(
                     label: "ไม่มีข้อมูล",
                     isSelected:
                         viewModel.selectedFilter == GraphFilterType.empty,
                     onPressed: () => viewModel.setFilter(GraphFilterType.empty),
+                  ),
+                  _FilterButton(
+                    label: "สัปดาห์ (ว่าง)",
+                    isSelected:
+                        viewModel.selectedFilter == GraphFilterType.emptyWeek,
+                    onPressed: () =>
+                        viewModel.setFilter(GraphFilterType.emptyWeek),
+                  ),
+                  _FilterButton(
+                    label: "เดือน (ว่าง)",
+                    isSelected:
+                        viewModel.selectedFilter == GraphFilterType.emptyMonth,
+                    onPressed: () =>
+                        viewModel.setFilter(GraphFilterType.emptyMonth),
+                  ),
+                  _FilterButton(
+                    label: "ปี (ว่าง)",
+                    isSelected:
+                        viewModel.selectedFilter == GraphFilterType.emptyYear,
+                    onPressed: () =>
+                        viewModel.setFilter(GraphFilterType.emptyYear),
                   ),
                 ],
               ),
@@ -100,17 +122,17 @@ class _BpGraphPlaygroundView extends StatelessWidget {
                 title: _getCardTitle(viewModel.selectedFilter),
                 contentPadding: const EdgeInsets.all(20),
                 content: Container(
-                  height: viewModel.selectedFilter != GraphFilterType.empty
-                      ? 350
-                      : 250,
+                  height: 350,
                   width: double.infinity,
                   padding: const EdgeInsets.only(top: 20, right: 10),
                   child: BpGraphSdk(
                     key: ValueKey(viewModel.refreshCounter),
+                    heading: viewModel.selectedFilter.label,
                     data: viewModel.currentData,
                     onPointTap: (select) {
-                      print(select);
+                      print("${select.xLabel} : ${select.level.label}}");
                     },
+                    onButtonPress: viewModel.navigationToRecord,
                   ),
                 ),
               ),
@@ -123,18 +145,24 @@ class _BpGraphPlaygroundView extends StatelessWidget {
     );
   }
 
-  String _getCardTitle(GraphFilterType type) {
+  String? _getCardTitle(GraphFilterType type) {
     switch (type) {
       case GraphFilterType.time:
         return "ข้อมูลรายชั่วโมง";
-      case GraphFilterType.day:
-        return "วันที่ 1 ถึง 7 มกราคม 2568";
       case GraphFilterType.week:
-        return "มกราคม 2568";
+        return "วันที่ 1 ถึง 7 มกราคม 2568";
       case GraphFilterType.month:
+        return "มกราคม 2568";
+      case GraphFilterType.year:
         return "2568";
       case GraphFilterType.empty:
-        return "13 ธันวาคม - 19 ธันวาคม 2568";
+        return null;
+      case GraphFilterType.emptyWeek:
+        return null;
+      case GraphFilterType.emptyMonth:
+        return null;
+      case GraphFilterType.emptyYear:
+        return null;
     }
   }
 }
