@@ -17,7 +17,7 @@ class DropShadow {
   );
 
   static const drop_card = BoxShadow(
-    color: Color.fromRGBO(0, 0, 0, 0.1), // Shadow color and opacity
+    color: Color.fromRGBO(0, 0, 0, 0.05), // Shadow color and opacity
     offset: Offset(0, 5),
     blurRadius: 10,
     spreadRadius: 0,
