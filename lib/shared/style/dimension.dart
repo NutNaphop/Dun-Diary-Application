@@ -20,6 +20,8 @@ class _Padding{
 class _FontSize {
   const _FontSize._();
   // fontSize
+  final double xl = 28.0; /// 28
+  final double lg = 24.0; /// 24
   final double h1 = 21.0; /// 21
   final double h2 = 16.0; /// 16
   final double md = 14.0; /// 14

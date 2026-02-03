@@ -1,5 +1,7 @@
 import 'package:dun_diary_app/data/blood_pressure/model/record_model.dart';
 import 'package:dun_diary_app/shared/constant/app_strings.dart';
+import 'package:dun_diary_app/shared/style/color.dart';
+import 'package:flutter/painting.dart';
 
 class BloodPressureUtils {
   static BloodPressure parseStringToBloodPressure(
@@ -74,6 +76,25 @@ class BloodPressureUtils {
 
       default:
         return AppStrings.bloodPressure.danger;
+    }
+  }
+
+  static Color mapLevelColor(int level) {
+    switch (level) {
+      case 0:
+        return CustomColor.dangerColor;
+
+      case 1:
+        return CustomColor.green300;
+
+      case 2:
+        return CustomColor.warningColor;
+
+      case 3:
+        return CustomColor.quiteDangerColor;
+
+      default:
+        return CustomColor.dangerColor;
     }
   }
 
