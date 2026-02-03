@@ -1,10 +1,10 @@
 import 'package:dun_diary_app/feature/history/presentation/history_screen.dart';
+import 'package:dun_diary_app/feature/stat/presentation/stat_screen.dart';
 import 'package:dun_diary_app/shared/constant/app_strings.dart';
 import 'package:dun_diary_app/shared/style/color.dart';
 import 'package:dun_diary_app/shared/style/dimension.dart';
 import 'package:dun_diary_app/shared/widgets/custom/text/text_widget.dart';
 import 'package:dun_diary_app/shared/widgets/ui/bp_graph_sdk/bp_graph_playground.dart';
-import 'package:dun_diary_app/shared/widgets/ui/calendar_sdk/calendar_playground_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
@@ -26,7 +26,7 @@ class MainScreen extends StatelessWidget {
       case 2:
         return Center(child: Text(AppStrings.main.addPage));
       case 3:
-        return Center(child: CalendarPlaygroundPage());
+        return StatScreen.create();
       case 4:
         return BpGraphPlayground();
       default:

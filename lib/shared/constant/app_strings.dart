@@ -15,6 +15,7 @@ class AppStrings {
   static const home = _HomeStrings();
   static const record = _RecordStrings();
   static const result = _ResultStrings();
+  static const stat = _StatStrings();
 }
 
 class _CommonStrings {
@@ -110,6 +111,12 @@ class _RecordStrings {
   final String canNotReadImage = "ไม่สามารถอ่านค่าจากรูปภาพได้";
 }
 
+class _StatStrings {
+  const _StatStrings();
+
+  final String stat = "สถิติ";
+}
+
 class _ResultStrings {
   const _ResultStrings();
 
@@ -148,7 +155,8 @@ class _BPGraphStrings {
   const _BPGraphStrings();
 
   String noDataFor(String type) => "ยังไม่มีข้อมูล$typeนี้";
-  final recordToSeeTrend = "บันทึกค่าความดัน เพื่อดูสรุปสถิติและแนวโน้มสุขภาพของคุณ";
+  final recordToSeeTrend =
+      "บันทึกค่าความดัน เพื่อดูสรุปสถิติและแนวโน้มสุขภาพของคุณ";
   final graphWillShowHere = "กราฟวิเคราะห์จะปรากฎที่นี่";
   final addRecordToday = "เพิ่มบันทึกวันนี้";
 }
