@@ -1,3 +1,5 @@
+import 'package:dun_diary_app/shared/style/dimension.dart';
+import 'package:dun_diary_app/shared/widgets/custom/text/text_widget.dart';
 import 'package:flutter/material.dart';
 
 class TabItem extends StatelessWidget {
@@ -8,9 +10,10 @@ class TabItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Tab(
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [Text(title, overflow: TextOverflow.ellipsis)],
+      child: CustomText(
+        text: title,
+        fontSize: Dimension.fontSizes.md,
+        fontWeight: Dimension.fontWeights.medium,
       ),
     );
   }

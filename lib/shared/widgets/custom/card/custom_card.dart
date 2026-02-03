@@ -27,16 +27,13 @@ class CustomCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-      color: Colors.transparent,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-      child: Container(
+    return Container(
         padding: contentPadding,
         width: double.infinity,
         decoration: BoxDecoration(
           color: CustomColor.white,
           borderRadius: BorderRadius.circular(10),
-          boxShadow: [DropShadow.drop_popup],
+          boxShadow: [DropShadow.drop_card],
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
@@ -66,7 +63,6 @@ class CustomCard extends StatelessWidget {
             Container(child: content),
           ],
         ),
-      ),
     );
   }
 }

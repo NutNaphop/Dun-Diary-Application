@@ -29,6 +29,7 @@ class BloodPressureCard extends StatelessWidget {
           leadingIcon,
           const SizedBox(width: 12), // เพิ่มระยะห่าง
           Column(
+            spacing: 8,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               CustomText(

@@ -1,6 +1,5 @@
-import 'package:dun_diary_app/shared/style/drop_shadow.dart';
-import 'package:dun_diary_app/shared/widgets/ui/tab_bar/tab_item.dart';
 import 'package:dun_diary_app/shared/style/color.dart';
+import 'package:dun_diary_app/shared/widgets/ui/tab_bar/tab_item.dart';
 import 'package:flutter/material.dart';
 
 class AppTabBar extends StatelessWidget {
@@ -33,7 +32,6 @@ class AppTabBar extends StatelessWidget {
               indicator: BoxDecoration(
                 color: CustomColor.white,
                 borderRadius: BorderRadius.circular(30),
-                boxShadow: [DropShadow.drop_thumb],
               ),
               labelColor: CustomColor.accentColor,
               unselectedLabelColor: CustomColor.gray400,
