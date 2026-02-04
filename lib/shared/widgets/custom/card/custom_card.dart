@@ -41,25 +41,26 @@ class CustomCard extends StatelessWidget {
           spacing: 10,
           mainAxisSize: MainAxisSize.max,
           children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                if (title != null)
-                  CustomText(
-                    text: title!,
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    textAlign: titleTextAlign,
-                  ),
-                if (description != null)
-                  CustomText(
-                    text: description!,
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    textAlign: descriptionTextAlign,
-                  ),
-              ],
-            ),
+            if (title != null || description != null)
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  if (title != null)
+                    CustomText(
+                      text: title!,
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      textAlign: titleTextAlign,
+                    ),
+                  if (description != null)
+                    CustomText(
+                      text: description!,
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      textAlign: descriptionTextAlign,
+                    ),
+                ],
+              ),
             Container(child: content),
           ],
         ),

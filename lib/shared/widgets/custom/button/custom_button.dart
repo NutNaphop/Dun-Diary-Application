@@ -18,7 +18,8 @@ class CustomButton extends StatelessWidget {
   final Widget? leadingIcon;
   final Widget? trailingIcon;
   final List<BoxShadow>? boxShadow;
-  final VoidCallback onPressed;
+  final VoidCallback? onPressed;
+  final MainAxisAlignment? mainAxisAlignment;
 
   const CustomButton({
     super.key,
@@ -35,20 +36,26 @@ class CustomButton extends StatelessWidget {
     this.leadingIcon,
     this.trailingIcon,
     this.boxShadow,
+    this.mainAxisAlignment,
   });
 
   @override
   Widget build(BuildContext context) {
     final isFill = type == CustomButtonType.fill;
+    final isDisabled = onPressed == null;
 
     final effectiveBackgroundColor =
-        backgroundColor ??
-        (isFill ? CustomColor.accentColor : CustomColor.white);
+        isDisabled
+            ? (isFill ? CustomColor.gray200 : CustomColor.white)
+            : (backgroundColor ??
+                (isFill ? CustomColor.accentColor : CustomColor.white));
 
     final effectiveBorderColor =
-        borderColor ?? (isFill ? Colors.transparent : CustomColor.gray400);
+        isDisabled
+            ? CustomColor.gray300
+            : (borderColor ?? (isFill ? Colors.transparent : CustomColor.gray400));
 
-    final defaultTextColor = isFill ? CustomColor.white : CustomColor.gray900;
+    final defaultTextColor = isDisabled ? CustomColor.gray500 : (isFill ? CustomColor.white : CustomColor.gray900);
 
     final effectiveTextStyle =
         textStyle ??
@@ -57,6 +64,12 @@ class CustomButton extends StatelessWidget {
           fontSize: Dimension.fontSizes.h2,
           fontWeight: Dimension.fontWeights.bold,
         );
+
+    final effectiveMainAxisAlignment =
+        mainAxisAlignment ??
+        (leadingIcon != null && trailingIcon != null
+            ? MainAxisAlignment.spaceBetween
+            : MainAxisAlignment.center);
 
     return Container(
       decoration: BoxDecoration(
@@ -78,44 +91,42 @@ class CustomButton extends StatelessWidget {
             padding:
                 padding ??
                 const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
-            child: leadingIcon == null && trailingIcon == null
-                ? Center(
-                    child: CustomText(
+            child: Row(
+              mainAxisAlignment: effectiveMainAxisAlignment,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    if (leadingIcon != null) ...[
+                      leadingIcon!,
+                      const SizedBox(width: 8),
+                    ],
+                    CustomText(
                       text: text,
                       color: effectiveTextStyle.color ?? defaultTextColor,
                       fontSize: effectiveTextStyle.fontSize!,
                       fontWeight: effectiveTextStyle.fontWeight!,
                     ),
-                  )
-                : Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Row(
-                        children: [
-                          if (leadingIcon != null) ...[
-                            leadingIcon!,
-                            const SizedBox(width: 8),
-                          ],
-                          CustomText(
-                            text: text,
-                            color: effectiveTextStyle.color ?? defaultTextColor,
-                            fontSize: effectiveTextStyle.fontSize!,
-                            fontWeight: effectiveTextStyle.fontWeight!,
-                          ),
-                        ],
-                      ),
-                      if (trailingIcon != null)
-                        Container(
-                          height: 28,
-                          width: 28,
-                          decoration: const BoxDecoration(
-                            color: CustomColor.transparent,
-                            shape: BoxShape.circle,
-                          ),
-                          child: Center(child: trailingIcon!),
-                        ),
-                    ],
+                  ],
+                ),
+                if (trailingIcon != null) ...[
+                  if (effectiveMainAxisAlignment !=
+                      MainAxisAlignment.spaceBetween)
+                    const SizedBox(width: 8),
+                  Container(
+                    height: 28,
+                    width: 28,
+                    decoration: const BoxDecoration(
+                      color: CustomColor.transparent,
+                      shape: BoxShape.circle,
+                    ),
+                    child: Center(child: trailingIcon!),
                   ),
+                ],
+              ],
+            ),
           ),
         ),
       ),
