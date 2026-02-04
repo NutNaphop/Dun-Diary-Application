@@ -1,7 +1,7 @@
 import 'package:dun_diary_app/shared/constant/app_icons.dart';
 import 'package:dun_diary_app/shared/constant/app_strings.dart';
 import 'package:dun_diary_app/shared/utils/date_utils.dart';
-import 'package:dun_diary_app/shared/widgets/custom/svg/custom_svg_widget.dart';
+import 'package:dun_diary_app/shared/widgets/custom/img/custom_svg_widget.dart';
 import 'package:dun_diary_app/shared/widgets/ui/picker/widgets/picker_slot.dart';
 import 'package:flutter/material.dart';
 

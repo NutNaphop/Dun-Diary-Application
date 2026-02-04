@@ -1,7 +1,9 @@
-import 'package:dun_diary_app/feature/stat/presentation/widgets/ui/card/stat_card.dart';
-import 'package:dun_diary_app/shared/style/dimension.dart';
 import 'package:dun_diary_app/feature/stat/presentation/widgets/ui/card/blood_pressure_card.dart';
+import 'package:dun_diary_app/feature/stat/presentation/widgets/ui/card/stat_card.dart';
+import 'package:dun_diary_app/shared/constant/app_animations.dart';
+import 'package:dun_diary_app/shared/style/dimension.dart';
 import 'package:dun_diary_app/shared/widgets/custom/card/custom_card.dart';
+import 'package:dun_diary_app/shared/widgets/custom/img/custom_lottie_widget.dart';
 import 'package:dun_diary_app/shared/widgets/custom/text/text_widget.dart';
 import 'package:dun_diary_app/shared/widgets/ui/bp_graph_sdk/bp_graph_sdk.dart';
 import 'package:flutter/material.dart';
@@ -36,10 +38,14 @@ class StatSummaryView extends StatelessWidget {
             fontWeight: Dimension.fontWeights.bold,
           ),
           const SizedBox(height: 15),
-          const BloodPressureCard(
+          BloodPressureCard(
             bloodPressureLevel: 1,
             date: "3 ธ.ค. - 19 ธ.ค. 2565",
-            leadingIcon: Icon(Icons.abc, size: 90),
+            leadingIcon: LottieAnimation(
+              path: AppAnimations.blushing,
+              width: 90,
+              height: 90,
+            ),
           ),
           const SizedBox(height: 20),
 
@@ -66,7 +72,7 @@ class StatSummaryView extends StatelessWidget {
 
           // Analyze Seciton
           SizedBox(height: 15),
-          Text("Analyze Section")
+          Text("Analyze Section"),
         ],
       ),
     );
