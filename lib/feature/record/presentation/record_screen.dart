@@ -15,9 +15,9 @@ import 'package:dun_diary_app/shared/widgets/custom/button/custom_box_icon.dart'
 import 'package:dun_diary_app/shared/widgets/custom/button/custom_button.dart';
 import 'package:dun_diary_app/shared/widgets/custom/button/custom_popup_menu.dart';
 import 'package:dun_diary_app/shared/widgets/custom/card/custom_card.dart';
+import 'package:dun_diary_app/shared/widgets/custom/img/custom_svg_widget.dart';
 import 'package:dun_diary_app/shared/widgets/custom/scaffold/custom_scaffold.dart';
 import 'package:dun_diary_app/shared/widgets/custom/scaffold/main_appbar.dart';
-import 'package:dun_diary_app/shared/widgets/custom/svg/custom_svg_widget.dart';
 import 'package:dun_diary_app/shared/widgets/ui/guage/guage.dart';
 import 'package:dun_diary_app/shared/widgets/ui/picker/date_picker.dart';
 import 'package:dun_diary_app/shared/widgets/ui/picker/time_picker.dart';

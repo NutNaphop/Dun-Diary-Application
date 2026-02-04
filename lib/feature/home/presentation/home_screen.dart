@@ -12,9 +12,9 @@ import 'package:dun_diary_app/shared/widgets/custom/button/custom_button.dart';
 import 'package:dun_diary_app/shared/widgets/custom/card/custom_card.dart';
 import 'package:dun_diary_app/shared/widgets/custom/card/no_content_card.dart';
 import 'package:dun_diary_app/shared/widgets/custom/card/stat_row.dart';
+import 'package:dun_diary_app/shared/widgets/custom/img/custom_svg_widget.dart';
 import 'package:dun_diary_app/shared/widgets/custom/scaffold/custom_scaffold.dart';
 import 'package:dun_diary_app/shared/widgets/custom/scaffold/main_appbar.dart';
-import 'package:dun_diary_app/shared/widgets/custom/svg/custom_svg_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
