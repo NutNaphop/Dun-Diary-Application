@@ -55,3 +55,21 @@ class StatCard extends StatelessWidget {
     );
   }
 }
+
+class StatCardData {
+  String iconPath;
+  String title;
+  String value;
+  String description;
+  Color foreground;
+  Color background;
+
+  StatCardData({
+    required this.iconPath,
+    required this.title,
+    required this.value,
+    required this.description,
+    required this.foreground,
+    required this.background,
+  });
+}

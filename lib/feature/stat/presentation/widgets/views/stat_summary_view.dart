@@ -2,14 +2,16 @@ import 'package:dun_diary_app/feature/stat/presentation/widgets/ui/card/blood_pr
 import 'package:dun_diary_app/feature/stat/presentation/widgets/ui/card/stat_card.dart';
 import 'package:dun_diary_app/shared/constant/app_animations.dart';
 import 'package:dun_diary_app/shared/style/dimension.dart';
+import 'package:dun_diary_app/shared/utils/blood_pressure_utils.dart';
 import 'package:dun_diary_app/shared/widgets/custom/card/custom_card.dart';
 import 'package:dun_diary_app/shared/widgets/custom/img/custom_lottie_widget.dart';
+import 'package:dun_diary_app/shared/widgets/custom/img/custom_svg_widget.dart';
 import 'package:dun_diary_app/shared/widgets/custom/text/text_widget.dart';
 import 'package:dun_diary_app/shared/widgets/ui/bp_graph_sdk/bp_graph_sdk.dart';
 import 'package:flutter/material.dart';
 
 class StatSummaryView extends StatelessWidget {
-  final List<dynamic> data; // รับข้อมูลที่จะแสดงในกราฟ
+  final List<StatCardData> data; // รับข้อมูลที่จะแสดงในกราฟ
 
   const StatSummaryView({super.key, required this.data});
 
@@ -42,7 +44,7 @@ class StatSummaryView extends StatelessWidget {
             bloodPressureLevel: 1,
             date: "3 ธ.ค. - 19 ธ.ค. 2565",
             leadingIcon: LottieAnimation(
-              path: AppAnimations.blushing,
+              path: BloodPressureUtils.mapLevelAnimation(1),
               width: 90,
               height: 90,
             ),
@@ -53,7 +55,7 @@ class StatSummaryView extends StatelessWidget {
           GridView.builder(
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
-            itemCount: 4, // กำหนดจำนวน Item ที่ต้องการแสดง
+            itemCount: data.length, // กำหนดจำนวน Item ที่ต้องการแสดง
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
               crossAxisSpacing: 10,
@@ -61,11 +63,27 @@ class StatSummaryView extends StatelessWidget {
               mainAxisExtent: 120,
             ),
             itemBuilder: (context, index) {
-              return const StatCard(
-                leadingIcon: Icon(Icons.abc, size: 25),
-                title: "ค่าเฉลี่ยความดัน",
-                value: "82/52",
-                description: "อยู่ในช่วงปกติ",
+              final item = data[index];
+              return StatCard(
+                leadingIcon: Container(
+                  width: 25,
+                  height: 25,
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.rectangle,
+                    borderRadius: BorderRadius.circular(10),
+                    color: item.background,
+                  ),
+                  child: SVGImage(
+                    path: item.iconPath,
+                    width: 15,
+                    height: 15,
+                    color: item.foreground,
+                  ),
+                ),
+                title: item.title,
+                value: item.value,
+                description: item.description,
               );
             },
           ),
