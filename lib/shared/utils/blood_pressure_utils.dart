@@ -1,4 +1,5 @@
 import 'package:dun_diary_app/data/blood_pressure/model/record_model.dart';
+import 'package:dun_diary_app/shared/constant/app_animations.dart';
 import 'package:dun_diary_app/shared/constant/app_strings.dart';
 import 'package:dun_diary_app/shared/style/color.dart';
 import 'package:flutter/painting.dart';
@@ -85,7 +86,7 @@ class BloodPressureUtils {
         return CustomColor.dangerColor;
 
       case 1:
-        return CustomColor.green300;
+        return CustomColor.green3;
 
       case 2:
         return CustomColor.warningColor;
@@ -97,6 +98,26 @@ class BloodPressureUtils {
         return CustomColor.dangerColor;
     }
   }
+
+  static String mapLevelAnimation(int level) {
+    switch (level) {
+      case 0:
+        return AppAnimations.grieved;
+
+      case 1:
+        return AppAnimations.blushing;
+
+      case 2:
+        return AppAnimations.calm;
+
+      case 3:
+        return AppAnimations.calm;
+
+      default:
+        return AppAnimations.grieved;
+    }
+  }
+
 
   static double calculateAVGSYS(List<int> sysList) {
     int sumSys = sysList.fold(

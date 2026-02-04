@@ -39,7 +39,7 @@ class _StatScreenState extends State<StatScreen> {
           AppStrings.calendar.year,
         ],
         tabViews: [
-          StatSummaryView(data: const []), // ข้อมูลสัปดาห์
+          StatSummaryView(data: viewModel.data), // ข้อมูลสัปดาห์
           StatSummaryView(data: const []), // ข้อมูลเดือน
           StatSummaryView(data: const []), // ข้อมูลปี
         ],
