@@ -1,4 +1,4 @@
-import 'package:dun_diary_app/feature/stat/presentation/widgets/ui/card/stat_card.dart';
+import 'package:dun_diary_app/feature/stat/presentation/widgets/stat_card/stat_card.dart';
 import 'package:dun_diary_app/shared/constant/app_icons.dart';
 import 'package:dun_diary_app/shared/style/color.dart';
 import 'package:flutter/material.dart';

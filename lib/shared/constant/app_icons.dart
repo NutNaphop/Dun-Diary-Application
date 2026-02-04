@@ -47,6 +47,7 @@ class _FillIcons {
 
   final image = '$_path/image.svg';
   final notification = '$_path/notification.svg';
+  final sparkle = '$_path/sparkle.svg';
 }
 
 class _OutlineIcons {
@@ -55,6 +56,7 @@ class _OutlineIcons {
   static const _path = '${AppIcons._base}/outline';
 
   final leftArrow = '$_path/left_arrow.svg';
+  final arrowClockwise = '$_path/arrow_clockwise.svg';
   final x = '$_path/x.svg';
   final calendar = '$_path/calendar.svg';
   final clock = '$_path/clock.svg';

@@ -5,6 +5,8 @@ class AppImage {
 
   static const cuate = '$_base/cuate.svg';
   static const noMatchFound = '$_base/no_match_found.svg';
+  static const analyze = '$_base/analyze.svg';
+  static const analyzeError = '$_base/analyze_error.svg';
 }
 
 class AppConfigImages {
