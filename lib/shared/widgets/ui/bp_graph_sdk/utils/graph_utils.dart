@@ -16,8 +16,11 @@ class GraphUtils {
 
   /// Calculates the X-coordinate for a given index.
   static double getXCoordinate(int index, int dataLength, double stepWidth) {
-    if (dataLength <= 1) {
-      return stepWidth; // For a single point, place it in the middle
+    if (dataLength == 0) {
+      return 0;
+    }
+    if (dataLength == 1) {
+      return stepWidth ; // For a single point, place it in the middle
     }
     return index * stepWidth;
   }

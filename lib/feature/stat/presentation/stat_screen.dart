@@ -1,3 +1,5 @@
+import 'package:dun_diary_app/data/analyze_record/repository/analyze_repository.dart';
+import 'package:dun_diary_app/data/blood_pressure/repository/blood_pressure_repository.dart';
 import 'package:dun_diary_app/feature/stat/presentation/stat_viewModel.dart';
 import 'package:dun_diary_app/feature/stat/presentation/widgets/views/stat_summary_view.dart';
 import 'package:dun_diary_app/shared/constant/app_strings.dart';
@@ -12,7 +14,10 @@ class StatScreen extends StatefulWidget {
 
   static Widget create() {
     return ChangeNotifierProvider(
-      create: (context) => StatViewmodel(),
+      create: (context) => StatViewmodel(
+        context.read<BloodPressureRepository>(),
+        context.read<AnalyzeRepository>(),
+      ),
       child: const StatScreen(),
     );
   }
@@ -24,10 +29,7 @@ class StatScreen extends StatefulWidget {
 class _StatScreenState extends State<StatScreen> {
   @override
   Widget build(BuildContext context) {
-    final viewModel = context
-        .watch<
-          StatViewmodel
-        >(); // ใช้ watch เพื่อให้ UI rebuild เมื่อ index เปลี่ยน
+    final viewModel = context.watch<StatViewmodel>();
 
     return CustomScaffold(
       appBar: MainAppBar(title: AppStrings.stat.stat, showBack: false),
@@ -39,9 +41,21 @@ class _StatScreenState extends State<StatScreen> {
           AppStrings.calendar.year,
         ],
         tabViews: [
-          StatSummaryView(data: viewModel.data), // ข้อมูลสัปดาห์
-          StatSummaryView(data: const []), // ข้อมูลเดือน
-          StatSummaryView(data: const []), // ข้อมูลปี
+          StatSummaryView(
+            data: viewModel.statsData,
+            graphData: viewModel.graphData,
+            vm: viewModel,
+          ), // ข้อมูลสัปดาห์
+          StatSummaryView(
+            data: viewModel.statsData,
+            graphData: viewModel.graphData,
+            vm: viewModel,
+          ), // ข้อมูลเดือน
+          StatSummaryView(
+            data: viewModel.statsData,
+            graphData: viewModel.graphData,
+            vm: viewModel,
+          ), // ข้อมูลปี
         ],
       ),
     );
