@@ -29,6 +29,7 @@ class AppTabBar extends StatelessWidget {
               onTap: onTap, // ส่งค่า index กลับไปเมื่อมีการกด
               indicatorSize: TabBarIndicatorSize.tab,
               dividerColor: Colors.transparent,
+              indicatorPadding: EdgeInsetsGeometry.all(4),
               indicator: BoxDecoration(
                 color: CustomColor.white,
                 borderRadius: BorderRadius.circular(30),
