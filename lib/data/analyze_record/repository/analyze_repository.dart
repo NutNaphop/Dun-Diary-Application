@@ -19,10 +19,10 @@ class AnalyzeRepository {
     required List<BPRecord> records,
     required String signature,
   }) async {
-    final aiResultText = await _remoteDataSource.fetchAnalysisFromAi(records);
+    final aiResult = await _remoteDataSource.fetchAnalysisFromAi(records);
 
     final newCache = AnalysisCache(
-      content: aiResultText,
+      content: aiResult,
       analyzedAt: DateTime.now(),
       rangeKey: key,
       dataSignature: signature,

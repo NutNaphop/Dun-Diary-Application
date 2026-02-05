@@ -1,41 +1,41 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'analyze_cache_model.dart';
+part of 'analyze_result_model.dart';
 
 // **************************************************************************
 // TypeAdapterGenerator
 // **************************************************************************
 
-class AnalysisCacheAdapter extends TypeAdapter<AnalysisCache> {
+class AnalyzeResultModelAdapter extends TypeAdapter<AnalyzeResultModel> {
   @override
-  final int typeId = 2;
+  final int typeId = 3;
 
   @override
-  AnalysisCache read(BinaryReader reader) {
+  AnalyzeResultModel read(BinaryReader reader) {
     final numOfFields = reader.readByte();
     final fields = <int, dynamic>{
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
-    return AnalysisCache(
-      content: fields[0] as AnalyzeResultModel,
-      analyzedAt: fields[1] as DateTime,
-      rangeKey: fields[2] as String,
-      dataSignature: fields[3] as String,
+    return AnalyzeResultModel(
+      summary: fields[0] as String,
+      riskLevel: fields[1] as String,
+      suggestions: (fields[2] as List).cast<String>(),
+      reference: fields[3] as String,
     );
   }
 
   @override
-  void write(BinaryWriter writer, AnalysisCache obj) {
+  void write(BinaryWriter writer, AnalyzeResultModel obj) {
     writer
       ..writeByte(4)
       ..writeByte(0)
-      ..write(obj.content)
+      ..write(obj.summary)
       ..writeByte(1)
-      ..write(obj.analyzedAt)
+      ..write(obj.riskLevel)
       ..writeByte(2)
-      ..write(obj.rangeKey)
+      ..write(obj.suggestions)
       ..writeByte(3)
-      ..write(obj.dataSignature);
+      ..write(obj.reference);
   }
 
   @override
@@ -44,7 +44,7 @@ class AnalysisCacheAdapter extends TypeAdapter<AnalysisCache> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is AnalysisCacheAdapter &&
+      other is AnalyzeResultModelAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }

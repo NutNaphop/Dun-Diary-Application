@@ -1,4 +1,4 @@
-import 'package:dun_diary_app/feature/stat/presentation/stat_viewModel.dart';
+import 'package:dun_diary_app/data/analyze_record/model/analyze_result_model.dart';
 import 'package:dun_diary_app/feature/stat/presentation/widgets/analyze_card/analyze_card.dart';
 import 'package:dun_diary_app/feature/stat/presentation/widgets/card/blood_pressure_card.dart';
 import 'package:dun_diary_app/feature/stat/presentation/widgets/stat_card/components/stat_icon.dart';
@@ -15,14 +15,21 @@ import 'package:dun_diary_app/shared/widgets/ui/bp_graph_sdk/models/blood_pressu
 import 'package:flutter/material.dart';
 
 class StatSummaryView extends StatelessWidget {
+  final AnalyzeState analyzeState;
+  final AnalyzeResultModel? resultFromAi;
   final List<StatCardData> data; // รับข้อมูลที่จะแสดงในกราฟ
   final List<BloodPressureGraphData> graphData;
-  final StatViewmodel vm;
+  final VoidCallback? onSeed;
+  final VoidCallback? onAnalyzePressed;
+
   const StatSummaryView({
     super.key,
+    required this.analyzeState,
+    required this.resultFromAi,
     required this.data,
     required this.graphData,
-    required this.vm,
+    this.onSeed,
+    required this.onAnalyzePressed,
   });
 
   @override
@@ -33,10 +40,10 @@ class StatSummaryView extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            CustomButton(text: "Generate Data", onPressed: vm.seedData),
+            CustomButton(text: "Generate Data", onPressed: onSeed),
             SizedBox(height: 15),
+
             // Graph Section
-            Text(graphData.length.toString()),
             CustomCard(
               contentPadding: const EdgeInsets.all(20),
               content: Container(
@@ -99,7 +106,12 @@ class StatSummaryView extends StatelessWidget {
 
             // Analyze Seciton
             SizedBox(height: 15),
-            AnalyzeCard(state: AnalyzeState.idle, onPressed: () {}),
+            AnalyzeCard(
+              state: analyzeState,
+              resultFromAi: resultFromAi,
+              isInternetConnect: true,
+              onPressed: onAnalyzePressed,
+            ),
           ],
         ),
       ),

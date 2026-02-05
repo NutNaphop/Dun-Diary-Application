@@ -1,3 +1,4 @@
+import 'package:dun_diary_app/core/auth/auth_service.dart';
 import 'package:dun_diary_app/core/network/network_client.dart';
 import 'package:dun_diary_app/data/analyze_record/datasource/analyze_local_source.dart';
 import 'package:dun_diary_app/data/analyze_record/datasource/analyze_remote_source.dart';
@@ -10,8 +11,8 @@ List<SingleChildWidget> get repositoryStatProviders {
     // 1. Data Sources
     Provider<AnalyzeLocalDataSource>(create: (_) => AnalyzeLocalDataSource()),
 
-    ProxyProvider<NetworkClient, AnalyzeRemoteDataSource>(
-      update: (_, client, __) => AnalyzeRemoteDataSource(client),
+    ProxyProvider2<NetworkClient, AuthService, AnalyzeRemoteDataSource>(
+      update: (_, client, auth, __) => AnalyzeRemoteDataSource(client, auth),
     ),
 
     // User Repository
