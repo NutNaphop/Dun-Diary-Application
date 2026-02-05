@@ -1,12 +1,12 @@
-// file: feature/stat/presentation/stat_viewModel.dart
-
+import 'package:dun_diary_app/data/analyze_record/model/analyze_result_model.dart';
 import 'package:dun_diary_app/data/analyze_record/repository/analyze_repository.dart';
 import 'package:dun_diary_app/data/blood_pressure/model/bp_record.dart';
-import 'package:dun_diary_app/feature/stat/model/stat_model.dart';
 import 'package:dun_diary_app/data/blood_pressure/repository/blood_pressure_repository.dart';
+import 'package:dun_diary_app/feature/stat/model/stat_model.dart';
 import 'package:dun_diary_app/feature/stat/presentation/helper/stat_ui_mappper.dart';
 import 'package:dun_diary_app/feature/stat/presentation/widgets/analyze_card/analyze_card.dart';
 import 'package:dun_diary_app/feature/stat/presentation/widgets/stat_card/stat_card.dart';
+import 'package:dun_diary_app/shared/utils/analyze_utils.dart';
 import 'package:dun_diary_app/shared/utils/date_utils.dart';
 import 'package:dun_diary_app/shared/utils/graph_data_mapper.dart';
 import 'package:dun_diary_app/shared/utils/mock_data_seeder.dart';
@@ -15,12 +15,11 @@ import 'package:dun_diary_app/shared/widgets/ui/bp_graph_sdk/models/blood_pressu
 import 'package:flutter/material.dart';
 
 class StatViewmodel extends ChangeNotifier {
-  // 1. รับ Repository เข้ามา
   final BloodPressureRepository _bpRepo;
   final AnalyzeRepository _analyzeRepo;
 
   StatViewmodel(this._bpRepo, this._analyzeRepo) {
-    _loadData(); // เกิดมาปุ๊บ โหลดข้อมูลปั๊บ
+    _loadData();
   }
 
   // --- State Variables ---
@@ -34,8 +33,8 @@ class StatViewmodel extends ChangeNotifier {
   AnalyzeState _analyzeState = AnalyzeState.idle;
   AnalyzeState get analyzeState => _analyzeState;
 
-  String? _aiResultContent;
-  String? get aiResultContent => _aiResultContent;
+  AnalyzeResultModel? _aiResultContent;
+  AnalyzeResultModel? get aiResultContent => _aiResultContent;
 
   int _selectedTabIndex = 0;
   int get selectedTabIndex => _selectedTabIndex;
@@ -48,7 +47,7 @@ class StatViewmodel extends ChangeNotifier {
 
   void setTabIndex(int index) {
     _selectedTabIndex = index;
-    _loadData(); // เปลี่ยนแท็บ -> โหลดข้อมูลใหม่
+    _loadData();
   }
 
   // --- 🟢 PART 1: โหลดข้อมูล & คำนวณสถิติ ---
@@ -65,16 +64,12 @@ class StatViewmodel extends ChangeNotifier {
     notifyListeners();
   }
 
-  // --- 🟣 PART 2: ระบบ AI ---
+  // --- 🟣 PART 2: AI ---
   Future<void> _checkAiCache(String key, List<BPRecord> records) async {
-    // สร้างลายเซ็นข้อมูลปัจจุบัน (ต้องทำ fn นี้ใน Utils หรือ Repo)
-    // final currentSig = generateDataSignature(records);
-
-    // ดึง Cache มาดู
+    final currentSig = AnalyzeUtils.generateDataSignature(records);
     final cache = _analyzeRepo.getCachedAnalysis(key);
 
-    // *สมมติว่าเช็ค Signature แล้วตรงกัน (ถ้ายังไม่ได้ทำ Signature ข้ามไปก่อนได้)*
-    if (cache != null) {
+    if (cache != null && cache.dataSignature == currentSig) {
       _analyzeState = AnalyzeState.success;
       _aiResultContent = cache.content;
     } else {
@@ -91,14 +86,17 @@ class StatViewmodel extends ChangeNotifier {
     try {
       final range = DateTimeUtils.calculateDateRange(_selectedTabIndex);
       final records = _bpRepo.getRecordsByRange(range.start, range.end);
+      final signature = AnalyzeUtils.generateDataSignature(records);
 
-      // ... ตรงนี้เรียก AnalyzeRepo.analyzeAndSave ...
-      // รอ Mission ถัดไปเรื่องต่อ API จริงๆ เดี๋ยวใส่ Mock ไปก่อน
-
-      await Future.delayed(Duration(seconds: 2)); // แกล้งโหลด
+      final result = await _analyzeRepo.analyzeAndSave(
+        key: range.key,
+        records: records,
+        signature: signature,
+      );
       _analyzeState = AnalyzeState.success;
-      _aiResultContent = "สุขภาพความดันของคุณอยู่ในเกณฑ์ดีมาก..."; // Mock
+      _aiResultContent = result.content;
     } catch (e) {
+      print(e);
       _analyzeState = AnalyzeState.error;
     }
     notifyListeners();

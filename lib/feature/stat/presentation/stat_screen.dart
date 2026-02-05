@@ -42,19 +42,28 @@ class _StatScreenState extends State<StatScreen> {
         ],
         tabViews: [
           StatSummaryView(
+            analyzeState: viewModel.analyzeState,
+            resultFromAi: viewModel.aiResultContent,
             data: viewModel.statsData,
             graphData: viewModel.graphData,
-            vm: viewModel,
+            onSeed: viewModel.seedData, // Dont forget to delete first before merge
+            onAnalyzePressed: viewModel.triggerAnalyze,
           ), // ข้อมูลสัปดาห์
           StatSummaryView(
+            analyzeState: viewModel.analyzeState,
+            resultFromAi: viewModel.aiResultContent,
             data: viewModel.statsData,
             graphData: viewModel.graphData,
-            vm: viewModel,
+            onSeed: viewModel.seedData, // Dont forget to delete first before merge
+            onAnalyzePressed: viewModel.triggerAnalyze,
           ), // ข้อมูลเดือน
           StatSummaryView(
+            analyzeState: viewModel.analyzeState,
+            resultFromAi: viewModel.aiResultContent,
             data: viewModel.statsData,
             graphData: viewModel.graphData,
-            vm: viewModel,
+            onSeed: viewModel.seedData, // Dont forget to delete first before merge
+            onAnalyzePressed: viewModel.triggerAnalyze,
           ), // ข้อมูลปี
         ],
       ),

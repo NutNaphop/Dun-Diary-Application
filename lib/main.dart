@@ -4,6 +4,7 @@ import 'package:dun_diary_app/core/router/app_router.dart';
 import 'package:dun_diary_app/core/services/navigation_service.dart';
 import 'package:dun_diary_app/core/services/snackbar_service.dart';
 import 'package:dun_diary_app/data/analyze_record/model/analyze_cache_model.dart';
+import 'package:dun_diary_app/data/analyze_record/model/analyze_result_model.dart';
 import 'package:dun_diary_app/data/blood_pressure/model/bp_record.dart';
 import 'package:dun_diary_app/register_provider.dart';
 import 'package:dun_diary_app/shared/constant/app_strings.dart';
@@ -49,6 +50,7 @@ initHive() async {
   await Hive.initFlutter();
   Hive.registerAdapter(BPRecordAdapter());
   Hive.registerAdapter(AnalysisCacheAdapter());
+  Hive.registerAdapter(AnalyzeResultModelAdapter());
   await Hive.openBox<BPRecord>(HiveBoxName.bpRecord);
   await Hive.openBox(HiveBoxName.settingsBox);
   await Hive.openBox<String>(HiveBoxName.QueueBox);

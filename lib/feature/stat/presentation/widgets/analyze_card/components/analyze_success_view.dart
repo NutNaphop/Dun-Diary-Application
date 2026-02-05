@@ -1,3 +1,4 @@
+import 'package:dun_diary_app/data/analyze_record/model/analyze_result_model.dart';
 import 'package:dun_diary_app/feature/stat/presentation/widgets/stat_card/components/stat_icon.dart';
 import 'package:dun_diary_app/shared/constant/app_icons.dart';
 import 'package:dun_diary_app/shared/style/color.dart';
@@ -8,7 +9,16 @@ import 'package:dun_diary_app/shared/widgets/custom/text/text_widget.dart';
 import 'package:flutter/material.dart';
 
 class AnalyzeSuccessView extends StatelessWidget {
-  const AnalyzeSuccessView({super.key});
+  final AnalyzeResultModel? result;
+  final bool isInternetConnect;
+  final VoidCallback? onPressed;
+
+  const AnalyzeSuccessView({
+    super.key,
+    required this.result,
+    this.isInternetConnect = false,
+    this.onPressed,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -37,8 +47,7 @@ class AnalyzeSuccessView extends StatelessWidget {
           ],
         ),
         CustomText(
-          text:
-              "เยี่ยมมาก! ในรอบ 7 วันที่ผ่านมา ค่าความดันของคุณมี ความคงที่ โดยไม่มีการแกว่งตัวที่น่ากังวลสภาพร่างกาย สมดุลและพร้อมสำหรับการทำกิจกรรมต่างๆ",
+          text: result?.summary ?? "",
           fontSize: Dimension.fontSizes.md,
           fontWeight: Dimension.fontWeights.regular,
         ),
@@ -64,36 +73,59 @@ class AnalyzeSuccessView extends StatelessWidget {
                 ),
                 SizedBox(height: 5),
                 // need to render a data
-                for (int i = 0; i < 2; i++)
-                  CustomText(
-                    text: "•  รักษาพฤติกรรมการกิน",
-                    fontSize: Dimension.fontSizes.md,
-                    fontWeight: Dimension.fontWeights.regular,
+                ...(result?.suggestions ?? []).map(
+                  (suggest) => Padding(
+                    padding: const EdgeInsets.only(top: 3),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text("• "), // Bullet
+                        Expanded(
+                          child: CustomText(
+                            text: suggest,
+                            fontSize: Dimension.fontSizes.md,
+                            fontWeight: Dimension.fontWeights.regular,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
+                ),
               ],
             ),
           ),
         ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 76),
-          child: CustomButton(
-            text: "วิเคราะห์ผลอีกครั้ง",
-            leadingIcon: SVGImage(
-              path: AppIcons.outline.arrowClockwise,
-              width: 20,
-              height: 20,
-              color: CustomColor.accentColor,
+        Column(
+          spacing: 10,
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 76),
+              child: CustomButton(
+                text: "วิเคราะห์ผลอีกครั้ง",
+                leadingIcon: SVGImage(
+                  path: AppIcons.outline.arrowClockwise,
+                  width: 20,
+                  height: 20,
+                  color: CustomColor.accentColor,
+                ),
+                type: CustomButtonType.outline,
+                width: double.infinity,
+                textStyle: TextStyle(
+                  color: CustomColor.accentColor,
+                  fontSize: Dimension.fontSizes.md,
+                  fontWeight: Dimension.fontWeights.bold,
+                ),
+                borderColor: CustomColor.accentColor,
+                onPressed: onPressed,
+              ),
             ),
-            type: CustomButtonType.outline,
-            width: double.infinity,
-            textStyle: TextStyle(
-              color: CustomColor.accentColor,
-              fontSize: Dimension.fontSizes.md,
-              fontWeight: Dimension.fontWeights.bold,
+            CustomText(
+              text: "แหล่งที่มา: ${result?.reference}",
+              textAlign: TextAlign.center,
+              fontSize: Dimension.fontSizes.rg,
+              fontWeight: Dimension.fontWeights.regular,
             ),
-            borderColor: CustomColor.accentColor,
-            onPressed: () {},
-          ),
+          ],
         ),
       ],
     );

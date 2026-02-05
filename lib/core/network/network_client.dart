@@ -67,7 +67,8 @@ class NetworkClient {
 
   /// Header Merger
   Map<String, String> _mergeHeaders(Map<String, String>? headers) {
-    final defaultHeaders = ClientConfig.DEFAULT_HEADER;
+    // final defaultHeaders = ClientConfig.DEFAULT_HEADER;
+    final Map<String, String> defaultHeaders= Map.from(ClientConfig.DEFAULT_HEADER);
 
     if (headers != null) {
       defaultHeaders.addAll(headers);
@@ -92,9 +93,11 @@ class NetworkClient {
   }
 
   dynamic _processResponse(http.Response response) {
-    // print("API: ${response.request?.url}");
-    // print("code: ${response.statusCode}");
-    // print("body: ${response.body}"); // เปิดบรรทัดนี้ถ้าอยากเห็นข้อมูลดิบ
+    if (response.statusCode < 200 || response.statusCode >= 300) {
+      print("❌ API Error: ${response.request?.method} ${response.request?.url}");
+      print("Status Code: ${response.statusCode}");
+      print("Response Body: ${response.body}");
+    }
 
     if (response.statusCode >= 200 && response.statusCode < 300) {
       if (response.body.isEmpty) return null;
