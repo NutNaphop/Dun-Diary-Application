@@ -14,6 +14,9 @@ class BloodPressureRepository {
   }) : _localDataSource = localDataSource,
        _remoteDataSource = remoteDataSource;
 
+  // -----------------------------------------------------
+  // RECORD MANAGEMENT 
+  // -----------------------------------------------------
   Future<void> saveRecord(BPRecord record, bool isOnline) async {
     try {
       await _localDataSource.addRecord(record);
@@ -106,12 +109,25 @@ class BloodPressureRepository {
     });
   }
 
-  // Metadata Year Management
+  // -----------------------------------------------------
+  // YEAR METADATA MANAGEMENT 
+  // -----------------------------------------------------
   int getMinYear() {
     return _localDataSource.getMinYear();
   }
 
   List<int> getActiveYears() {
     return _localDataSource.getActiveYears();
+  }
+
+  // -----------------------------------------------------
+  // RANGE MANAGEMENT 
+  // -----------------------------------------------------
+  List<BPRecord> getRecordsByMonth(int year, int month) {
+    return _localDataSource.getRecordsByMonth(year, month);
+  }
+
+  List<BPRecord> getRecordsByRange(DateTime start, DateTime end) {
+    return _localDataSource.getRecordsByRange(start, end);
   }
 }

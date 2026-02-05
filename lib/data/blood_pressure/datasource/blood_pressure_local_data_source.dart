@@ -4,15 +4,33 @@ import 'package:hive_flutter/hive_flutter.dart';
 
 class BloodPressureLocalDataSource {
   final Box<BPRecord> _box;
+  final Box<List<String>> _indexBox;
   final Box _metaBox;
 
   BloodPressureLocalDataSource()
     : _metaBox = Hive.box(HiveBoxName.metaBox),
+      _indexBox = Hive.box(HiveBoxName.indexBox),
       _box = Hive.box(HiveBoxName.bpRecord);
 
   // --- Record Management ---
   Future<void> addRecord(BPRecord record) async {
     await _box.put(record.id, record);
+
+    // 2. อัปเดต Index
+    final indexKey =
+        "${record.createdAt.year}_${record.createdAt.month.toString().padLeft(2, '0')}";
+
+    // ดึง List เดิมมา (ต้องแปลง Type ให้ชัวร์)
+    final rawList = _indexBox.get(indexKey) ?? [];
+    final List<String> currentIds = List<String>.from(rawList);
+
+    if (!currentIds.contains(record.id)) {
+      currentIds.add(record.id);
+      await _indexBox.put(indexKey, currentIds);
+      print("✅ Saved to Index [$indexKey]: Total ${currentIds.length} records");
+    }
+
+    // 3. อัปเดต Meta
     await _updateMetaOnAdd(record.createdAt.year);
   }
 
@@ -135,7 +153,7 @@ class BloodPressureLocalDataSource {
           HiveKeys.meta.minYear,
           defaultValue: DateTime.now().year,
         );
-        
+
         // Check is year is currentMin ?
         if (year == currentMin) {
           if (yearCounts.isNotEmpty) {
@@ -154,12 +172,78 @@ class BloodPressureLocalDataSource {
   }
 
   int getMinYear() {
-    return _metaBox.get(HiveKeys.meta.minYear, defaultValue: DateTime.now().year);
+    return _metaBox.get(
+      HiveKeys.meta.minYear,
+      defaultValue: DateTime.now().year,
+    );
   }
 
   List<int> getActiveYears() {
     final rawMap = _metaBox.get(HiveKeys.meta.yearCounts, defaultValue: {});
     final Map<int, int> yearCounts = Map<int, int>.from(rawMap);
     return yearCounts.keys.toList()..sort();
+  }
+
+  // -----------------------------------------------------
+  // RANGE MANAGEMENT FUNCTIONS
+  // -----------------------------------------------------
+  List<BPRecord> getRecordsByMonth(int year, int month) {
+    final indexKey = "${year}_${month.toString().padLeft(2, '0')}";
+    final ids = _indexBox.get(indexKey) ?? [];
+
+    return ids.map((id) => _box.get(id)).whereType<BPRecord>().toList()
+      ..sort((a, b) => a.createdAt.compareTo(b.createdAt));
+  }
+
+  List<BPRecord> getRecordsByRange(DateTime start, DateTime end) {
+    print(
+      "🔍 Fetching from ${start.toIso8601String()} to ${end.toIso8601String()}",
+    );
+
+    Set<String> keys = {};
+
+    // 🔥 แก้บั๊ก: วนลูปเก็บ Key ทุกเดือนในช่วงเวลา
+    DateTime current = DateTime(start.year, start.month);
+    // ปัดเศษ end ไปเป็นวันสุดท้ายของเดือนเพื่อให้ครอบคลุม
+    DateTime endMonth = DateTime(end.year, end.month);
+
+    while (current.isBefore(endMonth) || current.isAtSameMomentAs(endMonth)) {
+      final key = "${current.year}_${current.month.toString().padLeft(2, '0')}";
+      keys.add(key);
+      // ขยับไปเดือนถัดไป
+      current = DateTime(current.year, current.month + 1);
+    }
+
+    print("📂 Index Keys involved: $keys");
+
+    List<BPRecord> results = [];
+
+    for (var key in keys) {
+      final ids = _indexBox.get(key) ?? [];
+      // print("  - Box [$key] has ${ids.length} IDs"); // เปิดถ้าอยากดูละเอียด
+
+      final records = ids
+          .map((id) => _box.get(id))
+          .whereType<BPRecord>() // กรอง null ทิ้ง
+          .toList();
+
+      results.addAll(records);
+    }
+
+    print("📥 Raw Records Found: ${results.length}");
+
+    // Filter วันที่แบบละเอียด
+    final filtered = results.where((r) {
+      // ใช้ compareTo เพื่อความชัวร์ (Start <= Date <= End)
+      // ผ่อนปรน Time นิดหน่อย
+      return r.createdAt.compareTo(start) >= 0 &&
+          r.createdAt.compareTo(end) <= 0;
+    }).toList();
+
+    // เรียงวันที่
+    filtered.sort((a, b) => a.createdAt.compareTo(b.createdAt));
+
+    print("✨ Final Filtered Records: ${filtered.length}");
+    return filtered;
   }
 }

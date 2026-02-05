@@ -1,20 +1,29 @@
+import 'package:dun_diary_app/feature/stat/presentation/stat_viewModel.dart';
 import 'package:dun_diary_app/feature/stat/presentation/widgets/analyze_card/analyze_card.dart';
 import 'package:dun_diary_app/feature/stat/presentation/widgets/card/blood_pressure_card.dart';
 import 'package:dun_diary_app/feature/stat/presentation/widgets/stat_card/components/stat_icon.dart';
 import 'package:dun_diary_app/feature/stat/presentation/widgets/stat_card/stat_card.dart';
 import 'package:dun_diary_app/shared/style/dimension.dart';
 import 'package:dun_diary_app/shared/utils/blood_pressure_utils.dart';
+import 'package:dun_diary_app/shared/widgets/custom/button/custom_button.dart';
 import 'package:dun_diary_app/shared/widgets/custom/card/custom_card.dart';
 import 'package:dun_diary_app/shared/widgets/custom/img/custom_lottie_widget.dart';
 import 'package:dun_diary_app/shared/widgets/custom/img/custom_svg_widget.dart';
 import 'package:dun_diary_app/shared/widgets/custom/text/text_widget.dart';
 import 'package:dun_diary_app/shared/widgets/ui/bp_graph_sdk/bp_graph_sdk.dart';
+import 'package:dun_diary_app/shared/widgets/ui/bp_graph_sdk/models/blood_pressure_graph_models.dart';
 import 'package:flutter/material.dart';
 
 class StatSummaryView extends StatelessWidget {
   final List<StatCardData> data; // รับข้อมูลที่จะแสดงในกราฟ
-
-  const StatSummaryView({super.key, required this.data});
+  final List<BloodPressureGraphData> graphData;
+  final StatViewmodel vm;
+  const StatSummaryView({
+    super.key,
+    required this.data,
+    required this.graphData,
+    required this.vm,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -24,14 +33,16 @@ class StatSummaryView extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            CustomButton(text: "Generate Data", onPressed: vm.seedData),
             SizedBox(height: 15),
             // Graph Section
+            Text(graphData.length.toString()),
             CustomCard(
               contentPadding: const EdgeInsets.all(20),
               content: Container(
                 height: 350,
                 width: double.infinity,
-                child: BpGraphSdk(data: List.empty()),
+                child: BpGraphSdk(data: graphData),
               ),
             ),
             const SizedBox(height: 30),
@@ -88,7 +99,7 @@ class StatSummaryView extends StatelessWidget {
 
             // Analyze Seciton
             SizedBox(height: 15),
-            AnalyzeCard(state: AnalyzeState.idle, onPressed: (){}),
+            AnalyzeCard(state: AnalyzeState.idle, onPressed: () {}),
           ],
         ),
       ),
