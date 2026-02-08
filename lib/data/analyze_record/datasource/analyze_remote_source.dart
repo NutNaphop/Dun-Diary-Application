@@ -20,7 +20,7 @@ class AnalyzeRemoteDataSource {
     }).toList();
 
     final token = await _authService.getUserToken();
-    if (token == null) throw Exception("Authentication required");
+    // if (token == null) throw Exception("Authentication required");
 
     try {
       final response = await _networkClient.post(
