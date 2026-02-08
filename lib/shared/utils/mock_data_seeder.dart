@@ -12,16 +12,19 @@ class MockDataSeeder {
     print("🚀 Start Seeding Data...");
     final random = Random();
     final uuid = Uuid();
-    final now = DateTime.now();
 
-    // วนลูปย้อนหลัง 365 วัน (1 ปี)
-    for (int i = 0; i < 365; i++) {
-      // สุ่มว่าวันนี้จะวัดกี่ครั้ง (0 - 2 ครั้ง)
-      int dailyCount = random.nextInt(3);
+    // เริ่มจากสิ้นปี 2569 (2026 ค.ศ.) แล้วย้อนหลัง 3 ปี
+    final startDate = DateTime(2026, 12, 31);
+    const int totalDays = 365 * 3; // 3 ปี (~1095 วัน)
+
+    // วนลูปย้อนหลัง 3 ปี
+    for (int i = 0; i < totalDays; i++) {
+      // สุ่มว่าวันนี้จะวัดกี่ครั้ง (1 - 3 ครั้ง) - การันตีอย่างน้อย 1 ครั้ง
+      int dailyCount = 1 + random.nextInt(3);
 
       for (int j = 0; j < dailyCount; j++) {
-        // สร้างวันที่ย้อนหลัง
-        final date = now.subtract(Duration(days: i));
+        // สร้างวันที่ย้อนหลังจาก startDate
+        final date = startDate.subtract(Duration(days: i));
 
         // สุ่มเวลาในวันนั้น (เช่น 8:00 - 20:00)
         final time = date.add(
