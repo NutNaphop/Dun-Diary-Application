@@ -61,63 +61,53 @@ class BloodPressureUtils {
     return bpLevel;
   }
 
-  static String mapLevelLabel(int level) {
+  static String mapLevelLabel(int? level) {
+    if (level == null) return '-';
     switch (level) {
       case 0:
         return AppStrings.bloodPressure.low;
-
       case 1:
         return AppStrings.bloodPressure.normal;
-
       case 2:
         return AppStrings.bloodPressure.preHigh;
-
       case 3:
         return AppStrings.bloodPressure.high;
-
       default:
         return AppStrings.bloodPressure.danger;
     }
   }
 
-  static Color mapLevelColor(int level) {
+  static Color mapLevelColor(int? level) {
+    if (level == null) return CustomColor.gray500;
     switch (level) {
       case 0:
         return CustomColor.dangerColor;
-
       case 1:
         return CustomColor.green3;
-
       case 2:
         return CustomColor.warningColor;
-
       case 3:
         return CustomColor.quiteDangerColor;
-
       default:
         return CustomColor.dangerColor;
     }
   }
 
-  static String mapLevelAnimation(int level) {
+  static String mapLevelAnimation(int? level) {
+    if (level == null) return AppAnimations.calm; // neutral animation
     switch (level) {
       case 0:
         return AppAnimations.grieved;
-
       case 1:
         return AppAnimations.blushing;
-
       case 2:
         return AppAnimations.calm;
-
       case 3:
         return AppAnimations.calm;
-
       default:
         return AppAnimations.grieved;
     }
   }
-
 
   static double calculateAVGSYS(List<int> sysList) {
     int sumSys = sysList.fold(
