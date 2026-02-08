@@ -17,7 +17,8 @@ class StatSummaryView extends StatelessWidget {
   final String dateLabel;
   final AnalyzeState analyzeState;
   final AnalyzeResultModel? resultFromAi;
-  final List<StatCardData> data; // รับข้อมูลที่จะแสดงในกราฟ
+  final List<StatCardData> data;
+  final int? bloodPressureLevel;
   final List<BloodPressureGraphData> graphData;
   final VoidCallback? onAnalyzePressed;
 
@@ -27,6 +28,7 @@ class StatSummaryView extends StatelessWidget {
     required this.analyzeState,
     required this.resultFromAi,
     required this.data,
+    required this.bloodPressureLevel,
     required this.graphData,
     required this.onAnalyzePressed,
   });
@@ -64,10 +66,10 @@ class StatSummaryView extends StatelessWidget {
             ),
             const SizedBox(height: 15),
             BloodPressureCard(
-              bloodPressureLevel: 1,
+              bloodPressureLevel: bloodPressureLevel,
               date: dateLabel,
               leadingIcon: LottieAnimation(
-                path: BloodPressureUtils.mapLevelAnimation(1),
+                path: BloodPressureUtils.mapLevelAnimation(bloodPressureLevel),
                 width: 90,
                 height: 90,
               ),
@@ -108,12 +110,14 @@ class StatSummaryView extends StatelessWidget {
 
             // Analyze Seciton
             SizedBox(height: 15),
-            AnalyzeCard(
-              state: analyzeState,
-              resultFromAi: resultFromAi,
-              isInternetConnect: true,
-              onPressed: onAnalyzePressed,
-            ),
+
+            if (graphData.isNotEmpty)
+              AnalyzeCard(
+                state: analyzeState,
+                resultFromAi: resultFromAi,
+                isInternetConnect: true,
+                onPressed: onAnalyzePressed,
+              ),
           ],
         ),
       ),

@@ -19,6 +19,8 @@ class StatUtils {
 
     return StatCalulatedType(
       avgBP: "${summary.avgSys} / ${summary.avgDia}",
+      avgSys: summary.avgSys,
+      avgDia: summary.avgDia,
       sd: "± ${sd.toStringAsFixed(1)}",
       maxBP: "${summary.max.sys} / ${summary.max.dia}",
       minBP: "${summary.min.sys} / ${summary.min.dia}",

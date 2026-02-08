@@ -6,21 +6,22 @@ import 'package:dun_diary_app/shared/widgets/custom/text/text_widget.dart';
 import 'package:flutter/material.dart';
 
 class BloodPressureCard extends StatelessWidget {
-  final int bloodPressureLevel;
+  final int? bloodPressureLevel;
   final String date;
   final Widget leadingIcon;
 
   const BloodPressureCard({
     super.key,
-    required this.bloodPressureLevel,
+    this.bloodPressureLevel,
     required this.date,
     required this.leadingIcon,
   });
 
   @override
   Widget build(BuildContext context) {
-    final resultLabel =
-        "ความดัน${BloodPressureUtils.mapLevelLabel(bloodPressureLevel)}";
+    final resultLabel = bloodPressureLevel == null
+        ? "ยังไม่มีข้อมูล"
+        : "ความดัน${BloodPressureUtils.mapLevelLabel(bloodPressureLevel)}";
     return CustomCard(
       contentPadding: EdgeInsets.all(15),
       content: Row(

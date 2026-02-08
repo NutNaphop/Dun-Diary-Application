@@ -7,6 +7,7 @@ import 'package:dun_diary_app/feature/stat/presentation/helper/stat_ui_mappper.d
 import 'package:dun_diary_app/feature/stat/presentation/widgets/analyze_card/analyze_card.dart';
 import 'package:dun_diary_app/feature/stat/presentation/widgets/stat_card/stat_card.dart';
 import 'package:dun_diary_app/shared/utils/analyze_utils.dart';
+import 'package:dun_diary_app/shared/utils/blood_pressure_utils.dart';
 import 'package:dun_diary_app/shared/utils/date_utils.dart';
 import 'package:dun_diary_app/shared/utils/graph_data_mapper.dart';
 import 'package:dun_diary_app/shared/utils/mock_data_seeder.dart';
@@ -27,6 +28,9 @@ class StatViewmodel extends ChangeNotifier {
   // --- State Variables ---
   List<StatCardData> _statsData = [];
   List<StatCardData> get statsData => _statsData;
+
+  int? _bloodPressureLevel;
+  int? get bloodPressureLevel => _bloodPressureLevel;
 
   // --- Graph Variables ---
   List<BloodPressureGraphData> _graphData = [];
@@ -58,9 +62,8 @@ class StatViewmodel extends ChangeNotifier {
   }
 
   Future<void> seedData() async {
-    print("data is seeding");
     await MockDataSeeder(_bpRepo).generateBigData();
-    print("data is already seed");
+    _loadData();
   }
 
   // -- Calendar --
@@ -84,6 +87,11 @@ class StatViewmodel extends ChangeNotifier {
     final records = _bpRepo.getRecordsByRange(range.start, range.end);
     final StatCalulatedType statMap = StatUtils.calculate(records);
 
+    final sys = statMap.avgSys;
+    final dia = statMap.avgDia;
+    _bloodPressureLevel = (sys != null && dia != null)
+        ? BloodPressureUtils.calculateBloodPressureLevel(sys, dia)
+        : null;
     _statsData = StatUiMappper.mapToCardData(statMap);
     _graphData = GraphDataMapper.mapToGraphData(records, _selectedTabIndex);
 
