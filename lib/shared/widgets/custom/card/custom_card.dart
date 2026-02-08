@@ -28,42 +28,42 @@ class CustomCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-        padding: contentPadding,
-        width: double.infinity,
-        decoration: BoxDecoration(
-          color: CustomColor.white,
-          borderRadius: BorderRadius.circular(10),
-          boxShadow: [DropShadow.drop_card],
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          spacing: 10,
-          mainAxisSize: MainAxisSize.max,
-          children: [
-            if (title != null || description != null)
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  if (title != null)
-                    CustomText(
-                      text: title!,
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      textAlign: titleTextAlign,
-                    ),
-                  if (description != null)
-                    CustomText(
-                      text: description!,
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      textAlign: descriptionTextAlign,
-                    ),
-                ],
-              ),
-            Container(child: content),
-          ],
-        ),
+      padding: contentPadding,
+      width: double.infinity,
+      decoration: BoxDecoration(
+        color: CustomColor.white,
+        borderRadius: BorderRadius.circular(10),
+        boxShadow: [DropShadow.drop_card],
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        spacing: 10,
+        mainAxisSize: MainAxisSize.max,
+        children: [
+          if (title != null || description != null)
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                if (title != null)
+                  CustomText(
+                    text: title!,
+                    fontSize: titleFontSize,
+                    fontWeight: FontWeight.bold,
+                    textAlign: titleTextAlign,
+                  ),
+                if (description != null)
+                  CustomText(
+                    text: description!,
+                    fontSize: descriptionFontSize,
+                    fontWeight: FontWeight.bold,
+                    textAlign: descriptionTextAlign,
+                  ),
+              ],
+            ),
+          Container(child: content),
+        ],
+      ),
     );
   }
 }

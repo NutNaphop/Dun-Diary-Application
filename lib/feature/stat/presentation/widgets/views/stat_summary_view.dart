@@ -5,7 +5,6 @@ import 'package:dun_diary_app/feature/stat/presentation/widgets/stat_card/compon
 import 'package:dun_diary_app/feature/stat/presentation/widgets/stat_card/stat_card.dart';
 import 'package:dun_diary_app/shared/style/dimension.dart';
 import 'package:dun_diary_app/shared/utils/blood_pressure_utils.dart';
-import 'package:dun_diary_app/shared/widgets/custom/button/custom_button.dart';
 import 'package:dun_diary_app/shared/widgets/custom/card/custom_card.dart';
 import 'package:dun_diary_app/shared/widgets/custom/img/custom_lottie_widget.dart';
 import 'package:dun_diary_app/shared/widgets/custom/img/custom_svg_widget.dart';
@@ -15,20 +14,20 @@ import 'package:dun_diary_app/shared/widgets/ui/bp_graph_sdk/models/blood_pressu
 import 'package:flutter/material.dart';
 
 class StatSummaryView extends StatelessWidget {
+  final String dateLabel;
   final AnalyzeState analyzeState;
   final AnalyzeResultModel? resultFromAi;
   final List<StatCardData> data; // รับข้อมูลที่จะแสดงในกราฟ
   final List<BloodPressureGraphData> graphData;
-  final VoidCallback? onSeed;
   final VoidCallback? onAnalyzePressed;
 
   const StatSummaryView({
     super.key,
+    required this.dateLabel,
     required this.analyzeState,
     required this.resultFromAi,
     required this.data,
     required this.graphData,
-    this.onSeed,
     required this.onAnalyzePressed,
   });
 
@@ -40,16 +39,19 @@ class StatSummaryView extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            CustomButton(text: "Generate Data", onPressed: onSeed),
-            SizedBox(height: 15),
-
             // Graph Section
             CustomCard(
+              title: dateLabel,
+              titleFontSize: Dimension.fontSizes.h2,
               contentPadding: const EdgeInsets.all(20),
               content: Container(
                 height: 350,
                 width: double.infinity,
-                child: BpGraphSdk(data: graphData),
+                margin: const EdgeInsets.only(top: 10),
+                child: BpGraphSdk(
+                  key: ValueKey("graph_$dateLabel"),
+                  data: graphData,
+                ),
               ),
             ),
             const SizedBox(height: 30),
@@ -63,7 +65,7 @@ class StatSummaryView extends StatelessWidget {
             const SizedBox(height: 15),
             BloodPressureCard(
               bloodPressureLevel: 1,
-              date: "3 ธ.ค. - 19 ธ.ค. 2565",
+              date: dateLabel,
               leadingIcon: LottieAnimation(
                 path: BloodPressureUtils.mapLevelAnimation(1),
                 width: 90,

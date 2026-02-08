@@ -12,6 +12,8 @@ import 'package:dun_diary_app/shared/utils/graph_data_mapper.dart';
 import 'package:dun_diary_app/shared/utils/mock_data_seeder.dart';
 import 'package:dun_diary_app/shared/utils/stat_utils.dart';
 import 'package:dun_diary_app/shared/widgets/ui/bp_graph_sdk/models/blood_pressure_graph_models.dart';
+import 'package:dun_diary_app/shared/widgets/ui/calendar_sdk/models/calendar_types.dart';
+import 'package:dun_diary_app/shared/widgets/ui/calendar_sdk/utils/calendar_utils.dart';
 import 'package:flutter/material.dart';
 
 class StatViewmodel extends ChangeNotifier {
@@ -30,14 +32,30 @@ class StatViewmodel extends ChangeNotifier {
   List<BloodPressureGraphData> _graphData = [];
   List<BloodPressureGraphData> get graphData => _graphData;
 
+  // --- AI Variables ---
   AnalyzeState _analyzeState = AnalyzeState.idle;
   AnalyzeState get analyzeState => _analyzeState;
 
   AnalyzeResultModel? _aiResultContent;
   AnalyzeResultModel? get aiResultContent => _aiResultContent;
 
+  // --- Tab & Calendar Variables ---
   int _selectedTabIndex = 0;
   int get selectedTabIndex => _selectedTabIndex;
+
+  DateTime _focusedDate = DateTime.now();
+  DateTime get focusedDate => _focusedDate;
+
+  String get currentRangeLabel =>
+      DateTimeUtils.getRangeLabel(_selectedTabIndex, _focusedDate);
+  CalendarType get currentCalendarType =>
+      CalendarUtils.getCalendarTypeFromTabIndex(_selectedTabIndex);
+
+  void onCalendarDateSelected(DateTime date) {
+    _focusedDate = date;
+    _loadData();
+    notifyListeners();
+  }
 
   Future<void> seedData() async {
     print("data is seeding");
@@ -45,14 +63,24 @@ class StatViewmodel extends ChangeNotifier {
     print("data is already seed");
   }
 
+  // -- Calendar --
+  void pickDate(DateTime newDate) {
+    _focusedDate = newDate;
+    _loadData();
+  }
+
   void setTabIndex(int index) {
     _selectedTabIndex = index;
+    _focusedDate = DateTime.now(); // กลับมาเป็นวันนี้เสมอเมื่อเปลี่ยนโหมด
     _loadData();
   }
 
   // --- 🟢 PART 1: โหลดข้อมูล & คำนวณสถิติ ---
   Future<void> _loadData() async {
-    final range = DateTimeUtils.calculateDateRange(_selectedTabIndex);
+    final range = DateTimeUtils.calculateDateRange(
+      _selectedTabIndex,
+      _focusedDate,
+    );
     final records = _bpRepo.getRecordsByRange(range.start, range.end);
     final StatCalulatedType statMap = StatUtils.calculate(records);
 
@@ -84,7 +112,10 @@ class StatViewmodel extends ChangeNotifier {
     notifyListeners();
 
     try {
-      final range = DateTimeUtils.calculateDateRange(_selectedTabIndex);
+      final range = DateTimeUtils.calculateDateRange(
+        _selectedTabIndex,
+        _focusedDate,
+      );
       final records = _bpRepo.getRecordsByRange(range.start, range.end);
       final signature = AnalyzeUtils.generateDataSignature(records);
 

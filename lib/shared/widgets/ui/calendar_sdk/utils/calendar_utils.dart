@@ -48,6 +48,7 @@ class CalendarUtils {
     if (a == null || b == null) return false;
     return a.year == b.year && a.month == b.month && a.day == b.day;
   }
+
   static String formatMonthYear(DateTime date) {
     return '${thaiMonths[date.month - 1]} ${toBuddhistYear(date.year)}';
   }
@@ -58,7 +59,6 @@ class CalendarUtils {
     return getCustomWeekRange(date, startDayOfWeek: DateTime.monday);
   }
 
-
   // Helper สำหรับจัดการวันที่ไม่ให้เกินจำนวนวันในเดือน (เช่น 31 ก.พ. -> 28 ก.พ.)
   static DateTime clampDay(int year, int month, int day) {
     final daysInMonth = DateUtils.getDaysInMonth(year, month);
@@ -67,12 +67,19 @@ class CalendarUtils {
   }
 
   /// หาช่วงวันที่ของสัปดาห์ (Start - End) โดยอิงจากวันที่ส่งเข้ามา
-  static DateTimeRange getCustomWeekRange(DateTime date, {int startDayOfWeek = DateTime.monday}) {
+  static DateTimeRange getCustomWeekRange(
+    DateTime date, {
+    int startDayOfWeek = DateTime.monday,
+  }) {
     // 1. คำนวณหาว่าต้องย้อนกลับไปกี่วันถึงจะเจอวันเริ่มสัปดาห์
     int daysToSubtract = (date.weekday - startDayOfWeek + 7) % 7;
 
     // 2. หาวันเริ่มต้น (ตัดเวลาทิ้งให้เหลือแค่ 00:00:00)
-    DateTime start = DateTime(date.year, date.month, date.day).subtract(Duration(days: daysToSubtract));
+    DateTime start = DateTime(
+      date.year,
+      date.month,
+      date.day,
+    ).subtract(Duration(days: daysToSubtract));
 
     // 3. หาวันสิ้นสุด (บวกไปอีก 6 วัน)
     DateTime end = start.add(const Duration(days: 6));
@@ -87,7 +94,9 @@ class CalendarUtils {
   }
 
   static String formatWeekRange(DateTime date) {
-    final start = date.subtract(Duration(days: date.weekday - 1)); // หาวันจันทร์
+    final start = date.subtract(
+      Duration(days: date.weekday - 1),
+    ); // หาวันจันทร์
     final end = start.add(const Duration(days: 6)); // หาวันอาทิตย์
 
     final df = DateFormat('d', 'th'); // วันที่
@@ -142,6 +151,20 @@ class CalendarUtils {
         return currentView != CalendarView.month;
       case CalendarType.year:
         return currentView != CalendarView.year;
+    }
+  }
+
+  /// Maps tab index to CalendarType (0=week, 1=month, 2=year)
+  static CalendarType getCalendarTypeFromTabIndex(int tabIndex) {
+    switch (tabIndex) {
+      case 0:
+        return CalendarType.week;
+      case 1:
+        return CalendarType.month;
+      case 2:
+        return CalendarType.year;
+      default:
+        return CalendarType.week;
     }
   }
 }
