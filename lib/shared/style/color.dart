@@ -18,10 +18,12 @@ class CustomColor {
   static const backgroundColor = gray100;
 
   // Color Status
-  static const dangerColor = Color(0xFFEF4758);
-  static const quiteDangerColor = Color(0xFFFFA500);
-  static const warningColor = Color(0xFFEFD347);
-  static const successColor = Color(0xFF68D16D);
+  static const lowColor = Color(0xFF848385);
+  static const normalColor = Color(0xFF68D16D);
+  static const elevatedColor = Color(0xFFEFD347);
+  static const highLevel1Color = Color(0xFFFFA500);
+  static const highLevel2Color = Color(0xFFEF7447);
+  static const highLevel3CrisisColor = Color(0xFFEF474A);
   static const infoColor = Color(0xFF007BFF);
 
   // Color

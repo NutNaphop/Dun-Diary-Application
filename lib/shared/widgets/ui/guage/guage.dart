@@ -57,11 +57,14 @@ class BloodPressureGauge extends StatelessWidget {
                   height: gaugeHeight,
                   child: Row(
                     children: [
-                      _buildColorSegment(color: CustomColor.dangerColor),
-                      _buildColorSegment(color: CustomColor.successColor),
-                      _buildColorSegment(color: CustomColor.warningColor),
-                      _buildColorSegment(color: CustomColor.quiteDangerColor),
-                      _buildColorSegment(color: CustomColor.dangerColor),
+                      _buildColorSegment(color: CustomColor.lowColor),
+                      _buildColorSegment(color: CustomColor.normalColor),
+                      _buildColorSegment(color: CustomColor.elevatedColor),
+                      _buildColorSegment(color: CustomColor.highLevel1Color),
+                      _buildColorSegment(color: CustomColor.highLevel2Color),
+                      _buildColorSegment(
+                        color: CustomColor.highLevel3CrisisColor,
+                      ),
                     ],
                   ),
                 ),

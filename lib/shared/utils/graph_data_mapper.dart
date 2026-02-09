@@ -80,34 +80,40 @@ class GraphDataMapper {
   }
 
   // ===========================================================================
-  // 🗓️ Monthly View: Group by Week (1-7, 8-14, etc.)
+  // 🗓️ Monthly View: Group by Week (จันทร์-อาทิตย์)
   // ===========================================================================
 
   /// Group ข้อมูลรายสัปดาห์ในเดือน
   ///
-  /// - xLabel: "1-7", "8-14", "15-21", "22-28", "29+"
+  /// - xLabel: "9-15", "16-22" (วันจันทร์-อาทิตย์ของสัปดาห์นั้น)
+  /// - ใช้ ISO week (เริ่มจากวันจันทร์)
   static List<BloodPressureGraphData> _mapMonthly(List<BPRecord> records) {
+    if (records.isEmpty) return [];
+
     final Map<String, List<BPRecord>> grouped = {};
 
     for (var r in records) {
-      final day = r.createdAt.day;
-      String key;
-      if (day <= 7)
-        key = "1-7";
-      else if (day <= 14)
-        key = "8-14";
-      else if (day <= 21)
-        key = "15-21";
-      else if (day <= 28)
-        key = "22-28";
-      else
-        key = "29+";
+      // หาวันจันทร์ของสัปดาห์นี้
+      final weekStart = _getWeekStart(r.createdAt);
+      // หาวันอาทิตย์ของสัปดาห์นี้
+      final weekEnd = weekStart.add(const Duration(days: 6));
+
+      // สร้าง key: "9-15"
+      final key = "${weekStart.day}-${weekEnd.day}";
 
       if (!grouped.containsKey(key)) grouped[key] = [];
       grouped[key]!.add(r);
     }
 
-    return grouped.entries.map((entry) {
+    // เรียงตาม key (จากสัปดาห์แรกไปสุดท้าย)
+    final sortedEntries = grouped.entries.toList()
+      ..sort((a, b) {
+        final dayA = int.parse(a.key.split('-')[0]);
+        final dayB = int.parse(b.key.split('-')[0]);
+        return dayA.compareTo(dayB);
+      });
+
+    return sortedEntries.map((entry) {
       final list = entry.value;
       final avgSys = BloodPressureUtils.calculateAVGSYS(
         list.map((e) => e.sys).toList(),
@@ -126,6 +132,13 @@ class GraphDataMapper {
         sourceData: list.first,
       );
     }).toList();
+  }
+
+  /// หาวันจันทร์ของสัปดาห์ที่ระบุ
+  static DateTime _getWeekStart(DateTime date) {
+    // weekday: 1 = Monday, 7 = Sunday
+    final daysFromMonday = date.weekday - DateTime.monday;
+    return DateTime(date.year, date.month, date.day - daysFromMonday);
   }
 
   // ===========================================================================
@@ -169,7 +182,7 @@ class GraphDataMapper {
   // 🔧 Helper: Int → Enum Conversion
   // ===========================================================================
 
-  /// แปลง level int (0-4) เป็น BloodPressureLevel enum
+  /// แปลง level int (0-5) เป็น BloodPressureLevel enum
   static BloodPressureLevel _intToEnum(int level) {
     switch (level) {
       case 0:
@@ -177,11 +190,13 @@ class GraphDataMapper {
       case 1:
         return BloodPressureLevel.normal;
       case 2:
-        return BloodPressureLevel.preHigh;
+        return BloodPressureLevel.elevated;
       case 3:
-        return BloodPressureLevel.high;
+        return BloodPressureLevel.highStage1;
       case 4:
-        return BloodPressureLevel.veryHigh;
+        return BloodPressureLevel.highStage2;
+      case 5:
+        return BloodPressureLevel.crisis;
       default:
         return BloodPressureLevel.normal;
     }

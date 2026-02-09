@@ -22,6 +22,7 @@ class StatSummaryView extends StatelessWidget {
   final List<BloodPressureGraphData> graphData;
   final bool isInternetConnected;
   final VoidCallback? onAnalyzePressed;
+  final VoidCallback? onRecordPressed;
 
   const StatSummaryView({
     super.key,
@@ -33,6 +34,7 @@ class StatSummaryView extends StatelessWidget {
     required this.graphData,
     this.isInternetConnected = true,
     required this.onAnalyzePressed,
+    required this.onRecordPressed,
   });
 
   @override
@@ -55,6 +57,7 @@ class StatSummaryView extends StatelessWidget {
                 child: BpGraphSdk(
                   key: ValueKey("graph_$dateLabel"),
                   data: graphData,
+                  onButtonPress: onRecordPressed,
                 ),
               ),
             ),

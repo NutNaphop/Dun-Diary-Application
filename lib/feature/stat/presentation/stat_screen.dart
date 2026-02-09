@@ -35,7 +35,6 @@ class _StatScreenState extends State<StatScreen> {
   @override
   Widget build(BuildContext context) {
     final viewModel = context.watch<StatViewmodel>();
-    final _repository = context.read<BloodPressureRepository>();
     return CustomScaffold(
       appBar: MainAppBar(
         title: AppStrings.stat.stat,
@@ -43,7 +42,7 @@ class _StatScreenState extends State<StatScreen> {
         actions: [
           IconButtonSVG(
             path: AppIcons.outline.calendar,
-            onPressed: () => _showCalendarDialog(viewModel, _repository),
+            onPressed: () => _showCalendarDialog(context, viewModel),
           ),
           IconButtonSVG(
             path: AppIcons.outline.dotThree,
@@ -70,6 +69,7 @@ class _StatScreenState extends State<StatScreen> {
             graphData: viewModel.graphData,
             isInternetConnected: viewModel.isInternetConnected,
             onAnalyzePressed: viewModel.triggerAnalyze,
+            onRecordPressed: viewModel.redirectToRecord,
           ),
         ),
       ),
@@ -77,9 +77,10 @@ class _StatScreenState extends State<StatScreen> {
   }
 
   Future<void> _showCalendarDialog(
+    BuildContext context,
     StatViewmodel viewModel,
-    BloodPressureRepository repository,
   ) async {
+    final repository = context.read<BloodPressureRepository>();
     final selectedDate = await showDialog<DateTime>(
       context: context,
       builder: (_) => CalendarSDK(

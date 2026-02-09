@@ -75,10 +75,21 @@ class _BloodPressureStrings {
   final String weightLabel = "น้ำหนักตัว";
   final String weightUnit = "kg";
 
-  final String low = "ต่ำ";
-  final String normal = "ปกติ";
+  // Blood Pressure Levels (6 levels: 0-5)
+  final String low = "ต่ำ"; // Level 0: SYS < 90 หรือ DIA < 60
+  final String normal = "ปกติ"; // Level 1: SYS 90-119 และ DIA 60-79
+  final String elevated = "สูง"; // Level 2: SYS 120-129 และ DIA < 80
+  final String highStage1 = "สูงระดับ 1"; // Level 3: SYS 130-139 หรือ DIA 80-89
+  final String highStage2 =
+      "สูงระดับ 2"; // Level 4: SYS 140-179 หรือ DIA 90-119
+  final String crisis = "วิกฤต"; // Level 5: SYS >= 180 หรือ DIA >= 120
+
+  // Legacy (for backward compatibility)
+  @Deprecated('Use elevated instead')
   final String preHigh = "เริ่มสูง";
+  @Deprecated('Use highStage1 or highStage2 instead')
   final String high = "สูง";
+  @Deprecated('Use crisis instead')
   final String danger = "อันตราย";
 }
 

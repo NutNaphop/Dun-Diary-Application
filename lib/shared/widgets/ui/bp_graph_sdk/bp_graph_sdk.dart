@@ -112,8 +112,8 @@ class _BpGraphSdkState extends State<BpGraphSdk>
                             ),
                           ),
 
-                          // 2. Y-Axis Labels
-                          for (int i = 0; i < 5; i++)
+                          // 2. Y-Axis Labels (6 levels)
+                          for (int i = 0; i < 6; i++)
                             Positioned(
                               right: 0,
                               top:
@@ -126,7 +126,7 @@ class _BpGraphSdkState extends State<BpGraphSdk>
                               width: yLabelWidth,
                               child: CustomText(
                                 text: BloodPressureLevel.values[i].label,
-                                fontSize: Dimension.fontSizes.rg,
+                                fontSize: Dimension.fontSizes.esm,
                                 fontWeight: Dimension.fontWeights.regular,
                                 color: CustomColor.gray600,
                                 textAlign: TextAlign.right,
@@ -160,22 +160,28 @@ class _BpGraphSdkState extends State<BpGraphSdk>
                             ...renderData.asMap().entries.map((entry) {
                               final i = entry.key;
                               final item = entry.value;
-                              
+
                               // คำนวณ threshold สำหรับ animation
                               // ถ้ามีตัวเดียวให้เริ่มที่ 0 เลย ถ้ามีหลายตัวให้ทยอยแสดงตามสัดส่วน
-                              double dotThreshold = renderData.length > 1 
-                                  ? i / renderData.length 
+                              double dotThreshold = renderData.length > 1
+                                  ? i / renderData.length
                                   : 0.0;
-                              
+
                               double scale = 0.0;
 
                               if (_animation.value >= dotThreshold) {
                                 double entryProgress = renderData.length > 1
-                                    ? (_animation.value - dotThreshold) * renderData.length
+                                    ? (_animation.value - dotThreshold) *
+                                          renderData.length
                                     : _animation.value;
-                                    
-                                double clampedProgress = entryProgress.clamp(0.0, 1.0);
-                                scale = Curves.elasticOut.transform(clampedProgress);
+
+                                double clampedProgress = entryProgress.clamp(
+                                  0.0,
+                                  1.0,
+                                );
+                                scale = Curves.elasticOut.transform(
+                                  clampedProgress,
+                                );
 
                                 return Positioned(
                                   left:
@@ -197,8 +203,7 @@ class _BpGraphSdkState extends State<BpGraphSdk>
                                     child: GestureDetector(
                                       onTap: isNoData
                                           ? null
-                                          : () =>
-                                                widget.onPointTap?.call(item),
+                                          : () => widget.onPointTap?.call(item),
                                       child: Container(
                                         width: GraphConfig.pointSize,
                                         height: GraphConfig.pointSize,
@@ -239,11 +244,11 @@ List<BloodPressureGraphData> _getMockData() {
   return List.generate(7, (index) {
     final levels = [
       BloodPressureLevel.normal,
-      BloodPressureLevel.preHigh,
+      BloodPressureLevel.elevated,
       BloodPressureLevel.normal,
-      BloodPressureLevel.preHigh,
+      BloodPressureLevel.elevated,
       BloodPressureLevel.normal,
-      BloodPressureLevel.preHigh,
+      BloodPressureLevel.elevated,
       BloodPressureLevel.normal,
     ];
     return BloodPressureGraphData(
