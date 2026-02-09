@@ -27,9 +27,13 @@ class AnalyzeResultModel {
 
   // Factory สำหรับแปลง JSON จาก Backend
   factory AnalyzeResultModel.fromJson(Map<String, dynamic> json) {
+    // Handle risk_level ที่อาจมาเป็น int หรือ String
+    final riskLevelRaw = json['risk_level'];
+    final riskLevel = riskLevelRaw?.toString() ?? '0';
+
     return AnalyzeResultModel(
       summary: json['summary'] ?? '',
-      riskLevel: json['risk_level'] ?? '0',
+      riskLevel: riskLevel,
       suggestions: List<String>.from(json['suggest'] ?? []),
       reference: json['reference'] ?? '',
     );

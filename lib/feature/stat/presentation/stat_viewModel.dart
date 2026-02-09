@@ -9,6 +9,7 @@ import 'package:dun_diary_app/feature/stat/model/stat_model.dart';
 import 'package:dun_diary_app/feature/stat/presentation/helper/stat_ui_mappper.dart';
 import 'package:dun_diary_app/feature/stat/presentation/widgets/analyze_card/analyze_card.dart';
 import 'package:dun_diary_app/feature/stat/presentation/widgets/stat_card/stat_card.dart';
+import 'package:dun_diary_app/shared/utils/analyze_summary_mapper.dart';
 import 'package:dun_diary_app/shared/utils/analyze_utils.dart';
 import 'package:dun_diary_app/shared/utils/blood_pressure_utils.dart';
 import 'package:dun_diary_app/shared/utils/date_utils.dart';
@@ -208,8 +209,8 @@ class StatViewmodel extends ChangeNotifier {
   ///
   /// Flow:
   /// 1. เปลี่ยน state เป็น processing
-  /// 2. ดึง records ใหม่
-  /// 3. เรียก AI API
+  /// 2. ดึง records และสร้าง summary
+  /// 3. ส่ง summary ไป AI API
   /// 4. บันทึก cache
   /// 5. อัปเดต state (success/error)
   Future<void> triggerAnalyze() async {
@@ -224,9 +225,16 @@ class StatViewmodel extends ChangeNotifier {
       final records = _bpRepo.getRecordsByRange(range.start, range.end);
       final signature = AnalyzeUtils.generateDataSignature(records);
 
+      // สร้าง summary จาก records
+      final summary = AnalyzeSummaryMapper.mapToSummary(
+        records,
+        _selectedTabIndex,
+        currentRangeLabel,
+      );
+
       final result = await _analyzeRepo.analyzeAndSave(
         key: range.key,
-        records: records,
+        summary: summary,
         signature: signature,
       );
       _analyzeState = AnalyzeState.success;
