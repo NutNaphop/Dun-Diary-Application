@@ -24,23 +24,30 @@ class DateTimeUtils {
     DateTime anchorDate, // ✅ รับวันอ้างอิงเข้ามา (แทนการใช้ DateTime.now())
   ) {
     if (index == 0) {
-      // [Week] : ดูย้อนหลัง 7 วันจาก anchorDate
-      int daysToAdd = DateTime.sunday - anchorDate.weekday;
-      DateTime weekEnd = anchorDate.add(Duration(days: daysToAdd));
+      int daysToSubtract = anchorDate.weekday - DateTime.monday;
+      DateTime weekStart = anchorDate.subtract(Duration(days: daysToSubtract));
+
+      final start = DateTime(
+        weekStart.year,
+        weekStart.month,
+        weekStart.day,
+        0,
+        0,
+        0,
+      );
       final end = DateTime(
-        weekEnd.year,
-        weekEnd.month,
-        weekEnd.day,
+        weekStart.year,
+        weekStart.month,
+        weekStart.day + 6, // อาทิตย์
         23,
         59,
         59,
       );
-      final start = end.subtract(const Duration(days: 6));
 
       return (
         start: start,
         end: end,
-        key: "week_${end.year}_${getWeekOfYear(end)}",
+        key: "week_${start.year}_${getWeekOfYear(start)}",
       );
     } else if (index == 1) {
       // [Month] : วันที่ 1 ถึงวันสิ้นเดือน ของเดือน anchorDate
@@ -79,18 +86,18 @@ class DateTimeUtils {
 
     if (index == 0) {
       // Week
-      return "${start.day} ${_monthShort(start.month)} - ${end.day} ${_monthShort(end.month)} ${end.year + 543}";
+      return "${start.day} ${getMonthShort(start.month)} - ${end.day} ${getMonthShort(end.month)} ${end.year + 543}";
     } else if (index == 1) {
       // Month
-      return "${_monthFull(anchorDate.month)} ${anchorDate.year + 543}";
+      return "${getMonthFull(anchorDate.month)} ${anchorDate.year + 543}";
     } else {
       // Year
       return "ปี ${anchorDate.year + 543}";
     }
   }
 
-  // Helper แปลงชื่อเดือนไทย
-  static String _monthShort(int month) {
+  // Helper แปลงชื่อเดือนไทย (ย่อ)
+  static String getMonthShort(int month) {
     const months = [
       "ม.ค.",
       "ก.พ.",
@@ -108,7 +115,8 @@ class DateTimeUtils {
     return months[month - 1];
   }
 
-  static String _monthFull(int month) {
+  // Helper แปลงชื่อเดือนไทย (เต็ม)
+  static String getMonthFull(int month) {
     const months = [
       "มกราคม",
       "กุมภาพันธ์",

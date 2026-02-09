@@ -2,6 +2,7 @@ import 'package:dun_diary_app/data/analyze_record/model/analyze_result_model.dar
 import 'package:dun_diary_app/data/analyze_record/repository/analyze_repository.dart';
 import 'package:dun_diary_app/data/blood_pressure/model/bp_record.dart';
 import 'package:dun_diary_app/data/blood_pressure/repository/blood_pressure_repository.dart';
+import 'package:dun_diary_app/core/network/network_info.dart';
 import 'package:dun_diary_app/feature/stat/model/stat_model.dart';
 import 'package:dun_diary_app/feature/stat/presentation/helper/stat_ui_mappper.dart';
 import 'package:dun_diary_app/feature/stat/presentation/widgets/analyze_card/analyze_card.dart';
@@ -20,8 +21,9 @@ import 'package:flutter/material.dart';
 class StatViewmodel extends ChangeNotifier {
   final BloodPressureRepository _bpRepo;
   final AnalyzeRepository _analyzeRepo;
+  final NetworkInfo _networkInfo;
 
-  StatViewmodel(this._bpRepo, this._analyzeRepo) {
+  StatViewmodel(this._bpRepo, this._analyzeRepo, this._networkInfo) {
     _loadData();
   }
 
@@ -42,6 +44,10 @@ class StatViewmodel extends ChangeNotifier {
 
   AnalyzeResultModel? _aiResultContent;
   AnalyzeResultModel? get aiResultContent => _aiResultContent;
+
+  // --- Network Variables ---
+  bool _isInternetConnected = true;
+  bool get isInternetConnected => _isInternetConnected;
 
   // --- Tab & Calendar Variables ---
   int _selectedTabIndex = 0;
@@ -80,6 +86,9 @@ class StatViewmodel extends ChangeNotifier {
 
   // --- 🟢 PART 1: โหลดข้อมูล & คำนวณสถิติ ---
   Future<void> _loadData() async {
+    // Check internet connectivity
+    _isInternetConnected = await _networkInfo.isConnected;
+
     final range = DateTimeUtils.calculateDateRange(
       _selectedTabIndex,
       _focusedDate,
@@ -102,6 +111,13 @@ class StatViewmodel extends ChangeNotifier {
 
   // --- 🟣 PART 2: AI ---
   Future<void> _checkAiCache(String key, List<BPRecord> records) async {
+    // ถ้าไม่มีข้อมูลให้แสดง noData state
+    if (records.isEmpty) {
+      _analyzeState = AnalyzeState.noData;
+      _aiResultContent = null;
+      return;
+    }
+
     final currentSig = AnalyzeUtils.generateDataSignature(records);
     final cache = _analyzeRepo.getCachedAnalysis(key);
 
