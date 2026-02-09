@@ -1,7 +1,7 @@
 import 'package:dun_diary_app/data/analyze_record/datasource/analyze_local_source.dart';
 import 'package:dun_diary_app/data/analyze_record/datasource/analyze_remote_source.dart';
 import 'package:dun_diary_app/data/analyze_record/model/analyze_cache_model.dart';
-import 'package:dun_diary_app/data/blood_pressure/model/bp_record.dart';
+import 'package:dun_diary_app/data/analyze_record/model/analyze_summary_model.dart';
 
 class AnalyzeRepository {
   final AnalyzeLocalDataSource _localDataSource;
@@ -13,13 +13,13 @@ class AnalyzeRepository {
     return _localDataSource.getCache(key);
   }
 
-  // 2. ยิง AI แล้ว Save ลง Cache (ใช้ Remote + Local)
+  /// ยิง AI วิเคราะห์ด้วย summary แล้ว Save ลง Cache
   Future<AnalysisCache> analyzeAndSave({
     required String key,
-    required List<BPRecord> records,
+    required AnalyzeSummary summary,
     required String signature,
   }) async {
-    final aiResult = await _remoteDataSource.fetchAnalysisFromAi(records);
+    final aiResult = await _remoteDataSource.fetchAnalysisFromAi(summary);
 
     final newCache = AnalysisCache(
       content: aiResult,

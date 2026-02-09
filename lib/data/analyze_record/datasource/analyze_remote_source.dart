@@ -1,7 +1,7 @@
 import 'package:dun_diary_app/core/auth/auth_service.dart';
 import 'package:dun_diary_app/core/network/network_client.dart';
 import 'package:dun_diary_app/data/analyze_record/model/analyze_result_model.dart';
-import 'package:dun_diary_app/data/blood_pressure/model/bp_record.dart';
+import 'package:dun_diary_app/data/analyze_record/model/analyze_summary_model.dart';
 
 class AnalyzeRemoteDataSource {
   final NetworkClient _networkClient;
@@ -9,18 +9,11 @@ class AnalyzeRemoteDataSource {
 
   AnalyzeRemoteDataSource(this._networkClient, this._authService);
 
-  Future<AnalyzeResultModel> fetchAnalysisFromAi(List<BPRecord> records) async {
-    final recordsJson = records.map((r) {
-      return {
-        "sys": r.sys,
-        "dia": r.dia,
-        "pulse": r.pulse,
-        "date": '${r.createdAt.toUtc().toIso8601String().split('.').first}Z',
-      };
-    }).toList();
-
+  /// ส่ง summary ไป AI วิเคราะห์
+  ///
+  /// [summary] - ข้อมูลสรุปที่จะส่งไป (แทน raw records)
+  Future<AnalyzeResultModel> fetchAnalysisFromAi(AnalyzeSummary summary) async {
     final token = await _authService.getUserToken();
-    // if (token == null) throw Exception("Authentication required");
 
     try {
       final response = await _networkClient.post(
@@ -29,12 +22,12 @@ class AnalyzeRemoteDataSource {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer $token',
         },
-        body: {"records": recordsJson},
+        body: summary.toJson(),
       );
 
       if (response != null && response is Map<String, dynamic>) {
         if (response['success'] == true) {
-          final data = response['data']['analysis']; // เจาะเข้าไปข้างใน
+          final data = response['data']['analysis'];
           return AnalyzeResultModel.fromJson(data);
         } else {
           throw Exception("API Error: Success is false");
