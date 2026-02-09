@@ -20,6 +20,7 @@ class StatSummaryView extends StatelessWidget {
   final List<StatCardData> data;
   final int? bloodPressureLevel;
   final List<BloodPressureGraphData> graphData;
+  final bool isInternetConnected;
   final VoidCallback? onAnalyzePressed;
 
   const StatSummaryView({
@@ -30,6 +31,7 @@ class StatSummaryView extends StatelessWidget {
     required this.data,
     required this.bloodPressureLevel,
     required this.graphData,
+    this.isInternetConnected = true,
     required this.onAnalyzePressed,
   });
 
@@ -108,16 +110,14 @@ class StatSummaryView extends StatelessWidget {
               },
             ),
 
-            // Analyze Seciton
+            // Analyze Section
             SizedBox(height: 15),
-
-            if (graphData.isNotEmpty)
-              AnalyzeCard(
-                state: analyzeState,
-                resultFromAi: resultFromAi,
-                isInternetConnect: true,
-                onPressed: onAnalyzePressed,
-              ),
+            AnalyzeCard(
+              state: analyzeState,
+              resultFromAi: resultFromAi,
+              isInternetConnect: isInternetConnected,
+              onPressed: onAnalyzePressed,
+            ),
           ],
         ),
       ),

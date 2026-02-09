@@ -1,5 +1,6 @@
 import 'package:dun_diary_app/data/blood_pressure/model/bp_record.dart';
 import 'package:dun_diary_app/shared/utils/blood_pressure_utils.dart'; // import utils เดิมของคุณ
+import 'package:dun_diary_app/shared/utils/date_utils.dart';
 import 'package:dun_diary_app/shared/widgets/ui/bp_graph_sdk/models/blood_pressure_graph_models.dart';
 import 'package:intl/intl.dart'; // อย่าลืมลง package intl นะครับ เพื่อจัด format วันที่
 
@@ -114,7 +115,9 @@ class GraphDataMapper {
     final Map<String, List<BPRecord>> grouped = {};
 
     for (var r in records) {
-      final key = DateFormat('MMM').format(r.createdAt); // "Jan", "Feb"
+      final key = DateTimeUtils.getMonthShort(
+        r.createdAt.month,
+      ); // "ม.ค.", "ก.พ."
       if (!grouped.containsKey(key)) grouped[key] = [];
       grouped[key]!.add(r);
     }

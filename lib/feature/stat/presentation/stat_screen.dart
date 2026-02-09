@@ -1,3 +1,4 @@
+import 'package:dun_diary_app/core/network/network_info.dart';
 import 'package:dun_diary_app/data/analyze_record/repository/analyze_repository.dart';
 import 'package:dun_diary_app/data/blood_pressure/repository/blood_pressure_repository.dart';
 import 'package:dun_diary_app/feature/stat/presentation/stat_viewModel.dart';
@@ -20,6 +21,7 @@ class StatScreen extends StatefulWidget {
       create: (context) => StatViewmodel(
         context.read<BloodPressureRepository>(),
         context.read<AnalyzeRepository>(),
+        context.read<NetworkInfo>(),
       ),
       child: const StatScreen(),
     );
@@ -50,41 +52,26 @@ class _StatScreenState extends State<StatScreen> {
         ],
       ),
       body: AppTabBar(
-        onTap: (index) => viewModel.setTabIndex(index), // อัปเดตค่าใน ViewModel
+        onTap: (index) => viewModel.setTabIndex(index),
         titles: [
           AppStrings.calendar.week,
           AppStrings.calendar.month,
           AppStrings.calendar.year,
         ],
-        tabViews: [
-          StatSummaryView(
+        // ใช้ StatSummaryView เดียว เพราะ ViewModel จัดการข้อมูลตาม tab อยู่แล้ว
+        tabViews: List.generate(
+          3,
+          (_) => StatSummaryView(
             dateLabel: viewModel.currentRangeLabel,
             analyzeState: viewModel.analyzeState,
             resultFromAi: viewModel.aiResultContent,
             bloodPressureLevel: viewModel.bloodPressureLevel,
             data: viewModel.statsData,
             graphData: viewModel.graphData,
+            isInternetConnected: viewModel.isInternetConnected,
             onAnalyzePressed: viewModel.triggerAnalyze,
-          ), // ข้อมูลสัปดาห์
-          StatSummaryView(
-            dateLabel: viewModel.currentRangeLabel,
-            analyzeState: viewModel.analyzeState,
-            resultFromAi: viewModel.aiResultContent,
-            bloodPressureLevel: viewModel.bloodPressureLevel,
-            data: viewModel.statsData,
-            graphData: viewModel.graphData,
-            onAnalyzePressed: viewModel.triggerAnalyze,
-          ), // ข้อมูลเดือน
-          StatSummaryView(
-            dateLabel: viewModel.currentRangeLabel,
-            analyzeState: viewModel.analyzeState,
-            resultFromAi: viewModel.aiResultContent,
-            bloodPressureLevel: viewModel.bloodPressureLevel,
-            data: viewModel.statsData,
-            graphData: viewModel.graphData,
-            onAnalyzePressed: viewModel.triggerAnalyze,
-          ), // ข้อมูลปี
-        ],
+          ),
+        ),
       ),
     );
   }

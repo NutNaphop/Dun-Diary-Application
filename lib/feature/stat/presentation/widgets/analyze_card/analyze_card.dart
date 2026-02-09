@@ -1,12 +1,13 @@
 import 'package:dun_diary_app/data/analyze_record/model/analyze_result_model.dart';
 import 'package:dun_diary_app/feature/stat/presentation/widgets/analyze_card/components/analyze_error_view.dart';
 import 'package:dun_diary_app/feature/stat/presentation/widgets/analyze_card/components/analyze_idle_view.dart';
+import 'package:dun_diary_app/feature/stat/presentation/widgets/analyze_card/components/analyze_no_data_view.dart';
 import 'package:dun_diary_app/feature/stat/presentation/widgets/analyze_card/components/analyze_process_view.dart';
 import 'package:dun_diary_app/feature/stat/presentation/widgets/analyze_card/components/analyze_success_view.dart';
 import 'package:dun_diary_app/shared/widgets/custom/card/custom_card.dart';
 import 'package:flutter/material.dart';
 
-enum AnalyzeState { idle, processing, error, success }
+enum AnalyzeState { idle, processing, error, success, noData }
 
 class AnalyzeCard extends StatelessWidget {
   final AnalyzeState state;
@@ -45,7 +46,6 @@ class AnalyzeCard extends StatelessWidget {
           onPressed: onPressed,
         );
       case AnalyzeState.success:
-        // ป้องกันกรณีสถานะเป็น success แต่ไม่มีข้อมูลผลลัพธ์
         if (resultFromAi == null) {
           return AnalyzeIdleView(
             isInternetConnect: isInternetConnect,
@@ -57,6 +57,8 @@ class AnalyzeCard extends StatelessWidget {
           isInternetConnect: isInternetConnect,
           onPressed: onPressed,
         );
+      case AnalyzeState.noData:
+        return const AnalyzeNoDataView();
     }
   }
 }
