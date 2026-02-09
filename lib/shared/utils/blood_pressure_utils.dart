@@ -120,20 +120,20 @@ class BloodPressureUtils {
 
   /// แปลง level (0-5) เป็น animation
   static String mapLevelAnimation(int? level) {
-    if (level == null) return AppAnimations.calm;
+    if (level == null) return AppAnimations.empty;
     switch (level) {
       case 0:
-        return AppAnimations.grieved; // ต่ำ - ห่วงใย
+        return AppAnimations.dizzyFace; // ต่ำ - ห่วงใย
       case 1:
         return AppAnimations.blushing; // ปกติ - ยิ้ม
       case 2:
         return AppAnimations.calm; // สูง - สงบ
       case 3:
-        return AppAnimations.calm; // สูงระดับ 1 - สงบ
+        return AppAnimations.grieved; // สูงระดับ 1 - สงบ
       case 4:
-        return AppAnimations.grieved; // สูงระดับ 2 - ห่วงใย
+        return AppAnimations.sadTear; // สูงระดับ 2 - ห่วงใย
       case 5:
-        return AppAnimations.grieved; // วิกฤต - ห่วงใย
+        return AppAnimations.error; // วิกฤต - ห่วงใย
       default:
         return AppAnimations.calm;
     }
