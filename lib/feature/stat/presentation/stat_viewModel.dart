@@ -1,3 +1,5 @@
+import 'package:dun_diary_app/core/constant/app_routes.dart';
+import 'package:dun_diary_app/core/services/navigation_service.dart';
 import 'package:dun_diary_app/data/analyze_record/model/analyze_result_model.dart';
 import 'package:dun_diary_app/data/analyze_record/repository/analyze_repository.dart';
 import 'package:dun_diary_app/data/blood_pressure/model/bp_record.dart';
@@ -42,7 +44,7 @@ class StatViewmodel extends ChangeNotifier {
   List<StatCardData> _statsData = [];
   List<StatCardData> get statsData => _statsData;
 
-  /// ระดับความดันโลหิตจากค่าเฉลี่ย (0-4, null = ไม่มีข้อมูล)
+  /// ระดับความดันโลหิตจากค่าเฉลี่ย (0-5, null = ไม่มีข้อมูล)
   int? _bloodPressureLevel;
   int? get bloodPressureLevel => _bloodPressureLevel;
 
@@ -118,6 +120,15 @@ class StatViewmodel extends ChangeNotifier {
   Future<void> seedData() async {
     await MockDataSeeder(_bpRepo).generateBigData();
     _loadData();
+  }
+
+  void redirectToRecord() async {
+    final didSave = await NavigationService.instance.pushNamed(
+      AppRoutes.record,
+    );
+    if (didSave == true) {
+      _loadData();
+    }
   }
 
   // ===========================================================================
