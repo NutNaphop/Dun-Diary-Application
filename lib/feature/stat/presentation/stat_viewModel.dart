@@ -18,6 +18,13 @@ import 'package:dun_diary_app/shared/widgets/ui/calendar_sdk/models/calendar_typ
 import 'package:dun_diary_app/shared/widgets/ui/calendar_sdk/utils/calendar_utils.dart';
 import 'package:flutter/material.dart';
 
+/// ViewModel สำหรับ Stat Screen
+///
+/// รับผิดชอบ:
+/// - โหลดและคำนวณสถิติความดันโลหิต (ค่าเฉลี่ย, SD, ค่าสูง/ต่ำสุด)
+/// - จัดการ Tab (Week/Month/Year) และ Calendar navigation
+/// - เรียก AI วิเคราะห์ข้อมูล + จัดการ cache
+/// - ตรวจสอบ Internet connectivity
 class StatViewmodel extends ChangeNotifier {
   final BloodPressureRepository _bpRepo;
   final AnalyzeRepository _analyzeRepo;
@@ -27,75 +34,122 @@ class StatViewmodel extends ChangeNotifier {
     _loadData();
   }
 
-  // --- State Variables ---
+  // ===========================================================================
+  // 📊 SECTION 1: State Variables
+  // ===========================================================================
+
+  /// ข้อมูลสถิติสำหรับแสดงใน StatCard (ค่าเฉลี่ย, SD, ค่าสูง/ต่ำสุด)
   List<StatCardData> _statsData = [];
   List<StatCardData> get statsData => _statsData;
 
+  /// ระดับความดันโลหิตจากค่าเฉลี่ย (0-4, null = ไม่มีข้อมูล)
   int? _bloodPressureLevel;
   int? get bloodPressureLevel => _bloodPressureLevel;
 
-  // --- Graph Variables ---
+  /// ข้อมูลสำหรับแสดงกราฟ
   List<BloodPressureGraphData> _graphData = [];
   List<BloodPressureGraphData> get graphData => _graphData;
 
-  // --- AI Variables ---
+  // ===========================================================================
+  // 🤖 SECTION 2: AI Analyze State
+  // ===========================================================================
+
+  /// สถานะการวิเคราะห์ AI (idle, processing, success, error, noData)
   AnalyzeState _analyzeState = AnalyzeState.idle;
   AnalyzeState get analyzeState => _analyzeState;
 
+  /// ผลลัพธ์จาก AI (null ถ้ายังไม่เคยวิเคราะห์)
   AnalyzeResultModel? _aiResultContent;
   AnalyzeResultModel? get aiResultContent => _aiResultContent;
 
-  // --- Network Variables ---
+  // ===========================================================================
+  // 🌐 SECTION 3: Network State
+  // ===========================================================================
+
+  /// สถานะ Internet connection (ใช้ enable/disable ปุ่ม AI)
   bool _isInternetConnected = true;
   bool get isInternetConnected => _isInternetConnected;
 
-  // --- Tab & Calendar Variables ---
+  // ===========================================================================
+  // 📅 SECTION 4: Tab & Calendar State
+  // ===========================================================================
+
+  /// Tab Index (0 = Week, 1 = Month, 2 = Year)
   int _selectedTabIndex = 0;
   int get selectedTabIndex => _selectedTabIndex;
 
+  /// วันที่อ้างอิงสำหรับคำนวณ date range
   DateTime _focusedDate = DateTime.now();
   DateTime get focusedDate => _focusedDate;
 
+  /// Label แสดงช่วงเวลา เช่น "3 ก.พ. - 9 ก.พ. 2569"
   String get currentRangeLabel =>
       DateTimeUtils.getRangeLabel(_selectedTabIndex, _focusedDate);
+
+  /// ประเภท Calendar สำหรับแสดง CalendarSDK
   CalendarType get currentCalendarType =>
       CalendarUtils.getCalendarTypeFromTabIndex(_selectedTabIndex);
 
+  // ===========================================================================
+  // 🎮 SECTION 5: User Actions
+  // ===========================================================================
+
+  /// เมื่อผู้ใช้เลือกวันที่จาก Calendar
   void onCalendarDateSelected(DateTime date) {
     _focusedDate = date;
     _loadData();
     notifyListeners();
   }
 
-  Future<void> seedData() async {
-    await MockDataSeeder(_bpRepo).generateBigData();
+  /// เมื่อผู้ใช้เปลี่ยน Tab (Week/Month/Year)
+  void setTabIndex(int index) {
+    _selectedTabIndex = index;
+    _focusedDate = DateTime.now(); // Reset เป็นวันนี้เสมอ
     _loadData();
   }
 
-  // -- Calendar --
+  /// เมื่อผู้ใช้เลือกวันที่ (จาก DatePicker อื่น)
   void pickDate(DateTime newDate) {
     _focusedDate = newDate;
     _loadData();
   }
 
-  void setTabIndex(int index) {
-    _selectedTabIndex = index;
-    _focusedDate = DateTime.now(); // กลับมาเป็นวันนี้เสมอเมื่อเปลี่ยนโหมด
+  /// 🧪 Debug: สร้าง Mock Data สำหรับทดสอบ
+  Future<void> seedData() async {
+    await MockDataSeeder(_bpRepo).generateBigData();
     _loadData();
   }
 
-  // --- 🟢 PART 1: โหลดข้อมูล & คำนวณสถิติ ---
+  // ===========================================================================
+  // 🔄 SECTION 6: Data Loading & Calculation
+  // ===========================================================================
+
+  /// โหลดข้อมูลและคำนวณสถิติใหม่ทั้งหมด
+  ///
+  /// Flow:
+  /// 1. ตรวจสอบ Internet
+  /// 2. คำนวณ date range จาก tab + focusedDate
+  /// 3. ดึง records จาก Repository
+  /// 4. คำนวณสถิติ (avg, SD, min, max)
+  /// 5. Map ข้อมูลสำหรับ UI (StatCard, Graph)
+  /// 6. ตรวจสอบ AI cache
   Future<void> _loadData() async {
-    // Check internet connectivity
+    // Step 1: ตรวจสอบ Internet
     _isInternetConnected = await _networkInfo.isConnected;
 
+    // Step 2: คำนวณ date range
     final range = DateTimeUtils.calculateDateRange(
       _selectedTabIndex,
       _focusedDate,
     );
+
+    // Step 3: ดึง records
     final records = _bpRepo.getRecordsByRange(range.start, range.end);
+
+    // Step 4: คำนวณสถิติ
     final StatCalulatedType statMap = StatUtils.calculate(records);
 
+    // Step 5: Map ข้อมูลสำหรับ UI
     final sys = statMap.avgSys;
     final dia = statMap.avgDia;
     _bloodPressureLevel = (sys != null && dia != null)
@@ -104,14 +158,23 @@ class StatViewmodel extends ChangeNotifier {
     _statsData = StatUiMappper.mapToCardData(statMap);
     _graphData = GraphDataMapper.mapToGraphData(records, _selectedTabIndex);
 
+    // Step 6: ตรวจสอบ AI cache
     await _checkAiCache(range.key, records);
 
     notifyListeners();
   }
 
-  // --- 🟣 PART 2: AI ---
+  // ===========================================================================
+  // 🤖 SECTION 7: AI Analysis
+  // ===========================================================================
+
+  /// ตรวจสอบว่ามี AI cache หรือไม่
+  ///
+  /// Logic:
+  /// - ถ้าไม่มี records → state = noData
+  /// - ถ้ามี cache ที่ตรงกับ signature → state = success
+  /// - ถ้าไม่มี cache หรือ signature ไม่ตรง → state = idle
   Future<void> _checkAiCache(String key, List<BPRecord> records) async {
-    // ถ้าไม่มีข้อมูลให้แสดง noData state
     if (records.isEmpty) {
       _analyzeState = AnalyzeState.noData;
       _aiResultContent = null;
@@ -130,7 +193,14 @@ class StatViewmodel extends ChangeNotifier {
     }
   }
 
-  // ฟังก์ชันที่ปุ่มกดเรียกใช้
+  /// ฟังก์ชันที่ปุ่ม "วิเคราะห์" เรียกใช้
+  ///
+  /// Flow:
+  /// 1. เปลี่ยน state เป็น processing
+  /// 2. ดึง records ใหม่
+  /// 3. เรียก AI API
+  /// 4. บันทึก cache
+  /// 5. อัปเดต state (success/error)
   Future<void> triggerAnalyze() async {
     _analyzeState = AnalyzeState.processing;
     notifyListeners();

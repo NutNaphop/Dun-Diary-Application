@@ -1,6 +1,16 @@
 import 'package:intl/intl.dart';
 
+/// Utility class สำหรับจัดการ DateTime และการคำนวณช่วงเวลา
+///
+/// รับผิดชอบ:
+/// - แปลง DateTime เป็นรูปแบบต่างๆ (ไทย, เวลา)
+/// - คำนวณ Date Range สำหรับ Week/Month/Year view
+/// - สร้าง Label สำหรับแสดงผล
 class DateTimeUtils {
+  // ===========================================================================
+  // 📅 SECTION 1: Date Formatting
+  // ===========================================================================
+
   /// แปลง DateTime เป็น String รูปแบบ "ว/ด/ป(พ.ศ.)" เช่น 28/12/2568
   static String formatToThaiDate(DateTime date) {
     return "${date.day}/${date.month}/${date.year + 543}";
@@ -11,19 +21,34 @@ class DateTimeUtils {
     return "${date.hour.toString().padLeft(2, '0')}:${date.minute.toString().padLeft(2, '0')}";
   }
 
-  /// คำนวณ Week Number (1-52)
+  /// คำนวณ Week Number (1-52) ตามมาตรฐาน ISO 8601
   static int getWeekOfYear(DateTime date) {
     return ((date.dayOfYear - date.weekday + 10) / 7).floor();
   }
 
-  // -------------------------------------------------------------------------
-  // 🟢 1. Logic คำนวณช่วงเวลา (Start - End) โดยอิงจาก anchorDate
-  // -------------------------------------------------------------------------
+  // ===========================================================================
+  // 📆 SECTION 2: Date Range Calculation
+  // ===========================================================================
+
+  /// คำนวณช่วงเวลา (start - end) โดยอิงจาก anchorDate
+  ///
+  /// [index] - 0 = Week, 1 = Month, 2 = Year
+  /// [anchorDate] - วันที่อ้างอิง
+  ///
+  /// Returns:
+  /// - start: วันเริ่มต้นของช่วง
+  /// - end: วันสิ้นสุดของช่วง (23:59:59)
+  /// - key: unique key สำหรับ cache (เช่น "week_2024_5")
+  ///
+  /// Week: จันทร์ 00:00:00 - อาทิตย์ 23:59:59
+  /// Month: วันที่ 1 00:00:00 - วันสุดท้ายของเดือน 23:59:59
+  /// Year: 1 ม.ค. 00:00:00 - 31 ธ.ค. 23:59:59
   static ({DateTime start, DateTime end, String key}) calculateDateRange(
     int index,
-    DateTime anchorDate, // ✅ รับวันอ้างอิงเข้ามา (แทนการใช้ DateTime.now())
+    DateTime anchorDate,
   ) {
     if (index == 0) {
+      // [Week] หาวันจันทร์ของสัปดาห์นี้
       int daysToSubtract = anchorDate.weekday - DateTime.monday;
       DateTime weekStart = anchorDate.subtract(Duration(days: daysToSubtract));
 
@@ -50,12 +75,12 @@ class DateTimeUtils {
         key: "week_${start.year}_${getWeekOfYear(start)}",
       );
     } else if (index == 1) {
-      // [Month] : วันที่ 1 ถึงวันสิ้นเดือน ของเดือน anchorDate
+      // [Month] วันที่ 1 ถึงวันสิ้นเดือน
       final start = DateTime(anchorDate.year, anchorDate.month, 1);
       final end = DateTime(
         anchorDate.year,
         anchorDate.month + 1,
-        0,
+        0, // Day 0 = วันสุดท้ายของเดือนก่อนหน้า
         23,
         59,
         59,
@@ -67,7 +92,7 @@ class DateTimeUtils {
         key: "month_${start.year}_${start.month}",
       );
     } else {
-      // [Year] : 1 ม.ค. - 31 ธ.ค.
+      // [Year] 1 ม.ค. - 31 ธ.ค.
       final start = DateTime(anchorDate.year, 1, 1);
       final end = DateTime(anchorDate.year, 12, 31, 23, 59, 59);
 
@@ -75,28 +100,38 @@ class DateTimeUtils {
     }
   }
 
-  // -------------------------------------------------------------------------
-  // 🟢 2. Helper สร้างข้อความหัวข้อ (Range Label)
-  // -------------------------------------------------------------------------
+  // ===========================================================================
+  // 🏷️ SECTION 3: Label Generation
+  // ===========================================================================
+
+  /// สร้าง Label แสดงช่วงเวลาสำหรับ UI
+  ///
+  /// Examples:
+  /// - Week: "3 ก.พ. - 9 ก.พ. 2569"
+  /// - Month: "กุมภาพันธ์ 2569"
+  /// - Year: "ปี 2569"
   static String getRangeLabel(int index, DateTime anchorDate) {
-    // คำนวณช่วงเวลาก่อน เพื่อเอาวันที่ start/end มาโชว์
     final range = calculateDateRange(index, anchorDate);
     final start = range.start;
     final end = range.end;
 
     if (index == 0) {
-      // Week
+      // Week: "3 ก.พ. - 9 ก.พ. 2569"
       return "${start.day} ${getMonthShort(start.month)} - ${end.day} ${getMonthShort(end.month)} ${end.year + 543}";
     } else if (index == 1) {
-      // Month
+      // Month: "กุมภาพันธ์ 2569"
       return "${getMonthFull(anchorDate.month)} ${anchorDate.year + 543}";
     } else {
-      // Year
+      // Year: "ปี 2569"
       return "ปี ${anchorDate.year + 543}";
     }
   }
 
-  // Helper แปลงชื่อเดือนไทย (ย่อ)
+  // ===========================================================================
+  // 🔤 SECTION 4: Thai Month Names
+  // ===========================================================================
+
+  /// แปลงเลขเดือน (1-12) เป็นชื่อเดือนไทย (ย่อ)
   static String getMonthShort(int month) {
     const months = [
       "ม.ค.",
@@ -115,7 +150,7 @@ class DateTimeUtils {
     return months[month - 1];
   }
 
-  // Helper แปลงชื่อเดือนไทย (เต็ม)
+  /// แปลงเลขเดือน (1-12) เป็นชื่อเดือนไทย (เต็ม)
   static String getMonthFull(int month) {
     const months = [
       "มกราคม",
@@ -135,6 +170,8 @@ class DateTimeUtils {
   }
 }
 
+/// Extension เพื่อเพิ่ม dayOfYear property ให้ DateTime
 extension DateUtils on DateTime {
+  /// คำนวณลำดับวันในปี (1-365/366)
   int get dayOfYear => int.parse(DateFormat("D").format(this));
 }
