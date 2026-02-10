@@ -6,25 +6,27 @@ import 'package:flutter/material.dart';
 class CustomText extends StatelessWidget {
   final String text;
   final TextAlign? textAlign;
-  final Color color;
+  final Color? color;
   final double fontSize;
   final FontWeight fontWeight;
-  
+
   const CustomText({
     Key? key,
     required this.text,
     this.textAlign,
-    this.color = CustomColor.gray900,
+    this.color,
     this.fontSize = 12.0,
     this.fontWeight = FontWeight.normal,
   }) : super(key: key);
-  
+
   @override
   Widget build(BuildContext context) {
+    final defaultStyle = DefaultTextStyle.of(context).style;
+
     return Text(
       text,
       style: TextStyle(
-        color: color,
+        color: color ?? defaultStyle.color ?? CustomColor.gray900,
         fontSize: fontSize,
         fontWeight: fontWeight,
         fontFamily: "NotoSanThai",
@@ -38,18 +40,15 @@ class CustomText extends StatelessWidget {
 class HeadingText extends StatelessWidget {
   final String text;
 
-  const HeadingText({
-    Key? key,
-    required this.text,
-  }) : super(key: key);
-  
+  const HeadingText({Key? key, required this.text}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return CustomText(
-        text: text,
-        fontSize: Dimension.fontSizes.h1,
-        fontWeight: Dimension.fontWeights.bold,       
-      );
+      text: text,
+      fontSize: Dimension.fontSizes.h1,
+      fontWeight: Dimension.fontWeights.bold,
+    );
   }
 }
 
@@ -57,17 +56,14 @@ class HeadingText extends StatelessWidget {
 class SubHeadingText extends StatelessWidget {
   final String text;
 
-  const SubHeadingText({
-    Key? key,
-    required this.text,
-  }) : super(key: key);
-  
+  const SubHeadingText({Key? key, required this.text}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return CustomText(
-        text: text,
-        fontSize: Dimension.fontSizes.h2,
-        fontWeight: Dimension.fontWeights.semiBold,       
-      );
+      text: text,
+      fontSize: Dimension.fontSizes.h2,
+      fontWeight: Dimension.fontWeights.semiBold,
+    );
   }
 }

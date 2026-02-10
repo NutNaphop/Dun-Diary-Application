@@ -1,6 +1,6 @@
 import 'package:dun_diary_app/shared/constant/app_image.dart';
 import 'package:dun_diary_app/shared/style/dimension.dart';
-import 'package:dun_diary_app/shared/widgets/custom/svg/custom_svg_widget.dart';
+import 'package:dun_diary_app/shared/widgets/custom/img/custom_svg_widget.dart';
 import 'package:dun_diary_app/shared/widgets/custom/text/text_widget.dart';
 import 'package:flutter/material.dart';
 

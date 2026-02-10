@@ -55,6 +55,14 @@ class AuthService {
     final currentId = await getUserIdForSaving();
     print("🆔 User Identity Ready: $currentId");
   }
+
+  // get firebase token
+  Future<String?> getUserToken() async {
+    final user = _firebaseAuth.currentUser;
+    if (user == null) return null;
+    return user.getIdToken();
+  }
+
   /// Helper: เช็คว่าตอนนี้ใช้ ID ปลอมอยู่ไหม? (เอาไว้โชว์ UI เตือน หรือไว้ใช้ตอน Migrate)
   bool get isGuest => _firebaseAuth.currentUser == null;
 }

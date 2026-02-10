@@ -54,15 +54,15 @@ class BpGraphPlaygroundViewModel extends ChangeNotifier {
     return List.generate(7, (index) {
       final levels = [
         BloodPressureLevel.normal,
-        BloodPressureLevel.preHigh,
+        BloodPressureLevel.elevated,
         BloodPressureLevel.normal,
-        BloodPressureLevel.preHigh,
+        BloodPressureLevel.elevated,
         BloodPressureLevel.normal,
-        BloodPressureLevel.preHigh,
+        BloodPressureLevel.elevated,
         BloodPressureLevel.normal,
       ];
       return BloodPressureGraphData(
-        xLabel: '', // ไม่ต้องใช้วันที่สำหรับ Ghost Graph
+        xLabel: '',
         level: levels[index % levels.length],
         sourceData: 'mock',
       );
@@ -85,18 +85,23 @@ class BpGraphPlaygroundViewModel extends ChangeNotifier {
           ),
           BloodPressureGraphData(
             xLabel: '10:00',
-            level: BloodPressureLevel.preHigh,
+            level: BloodPressureLevel.elevated,
             sourceData: 'T3',
           ),
           BloodPressureGraphData(
             xLabel: '11:00',
-            level: BloodPressureLevel.high,
+            level: BloodPressureLevel.highStage1,
             sourceData: 'T4',
           ),
           BloodPressureGraphData(
             xLabel: '12:00',
-            level: BloodPressureLevel.veryHigh,
+            level: BloodPressureLevel.highStage2,
             sourceData: 'T5',
+          ),
+          BloodPressureGraphData(
+            xLabel: '13:00',
+            level: BloodPressureLevel.crisis,
+            sourceData: 'T6',
           ),
         ];
       case GraphFilterType.week:
@@ -113,7 +118,7 @@ class BpGraphPlaygroundViewModel extends ChangeNotifier {
         return List.generate(6, (index) {
           return BloodPressureGraphData(
             xLabel: weeks[index],
-            level: BloodPressureLevel.values[index % 5],
+            level: BloodPressureLevel.values[index % 6],
             sourceData: 'W${index + 1}',
           );
         });
@@ -135,7 +140,7 @@ class BpGraphPlaygroundViewModel extends ChangeNotifier {
         return List.generate(12, (index) {
           return BloodPressureGraphData(
             xLabel: months[index],
-            level: BloodPressureLevel.values[index % 5],
+            level: BloodPressureLevel.values[index % 6],
             sourceData: 'M${index + 1}',
           );
         });

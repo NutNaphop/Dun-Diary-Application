@@ -3,6 +3,8 @@ class HiveBoxName {
   static const String bpRecord = "bpRecord";
   static const String QueueBox = "queueBox";
   static const String metaBox = "metaBox";
+  static const String analysisCacheBox = "analysisCacheBox";
+  static const String indexBox = "indexBox";
 }
 
 /// Keys ที่ใช้เก็บข้อมูลภายในแต่ละ Box

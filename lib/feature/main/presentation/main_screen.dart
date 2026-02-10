@@ -1,4 +1,4 @@
-import 'package:dun_diary_app/feature/history/presentation/history_screen.dart';
+import 'package:dun_diary_app/feature/stat/presentation/stat_screen.dart';
 import 'package:dun_diary_app/shared/constant/app_strings.dart';
 import 'package:dun_diary_app/shared/style/color.dart';
 import 'package:dun_diary_app/shared/style/dimension.dart';
@@ -22,11 +22,11 @@ class MainScreen extends StatelessWidget {
       case 0:
         return HomeScreen.create();
       case 1:
-        return HistoryScreen();
+        return CalendarPlaygroundPage();
       case 2:
         return Center(child: Text(AppStrings.main.addPage));
       case 3:
-        return Center(child: CalendarPlaygroundPage());
+        return StatScreen.create();
       case 4:
         return BpGraphPlayground();
       default:

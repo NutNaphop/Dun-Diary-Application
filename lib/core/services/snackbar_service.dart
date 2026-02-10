@@ -1,7 +1,7 @@
 import 'package:dun_diary_app/shared/constant/app_icons.dart';
 import 'package:dun_diary_app/shared/style/color.dart';
+import 'package:dun_diary_app/shared/widgets/custom/img/custom_svg_widget.dart';
 import 'package:dun_diary_app/shared/widgets/custom/snackbar/custom_snackbar.dart';
-import 'package:dun_diary_app/shared/widgets/custom/svg/custom_svg_widget.dart';
 import 'package:flutter/material.dart';
 
 class SnackBarService {
@@ -15,20 +15,20 @@ class SnackBarService {
     scaffoldMessengerKey.currentState?.showSnackBar(
       CustomSnackBar(
         message: message,
-        backgroundColor: CustomColor.green100,
-        borderColor: CustomColor.green200,
-        textColor: CustomColor.green300,
+        backgroundColor: CustomColor.green1,
+        borderColor: CustomColor.green2,
+        textColor: CustomColor.green3,
         leadingIcon: SVGImage(
           path: AppIcons.duotone.check_circle,
           width: 28,
           height: 28,
-          color: CustomColor.green300,
+          color: CustomColor.green3,
         ),
         trailingIcon: SVGImage(
           path: AppIcons.outline.x,
           width: 24,
           height: 24,
-          color: CustomColor.green300,
+          color: CustomColor.green3,
         ),
       ),
     );
@@ -38,20 +38,20 @@ class SnackBarService {
     scaffoldMessengerKey.currentState?.showSnackBar(
       CustomSnackBar(
         message: message,
-        backgroundColor: CustomColor.red100,
-        borderColor: CustomColor.red200,
-        textColor: CustomColor.red300,
+        backgroundColor: CustomColor.red1,
+        borderColor: CustomColor.red2,
+        textColor: CustomColor.red3,
         leadingIcon: SVGImage(
           path: AppIcons.duotone.danger,
           width: 28,
           height: 28,
-          color: CustomColor.red300,
+          color: CustomColor.red3,
         ),
         trailingIcon: SVGImage(
           path: AppIcons.outline.x,
           width: 24,
           height: 24,
-          color: CustomColor.red300,
+          color: CustomColor.red3,
         ),
       ),
     );
@@ -61,20 +61,20 @@ class SnackBarService {
     scaffoldMessengerKey.currentState?.showSnackBar(
       CustomSnackBar(
         message: message,
-        backgroundColor: CustomColor.yellow100,
-        borderColor: CustomColor.yellow200,
-        textColor: CustomColor.yellow300,
+        backgroundColor: CustomColor.yellow1,
+        borderColor: CustomColor.yellow2,
+        textColor: CustomColor.yellow3,
         leadingIcon: SVGImage(
           path: AppIcons.duotone.dangerTriangle,
           width: 28,
           height: 28,
-          color: CustomColor.yellow300,
+          color: CustomColor.yellow3,
         ),
         trailingIcon: SVGImage(
           path: AppIcons.outline.x,
           width: 24,
           height: 24,
-          color: CustomColor.yellow300,
+          color: CustomColor.yellow3,
         ),
       ),
     );
@@ -84,20 +84,20 @@ class SnackBarService {
     scaffoldMessengerKey.currentState?.showSnackBar(
       CustomSnackBar(
         message: message,
-        backgroundColor: CustomColor.blue100,
-        borderColor: CustomColor.blue200,
-        textColor: CustomColor.blue300,
+        backgroundColor: CustomColor.blue1,
+        borderColor: CustomColor.blue2,
+        textColor: CustomColor.blue3,
         leadingIcon: SVGImage(
           path: AppIcons.duotone.check_circle,
           width: 28,
           height: 28,
-          color: CustomColor.blue300,
+          color: CustomColor.blue3,
         ),
         trailingIcon: SVGImage(
           path: AppIcons.outline.x,
           width: 24,
           height: 24,
-          color: CustomColor.blue300,
+          color: CustomColor.blue3,
         ),
       ),
     );
