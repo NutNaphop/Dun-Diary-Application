@@ -41,6 +41,10 @@ class StatViewmodel extends ChangeNotifier {
   // 📊 SECTION 1: State Variables
   // ===========================================================================
 
+  /// สถานะกำลังโหลดข้อมูล (ใช้แสดง loading indicator ครั้งแรก)
+  bool _isLoading = true;
+  bool get isLoading => _isLoading;
+
   /// ข้อมูลสถิติสำหรับแสดงใน StatCard (ค่าเฉลี่ย, SD, ค่าสูง/ต่ำสุด)
   List<StatCardData> _statsData = [];
   List<StatCardData> get statsData => _statsData;
@@ -173,6 +177,7 @@ class StatViewmodel extends ChangeNotifier {
     // Step 6: ตรวจสอบ AI cache
     await _checkAiCache(range.key, records);
 
+    _isLoading = false;
     notifyListeners();
   }
 

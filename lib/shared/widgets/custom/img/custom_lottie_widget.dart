@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 
-class LottieAnimation extends StatelessWidget {
+class LottieAnimation extends StatefulWidget {
   final String path;
   final double? width;
   final double? height;
@@ -20,14 +20,45 @@ class LottieAnimation extends StatelessWidget {
   });
 
   @override
+  State<LottieAnimation> createState() => _LottieAnimationState();
+}
+
+class _LottieAnimationState extends State<LottieAnimation> {
+  LottieComposition? _composition;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadComposition();
+  }
+
+  @override
+  void didUpdateWidget(LottieAnimation oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.path != widget.path) {
+      _loadComposition();
+    }
+  }
+
+  Future<void> _loadComposition() async {
+    final composition = await AssetLottie(widget.path).load();
+    if (mounted) {
+      setState(() => _composition = composition);
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Lottie.asset(
-      path,
-      width: width,
-      height: height,
-      repeat: repeat,
-      animate: animate,
-      fit: fit,
+    if (_composition == null) {
+      return SizedBox(width: widget.width, height: widget.height);
+    }
+    return Lottie(
+      composition: _composition!,
+      width: widget.width,
+      height: widget.height,
+      repeat: widget.repeat,
+      animate: widget.animate,
+      fit: widget.fit,
     );
   }
 }
