@@ -126,6 +126,50 @@ class _StatStrings {
   const _StatStrings();
 
   final String stat = "สถิติ";
+
+  // Summary
+  final String healthSummary = "สรุปข้อมูลสุขภาพ";
+
+  // Stat Cards
+  final String avgBP = "ค่าเฉลี่ยความดัน";
+  final String fluctuation = "การแกว่งตัว";
+  final String fluctuationRange = "ระยะการแกว่งตัว";
+  final String maxBP = "ค่าสูงสุด";
+  final String minBP = "ค่าต่ำสุด";
+  final String noData = "ไม่มีข้อมูล";
+  final String noDataFound = "ไม่พบข้อมูล";
+  final String noDataYet = "ยังไม่มีข้อมูล";
+  String recordedOn(String date) => "เมื่อวันที่ $date";
+  String bpLevel(String level) => "ความดัน$level";
+
+  // Analyze
+  final String aiResult = "ผลวิเคราะห์จาก AI";
+  final String suggestions = "คำแนะนำ";
+  final String reAnalyze = "วิเคราะห์ผลอีกครั้ง";
+  String sourceFrom(String source) => "แหล่งที่มา: $source";
+
+  // Analyze - Idle
+  final String idleTitle = "ความดันของคุณเป็นอย่างไรบ้าง";
+  final String idleDesc =
+      "AI สรุปข้อมูลความดันตลอดสัปดาห์มาให้แล้ว ดูสิว่าช่วงที่ผ่านมาคุณดูแลตัวเองได้ดีแค่ไหน";
+  final String startAnalyze = "เริ่มวิเคราะห์ผลความดันด้วย AI";
+  final String connectInternet = "เชื่อมต่ออินเตอร์เน็ต เพื่อให้ AI ช่วยสรุปผล";
+
+  // Analyze - Processing
+  final String processingTitle = "กำลังประมวลผลสุขภาพ";
+  final String processingDesc = "AI กำลังวิเคราะห์ผลเพื่อคุณโดยเฉพาะ";
+  final String processingWarning = "กรุณารอสักครู่ อย่าปิดหรือออกจากหน้าจอนี้";
+
+  // Analyze - Error
+  final String errorTitle = "ไม่สามารถวิเคราะห์ผลได้ในขณะนี้";
+  final String errorDesc =
+      "โปรดลองใหม่อีกครั้ง และตรวจสอบการเชื่อมต่ออินเตอร์เน็ตของคุณ";
+  final String tryAgain = "ลองใหม่อีกครั้ง";
+
+  // Analyze - No Data
+  final String noDataTitle = "ยังไม่มีข้อมูลในช่วงเวลานี้";
+  final String noDataDesc =
+      "เพิ่มข้อมูลความดันโลหิตก่อน เพื่อให้ AI ช่วยวิเคราะห์ผลและสรุปให้คุณ";
 }
 
 class _ResultStrings {

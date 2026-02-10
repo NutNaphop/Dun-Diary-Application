@@ -3,6 +3,7 @@ import 'package:dun_diary_app/feature/stat/presentation/widgets/analyze_card/ana
 import 'package:dun_diary_app/feature/stat/presentation/widgets/card/blood_pressure_card.dart';
 import 'package:dun_diary_app/feature/stat/presentation/widgets/stat_card/components/stat_icon.dart';
 import 'package:dun_diary_app/feature/stat/presentation/widgets/stat_card/stat_card.dart';
+import 'package:dun_diary_app/shared/constant/app_strings.dart';
 import 'package:dun_diary_app/shared/style/dimension.dart';
 import 'package:dun_diary_app/shared/utils/blood_pressure_utils.dart';
 import 'package:dun_diary_app/shared/widgets/custom/card/custom_card.dart';
@@ -65,7 +66,7 @@ class StatSummaryView extends StatelessWidget {
 
             // Summary Section
             CustomText(
-              text: "สรุปข้อมูลสุขภาพ",
+              text: AppStrings.stat.healthSummary,
               fontSize: Dimension.fontSizes.h1,
               fontWeight: Dimension.fontWeights.bold,
             ),

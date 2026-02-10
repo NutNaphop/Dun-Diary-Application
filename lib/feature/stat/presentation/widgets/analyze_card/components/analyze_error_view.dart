@@ -1,5 +1,6 @@
 import 'package:dun_diary_app/shared/constant/app_icons.dart';
 import 'package:dun_diary_app/shared/constant/app_image.dart';
+import 'package:dun_diary_app/shared/constant/app_strings.dart';
 import 'package:dun_diary_app/shared/style/color.dart';
 import 'package:dun_diary_app/shared/style/dimension.dart';
 import 'package:dun_diary_app/shared/style/drop_shadow.dart';
@@ -40,15 +41,14 @@ class AnalyzeErrorView extends StatelessWidget {
             children: [
               SVGImage(path: AppImage.analyzeError, width: 150, height: 150),
               CustomText(
-                text: "ไม่สามารถวิเคราะห์ผลได้ในขณะนี้",
+                text: AppStrings.stat.errorTitle,
                 fontSize: Dimension.fontSizes.h1,
                 fontWeight: Dimension.fontWeights.bold,
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 35),
                 child: CustomText(
-                  text:
-                      "โปรดลองใหม่อีกครั้ง และตรวจสอบการเชื่อมต่ออินเตอร์เน็ตของคุณ",
+                  text: AppStrings.stat.errorDesc,
                   fontSize: Dimension.fontSizes.md,
                   fontWeight: Dimension.fontWeights.regular,
                   color: CustomColor.gray600,
@@ -73,7 +73,7 @@ class AnalyzeErrorView extends StatelessWidget {
                     color: buttonContentColor,
                   ),
                   mainAxisAlignment: MainAxisAlignment.center,
-                  text: "ลองใหม่อีกครั้ง",
+                  text: AppStrings.stat.tryAgain,
                   borderColor: buttonStrokeColor,
                   onPressed: buttonCallback,
                 ),
@@ -81,7 +81,7 @@ class AnalyzeErrorView extends StatelessWidget {
 
               if (!isInternetConnect)
                 CustomText(
-                  text: "เชื่อมต่ออินเตอร์เน็ต เพื่อให้ AI ช่วยสรุปผล",
+                  text: AppStrings.stat.connectInternet,
                   fontSize: Dimension.fontSizes.rg,
                   fontWeight: Dimension.fontWeights.regular,
                   color: CustomColor.orange3,

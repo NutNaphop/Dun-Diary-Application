@@ -84,4 +84,23 @@ class StatUtils {
     }
     return sqrt(sumSquaredDiff / records.length);
   }
+
+  // ===========================================================================
+  // 🔢 Generic Helpers (ใช้ได้ทั่วโปรเจค)
+  // ===========================================================================
+
+  /// หาค่าต่ำสุดจาก List<int>
+  static int minOf(List<int> values) {
+    return values.reduce((a, b) => a < b ? a : b);
+  }
+
+  /// หาค่าสูงสุดจาก List<int>
+  static int maxOf(List<int> values) {
+    return values.reduce((a, b) => a > b ? a : b);
+  }
+
+  /// หาค่าเฉลี่ยจาก List<int>
+  static int avgOf(List<int> values) {
+    return (values.reduce((a, b) => a + b) / values.length).round();
+  }
 }

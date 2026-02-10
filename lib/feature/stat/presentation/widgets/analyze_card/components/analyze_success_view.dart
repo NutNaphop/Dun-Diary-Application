@@ -1,6 +1,7 @@
 import 'package:dun_diary_app/data/analyze_record/model/analyze_result_model.dart';
 import 'package:dun_diary_app/feature/stat/presentation/widgets/stat_card/components/stat_icon.dart';
 import 'package:dun_diary_app/shared/constant/app_icons.dart';
+import 'package:dun_diary_app/shared/constant/app_strings.dart';
 import 'package:dun_diary_app/shared/style/color.dart';
 import 'package:dun_diary_app/shared/style/dimension.dart';
 import 'package:dun_diary_app/shared/widgets/custom/button/custom_button.dart';
@@ -40,7 +41,7 @@ class AnalyzeSuccessView extends StatelessWidget {
               ),
             ),
             CustomText(
-              text: "ผลวิเคราะห์จาก AI",
+              text: AppStrings.stat.aiResult,
               fontSize: Dimension.fontSizes.h2,
               fontWeight: Dimension.fontWeights.semiBold,
             ),
@@ -67,7 +68,7 @@ class AnalyzeSuccessView extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 CustomText(
-                  text: "คำแนะนำ",
+                  text: AppStrings.stat.suggestions,
                   fontSize: Dimension.fontSizes.h2,
                   fontWeight: Dimension.fontWeights.semiBold,
                 ),
@@ -101,7 +102,7 @@ class AnalyzeSuccessView extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 76),
               child: CustomButton(
-                text: "วิเคราะห์ผลอีกครั้ง",
+                text: AppStrings.stat.reAnalyze,
                 leadingIcon: SVGImage(
                   path: AppIcons.outline.arrowClockwise,
                   width: 20,
@@ -120,7 +121,7 @@ class AnalyzeSuccessView extends StatelessWidget {
               ),
             ),
             CustomText(
-              text: "แหล่งที่มา: ${result?.reference}",
+              text: AppStrings.stat.sourceFrom(result?.reference ?? ''),
               textAlign: TextAlign.center,
               fontSize: Dimension.fontSizes.rg,
               fontWeight: Dimension.fontWeights.regular,

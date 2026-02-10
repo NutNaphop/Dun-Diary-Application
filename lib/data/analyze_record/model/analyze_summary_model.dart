@@ -40,9 +40,33 @@ class AnalyzeSummaryItem {
   };
 }
 
+/// ประเภทช่วงเวลาสำหรับการวิเคราะห์
+enum PeriodType {
+  week('week'),
+  month('month'),
+  year('year');
+
+  final String value;
+  const PeriodType(this.value);
+
+  /// แปลง tabIndex เป็น PeriodType
+  static PeriodType fromTabIndex(int tabIndex) {
+    switch (tabIndex) {
+      case 0:
+        return PeriodType.week;
+      case 1:
+        return PeriodType.month;
+      case 2:
+        return PeriodType.year;
+      default:
+        return PeriodType.week;
+    }
+  }
+}
+
 /// Model สำหรับ Summary รวมที่ส่งไป API
 class AnalyzeSummary {
-  final String periodType; // "week", "month", "year"
+  final PeriodType periodType;
   final String rangeLabel;
   final List<AnalyzeSummaryItem> items;
   final int totalRecords;
@@ -55,7 +79,7 @@ class AnalyzeSummary {
   });
 
   Map<String, dynamic> toJson() => {
-    'periodType': periodType,
+    'periodType': periodType.value,
     'rangeLabel': rangeLabel,
     'totalRecords': totalRecords,
     'items': items.map((e) => e.toJson()).toList(),

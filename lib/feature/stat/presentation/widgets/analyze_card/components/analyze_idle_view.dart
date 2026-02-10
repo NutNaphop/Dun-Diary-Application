@@ -1,5 +1,6 @@
 import 'package:dun_diary_app/shared/constant/app_icons.dart';
 import 'package:dun_diary_app/shared/constant/app_image.dart';
+import 'package:dun_diary_app/shared/constant/app_strings.dart';
 import 'package:dun_diary_app/shared/style/color.dart';
 import 'package:dun_diary_app/shared/style/dimension.dart';
 import 'package:dun_diary_app/shared/style/drop_shadow.dart';
@@ -40,15 +41,14 @@ class AnalyzeIdleView extends StatelessWidget {
             children: [
               SVGImage(path: AppImage.analyze, width: 105, height: 102),
               CustomText(
-                text: "ความดันของคุณเป็นอย่างไรบ้าง",
+                text: AppStrings.stat.idleTitle,
                 fontSize: Dimension.fontSizes.h1,
                 fontWeight: Dimension.fontWeights.bold,
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 35),
                 child: CustomText(
-                  text:
-                      "AI สรุปข้อมูลความดันตลอดสัปดาห์มาให้แล้ว ดูสิว่าช่วงที่ผ่านมาคุณดูแลตัวเองได้ดีแค่ไหน",
+                  text: AppStrings.stat.idleDesc,
                   fontSize: Dimension.fontSizes.md,
                   fontWeight: Dimension.fontWeights.regular,
                   color: CustomColor.gray600,
@@ -73,7 +73,7 @@ class AnalyzeIdleView extends StatelessWidget {
                     color: buttonContentColor,
                   ),
                   mainAxisAlignment: MainAxisAlignment.center,
-                  text: "เริ่มวิเคราะห์ผลความดันด้วย AI",
+                  text: AppStrings.stat.startAnalyze,
                   borderColor: buttonStrokeColor,
                   onPressed: buttonCallback,
                 ),
@@ -81,7 +81,7 @@ class AnalyzeIdleView extends StatelessWidget {
 
               if (!isInternetConnect)
                 CustomText(
-                  text: "เชื่อมต่ออินเตอร์เน็ต เพื่อให้ AI ช่วยสรุปผล",
+                  text: AppStrings.stat.connectInternet,
                   fontSize: Dimension.fontSizes.rg,
                   fontWeight: Dimension.fontWeights.regular,
                   color: CustomColor.orange3,
