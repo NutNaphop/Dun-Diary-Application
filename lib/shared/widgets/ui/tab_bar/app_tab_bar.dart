@@ -5,13 +5,21 @@ import 'package:flutter/material.dart';
 class AppTabBar extends StatelessWidget {
   final List<String> titles; // รายชื่อแท็บที่ต้องการแสดง
   final List<Widget>? tabViews; // เนื้อหาของแต่ละแท็บ (Optional)
+  final Widget? child; // เนื้อหาเดียวสำหรับทุกแท็บ (ใช้แทน tabViews)
   final ValueChanged<int>? onTap; // Callback เมื่อมีการกดเปลี่ยนแท็บ
 
-  const AppTabBar({super.key, required this.titles, this.tabViews, this.onTap})
-    : assert(
-        tabViews == null || titles.length == tabViews.length,
-        'จำนวน titles และ tabViews ต้องเท่ากัน',
-      );
+  const AppTabBar({
+    super.key,
+    required this.titles,
+    this.tabViews,
+    this.child,
+    this.onTap,
+  }) : assert(
+         (tabViews == null && child == null) ||
+             (tabViews != null && child == null) ||
+             (tabViews == null && child != null),
+         'ใช้ tabViews หรือ child อย่างใดอย่างหนึ่ง ไม่ใช้พร้อมกัน',
+       );
 
   @override
   Widget build(BuildContext context) {
@@ -41,6 +49,7 @@ class AppTabBar extends StatelessWidget {
           ),
           if (tabViews != null)
             Expanded(child: TabBarView(children: tabViews!)),
+          if (child != null) Expanded(child: child!),
         ],
       ),
     );
