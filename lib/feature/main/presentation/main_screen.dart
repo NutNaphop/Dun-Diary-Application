@@ -1,4 +1,3 @@
-import 'package:dun_diary_app/feature/history/presentation/history_screen.dart';
 import 'package:dun_diary_app/feature/stat/presentation/stat_screen.dart';
 import 'package:dun_diary_app/shared/constant/app_strings.dart';
 import 'package:dun_diary_app/shared/style/color.dart';

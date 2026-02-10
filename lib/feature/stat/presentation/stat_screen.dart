@@ -49,10 +49,7 @@ class _StatScreenState extends State<StatScreen> {
             path: AppIcons.outline.calendar,
             onPressed: () => _showCalendarDialog(context, viewModel),
           ),
-          IconButtonSVG(
-            path: AppIcons.outline.dotThree,
-            onPressed: () => viewModel.seedData(),
-          ),
+          IconButtonSVG(path: AppIcons.outline.dotThree, onPressed: () {}),
         ],
       ),
       body: AppTabBar(
