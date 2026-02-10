@@ -12,9 +12,9 @@ import 'package:dun_diary_app/shared/widgets/custom/button/custom_button.dart';
 import 'package:dun_diary_app/shared/widgets/custom/card/custom_card.dart';
 import 'package:dun_diary_app/shared/widgets/custom/card/no_content_card.dart';
 import 'package:dun_diary_app/shared/widgets/custom/card/stat_row.dart';
+import 'package:dun_diary_app/shared/widgets/custom/img/custom_svg_widget.dart';
 import 'package:dun_diary_app/shared/widgets/custom/scaffold/custom_scaffold.dart';
 import 'package:dun_diary_app/shared/widgets/custom/scaffold/main_appbar.dart';
-import 'package:dun_diary_app/shared/widgets/custom/svg/custom_svg_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -129,7 +129,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         path: AppIcons.duotone.graphDown,
                         width: 34,
                         height: 34,
-                        color: CustomColor.blue1,
+                        color: CustomColor.blue4,
                       ),
                       label: AppStrings.bloodPressure.diaShortLabel,
                       description: AppStrings.bloodPressure.diaDesc,
@@ -140,7 +140,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         path: AppIcons.duotone.heartPulse,
                         width: 34,
                         height: 34,
-                        color: CustomColor.pink1,
+                        color: CustomColor.pink3,
                       ),
                       label: AppStrings.bloodPressure.pulseShortLabel,
                       description: AppStrings.bloodPressure.pulseDesc,

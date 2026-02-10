@@ -3,7 +3,7 @@ import 'package:dun_diary_app/shared/constant/app_icons.dart';
 import 'package:dun_diary_app/shared/style/color.dart';
 import 'package:dun_diary_app/shared/style/dimension.dart';
 import 'package:dun_diary_app/shared/style/drop_shadow.dart';
-import 'package:dun_diary_app/shared/widgets/custom/svg/custom_svg_widget.dart';
+import 'package:dun_diary_app/shared/widgets/custom/img/custom_svg_widget.dart';
 import 'package:dun_diary_app/shared/widgets/custom/text/text_widget.dart';
 import 'package:flutter/material.dart';
 
@@ -24,27 +24,27 @@ class CustomFlushbar {
 
     switch (type) {
       case FlushbarType.success:
-        bgColor = CustomColor.green100;
-        borderColor = CustomColor.green200;
-        textColor = CustomColor.green300;
+        bgColor = CustomColor.green1;
+        borderColor = CustomColor.green2;
+        textColor = CustomColor.green3;
         iconPath = AppIcons.duotone.check_circle;
         break;
       case FlushbarType.error:
-        bgColor = CustomColor.red100;
-        borderColor = CustomColor.red200;
-        textColor = CustomColor.red300;
+        bgColor = CustomColor.red1;
+        borderColor = CustomColor.red2;
+        textColor = CustomColor.red3;
         iconPath = AppIcons.duotone.dangerTriangle;
         break;
       case FlushbarType.warning:
-        bgColor = CustomColor.yellow100;
-        borderColor = CustomColor.yellow200;
-        textColor = CustomColor.yellow300;
+        bgColor = CustomColor.yellow1;
+        borderColor = CustomColor.yellow2;
+        textColor = CustomColor.yellow3;
         iconPath = AppIcons.duotone.dangerTriangle;
         break;
       case FlushbarType.info:
-        bgColor = CustomColor.blue100;
-        borderColor = CustomColor.blue200;
-        textColor = CustomColor.blue300;
+        bgColor = CustomColor.blue1;
+        borderColor = CustomColor.blue2;
+        textColor = CustomColor.blue3;
         iconPath = AppIcons.duotone.check_circle;
         break;
     }

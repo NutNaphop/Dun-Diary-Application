@@ -3,6 +3,8 @@ import 'package:dun_diary_app/core/constant/hive_constants.dart';
 import 'package:dun_diary_app/core/router/app_router.dart';
 import 'package:dun_diary_app/core/services/navigation_service.dart';
 import 'package:dun_diary_app/core/services/snackbar_service.dart';
+import 'package:dun_diary_app/data/analyze_record/model/analyze_cache_model.dart';
+import 'package:dun_diary_app/data/analyze_record/model/analyze_result_model.dart';
 import 'package:dun_diary_app/data/blood_pressure/model/bp_record.dart';
 import 'package:dun_diary_app/register_provider.dart';
 import 'package:dun_diary_app/shared/constant/app_strings.dart';
@@ -43,15 +45,18 @@ initService() async {
   FlutterNativeSplash.preserve(widgetsBinding: binding);
 }
 
-
 // init hive
 initHive() async {
   await Hive.initFlutter();
   Hive.registerAdapter(BPRecordAdapter());
-  await Hive.openBox<BPRecord>(HiveBoxName.bpRecord); 
+  Hive.registerAdapter(AnalysisCacheAdapter());
+  Hive.registerAdapter(AnalyzeResultModelAdapter());
+  await Hive.openBox<BPRecord>(HiveBoxName.bpRecord);
   await Hive.openBox(HiveBoxName.settingsBox);
   await Hive.openBox<String>(HiveBoxName.QueueBox);
   await Hive.openBox(HiveBoxName.metaBox);
+  await Hive.openBox<AnalysisCache>(HiveBoxName.analysisCacheBox);
+  await Hive.openBox<List<String>>(HiveBoxName.indexBox);
 }
 
 // init firebase

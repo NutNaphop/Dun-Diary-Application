@@ -31,7 +31,7 @@ class RecordViewmodel extends ChangeNotifier {
        _mediaService = mediaService,
        _networkInfo = networkInfo;
 
-  BloodPressure _bpValue = BloodPressure(sys: 120, dia: 80, pul: 70);
+  BloodPressure _bpValue = BloodPressure(sys: 113, dia: 64, pul: 74);
   BloodPressure get bpValue => _bpValue;
 
   DateTime _recordDate = DateTime.now();
