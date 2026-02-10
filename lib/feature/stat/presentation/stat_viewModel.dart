@@ -1,10 +1,10 @@
 import 'package:dun_diary_app/core/constant/app_routes.dart';
+import 'package:dun_diary_app/core/network/network_info.dart';
 import 'package:dun_diary_app/core/services/navigation_service.dart';
 import 'package:dun_diary_app/data/analyze_record/model/analyze_result_model.dart';
 import 'package:dun_diary_app/data/analyze_record/repository/analyze_repository.dart';
 import 'package:dun_diary_app/data/blood_pressure/model/bp_record.dart';
 import 'package:dun_diary_app/data/blood_pressure/repository/blood_pressure_repository.dart';
-import 'package:dun_diary_app/core/network/network_info.dart';
 import 'package:dun_diary_app/feature/stat/model/stat_model.dart';
 import 'package:dun_diary_app/feature/stat/presentation/helper/stat_ui_mappper.dart';
 import 'package:dun_diary_app/feature/stat/presentation/widgets/analyze_card/analyze_card.dart';
@@ -14,7 +14,6 @@ import 'package:dun_diary_app/shared/utils/analyze_utils.dart';
 import 'package:dun_diary_app/shared/utils/blood_pressure_utils.dart';
 import 'package:dun_diary_app/shared/utils/date_utils.dart';
 import 'package:dun_diary_app/shared/utils/graph_data_mapper.dart';
-import 'package:dun_diary_app/shared/utils/mock_data_seeder.dart';
 import 'package:dun_diary_app/shared/utils/stat_utils.dart';
 import 'package:dun_diary_app/shared/widgets/ui/bp_graph_sdk/models/blood_pressure_graph_models.dart';
 import 'package:dun_diary_app/shared/widgets/ui/calendar_sdk/models/calendar_types.dart';
@@ -35,6 +34,19 @@ class StatViewmodel extends ChangeNotifier {
 
   StatViewmodel(this._bpRepo, this._analyzeRepo, this._networkInfo) {
     _loadData();
+  }
+
+  bool _disposed = false;
+
+  @override
+  void dispose() {
+    _disposed = true;
+    super.dispose();
+  }
+
+  @override
+  void notifyListeners() {
+    if (!_disposed) super.notifyListeners();
   }
 
   // ===========================================================================
@@ -105,7 +117,6 @@ class StatViewmodel extends ChangeNotifier {
   void onCalendarDateSelected(DateTime date) {
     _focusedDate = date;
     _loadData();
-    notifyListeners();
   }
 
   /// เมื่อผู้ใช้เปลี่ยน Tab (Week/Month/Year)
@@ -118,12 +129,6 @@ class StatViewmodel extends ChangeNotifier {
   /// เมื่อผู้ใช้เลือกวันที่ (จาก DatePicker อื่น)
   void pickDate(DateTime newDate) {
     _focusedDate = newDate;
-    _loadData();
-  }
-
-  /// 🧪 Debug: สร้าง Mock Data สำหรับทดสอบ
-  Future<void> seedData() async {
-    await MockDataSeeder(_bpRepo).generateBigData();
     _loadData();
   }
 
@@ -171,7 +176,7 @@ class StatViewmodel extends ChangeNotifier {
     _bloodPressureLevel = (sys != null && dia != null)
         ? BloodPressureUtils.calculateBloodPressureLevel(sys, dia)
         : null;
-    _statsData = StatUiMappper.mapToCardData(statMap, _bloodPressureLevel!);
+    _statsData = StatUiMappper.mapToCardData(statMap, _bloodPressureLevel);
     _graphData = GraphDataMapper.mapToGraphData(records, _selectedTabIndex);
 
     // Step 6: ตรวจสอบ AI cache
