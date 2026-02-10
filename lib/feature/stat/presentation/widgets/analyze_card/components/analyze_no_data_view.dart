@@ -1,4 +1,5 @@
 import 'package:dun_diary_app/shared/constant/app_image.dart';
+import 'package:dun_diary_app/shared/constant/app_strings.dart';
 import 'package:dun_diary_app/shared/style/color.dart';
 import 'package:dun_diary_app/shared/style/dimension.dart';
 import 'package:dun_diary_app/shared/widgets/custom/img/custom_svg_widget.dart';
@@ -22,7 +23,7 @@ class AnalyzeNoDataView extends StatelessWidget {
             children: [
               SVGImage(path: AppImage.analyze, width: 105, height: 102),
               CustomText(
-                text: "ยังไม่มีข้อมูลในช่วงเวลานี้",
+                text: AppStrings.stat.noDataTitle,
                 fontSize: Dimension.fontSizes.h1,
                 fontWeight: Dimension.fontWeights.bold,
                 color: CustomColor.gray500,
@@ -30,8 +31,7 @@ class AnalyzeNoDataView extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 35),
                 child: CustomText(
-                  text:
-                      "เพิ่มข้อมูลความดันโลหิตก่อน เพื่อให้ AI ช่วยวิเคราะห์ผลและสรุปให้คุณ",
+                  text: AppStrings.stat.noDataDesc,
                   fontSize: Dimension.fontSizes.md,
                   fontWeight: Dimension.fontWeights.regular,
                   color: CustomColor.gray400,

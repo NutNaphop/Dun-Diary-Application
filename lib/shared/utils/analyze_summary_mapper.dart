@@ -2,6 +2,7 @@ import 'package:dun_diary_app/data/analyze_record/model/analyze_summary_model.da
 import 'package:dun_diary_app/data/blood_pressure/model/bp_record.dart';
 import 'package:dun_diary_app/shared/utils/blood_pressure_utils.dart';
 import 'package:dun_diary_app/shared/utils/date_utils.dart';
+import 'package:dun_diary_app/shared/utils/stat_utils.dart';
 import 'package:intl/intl.dart';
 
 /// Utility class สำหรับแปลง BPRecords เป็น Summary
@@ -22,9 +23,11 @@ class AnalyzeSummaryMapper {
     int tabIndex,
     String rangeLabel,
   ) {
+    final periodType = PeriodType.fromTabIndex(tabIndex);
+
     if (records.isEmpty) {
       return AnalyzeSummary(
-        periodType: _getPeriodType(tabIndex),
+        periodType: periodType,
         rangeLabel: rangeLabel,
         items: [],
         totalRecords: 0,
@@ -34,17 +37,14 @@ class AnalyzeSummaryMapper {
     // เรียงข้อมูลตามวันที่
     records.sort((a, b) => a.createdAt.compareTo(b.createdAt));
 
-    List<AnalyzeSummaryItem> items;
-    if (tabIndex == 0) {
-      items = _groupByDay(records);
-    } else if (tabIndex == 1) {
-      items = _groupByWeek(records);
-    } else {
-      items = _groupByMonth(records);
-    }
+    final grouped = _groupRecords(records, periodType);
+
+    final items = grouped.entries
+        .map((e) => _createSummaryItem(e.key, e.value))
+        .toList();
 
     return AnalyzeSummary(
-      periodType: _getPeriodType(tabIndex),
+      periodType: periodType,
       rangeLabel: rangeLabel,
       items: items,
       totalRecords: records.length,
@@ -55,24 +55,34 @@ class AnalyzeSummaryMapper {
   // 📅 Grouping Methods
   // ===========================================================================
 
-  /// Group by Day (สำหรับ Week view)
-  static List<AnalyzeSummaryItem> _groupByDay(List<BPRecord> records) {
-    final Map<String, List<BPRecord>> grouped = {};
+  /// Group records ตาม PeriodType
+  static Map<String, List<BPRecord>> _groupRecords(
+    List<BPRecord> records,
+    PeriodType periodType,
+  ) {
+    switch (periodType) {
+      case PeriodType.week:
+        return _groupByDay(records);
+      case PeriodType.month:
+        return _groupByWeek(records);
+      case PeriodType.year:
+        return _groupByMonth(records);
+    }
+  }
 
+  /// Group by Day (สำหรับ Week view)
+  static Map<String, List<BPRecord>> _groupByDay(List<BPRecord> records) {
+    final Map<String, List<BPRecord>> grouped = {};
     for (var r in records) {
       final key = DateFormat('d').format(r.createdAt);
       grouped.putIfAbsent(key, () => []).add(r);
     }
-
-    return grouped.entries
-        .map((e) => _createSummaryItem(e.key, e.value))
-        .toList();
+    return grouped;
   }
 
   /// Group by Week (สำหรับ Month view)
-  static List<AnalyzeSummaryItem> _groupByWeek(List<BPRecord> records) {
+  static Map<String, List<BPRecord>> _groupByWeek(List<BPRecord> records) {
     final Map<String, List<BPRecord>> grouped = {};
-
     for (var r in records) {
       final weekStart = _getWeekStart(r.createdAt);
       final weekEnd = weekStart.add(const Duration(days: 6));
@@ -81,37 +91,31 @@ class AnalyzeSummaryMapper {
     }
 
     // เรียงตามวันที่เริ่มต้นของสัปดาห์
-    final sortedEntries = grouped.entries.toList()
-      ..sort((a, b) {
+    final sorted = Map.fromEntries(
+      grouped.entries.toList()..sort((a, b) {
         final dayA = int.parse(a.key.split('-')[0]);
         final dayB = int.parse(b.key.split('-')[0]);
         return dayA.compareTo(dayB);
-      });
-
-    return sortedEntries
-        .map((e) => _createSummaryItem(e.key, e.value))
-        .toList();
+      }),
+    );
+    return sorted;
   }
 
   /// Group by Month (สำหรับ Year view)
-  static List<AnalyzeSummaryItem> _groupByMonth(List<BPRecord> records) {
+  static Map<String, List<BPRecord>> _groupByMonth(List<BPRecord> records) {
     final Map<String, List<BPRecord>> grouped = {};
-
     for (var r in records) {
       final key = DateTimeUtils.getMonthShort(r.createdAt.month);
       grouped.putIfAbsent(key, () => []).add(r);
     }
-
-    return grouped.entries
-        .map((e) => _createSummaryItem(e.key, e.value))
-        .toList();
+    return grouped;
   }
 
   // ===========================================================================
   // 🔧 Helper Methods
   // ===========================================================================
 
-  /// สร้าง SummaryItem จาก records
+  /// สร้าง SummaryItem จาก records (ใช้ StatUtils สำหรับ min/max/avg)
   static AnalyzeSummaryItem _createSummaryItem(
     String label,
     List<BPRecord> records,
@@ -122,18 +126,16 @@ class AnalyzeSummaryMapper {
 
     final avgSys = BloodPressureUtils.calculateAVGSYS(sysList).round();
     final avgDia = BloodPressureUtils.calculateAVGDIA(diaList).round();
-    final avgPulse = (pulseList.reduce((a, b) => a + b) / pulseList.length)
-        .round();
 
     return AnalyzeSummaryItem(
       label: label,
       avgSys: avgSys,
       avgDia: avgDia,
-      avgPulse: avgPulse,
-      minSys: sysList.reduce((a, b) => a < b ? a : b),
-      maxSys: sysList.reduce((a, b) => a > b ? a : b),
-      minDia: diaList.reduce((a, b) => a < b ? a : b),
-      maxDia: diaList.reduce((a, b) => a > b ? a : b),
+      avgPulse: StatUtils.avgOf(pulseList),
+      minSys: StatUtils.minOf(sysList),
+      maxSys: StatUtils.maxOf(sysList),
+      minDia: StatUtils.minOf(diaList),
+      maxDia: StatUtils.maxOf(diaList),
       recordCount: records.length,
       level: BloodPressureUtils.calculateBloodPressureLevel(avgSys, avgDia),
     );
@@ -143,19 +145,5 @@ class AnalyzeSummaryMapper {
   static DateTime _getWeekStart(DateTime date) {
     final daysFromMonday = date.weekday - DateTime.monday;
     return DateTime(date.year, date.month, date.day - daysFromMonday);
-  }
-
-  /// แปลง tabIndex เป็น period type
-  static String _getPeriodType(int tabIndex) {
-    switch (tabIndex) {
-      case 0:
-        return 'week';
-      case 1:
-        return 'month';
-      case 2:
-        return 'year';
-      default:
-        return 'week';
-    }
   }
 }

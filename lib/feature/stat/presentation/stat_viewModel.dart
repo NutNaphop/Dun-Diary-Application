@@ -167,7 +167,7 @@ class StatViewmodel extends ChangeNotifier {
     _bloodPressureLevel = (sys != null && dia != null)
         ? BloodPressureUtils.calculateBloodPressureLevel(sys, dia)
         : null;
-    _statsData = StatUiMappper.mapToCardData(statMap);
+    _statsData = StatUiMappper.mapToCardData(statMap, _bloodPressureLevel!);
     _graphData = GraphDataMapper.mapToGraphData(records, _selectedTabIndex);
 
     // Step 6: ตรวจสอบ AI cache

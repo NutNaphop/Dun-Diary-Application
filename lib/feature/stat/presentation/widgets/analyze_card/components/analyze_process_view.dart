@@ -1,4 +1,5 @@
 import 'package:dun_diary_app/shared/constant/app_animations.dart';
+import 'package:dun_diary_app/shared/constant/app_strings.dart';
 import 'package:dun_diary_app/shared/style/color.dart';
 import 'package:dun_diary_app/shared/style/dimension.dart';
 import 'package:dun_diary_app/shared/widgets/custom/img/custom_lottie_widget.dart';
@@ -26,14 +27,14 @@ class AnalyzeProcessView extends StatelessWidget {
                 height: 122,
               ),
               CustomText(
-                text: "กำลังประมวลผลสุขภาพ",
+                text: AppStrings.stat.processingTitle,
                 fontSize: Dimension.fontSizes.h1,
                 fontWeight: Dimension.fontWeights.bold,
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 35),
                 child: CustomText(
-                  text: "AI กำลังวิเคราะห์ผลเพื่อคุณโดยเฉพาะ",
+                  text: AppStrings.stat.processingDesc,
                   fontSize: Dimension.fontSizes.md,
                   fontWeight: Dimension.fontWeights.regular,
                   color: CustomColor.gray600,
@@ -42,7 +43,7 @@ class AnalyzeProcessView extends StatelessWidget {
               ),
               SizedBox(height: 15),
               CustomText(
-                text: "กรุณารอสักครู่ อย่าปิดหรือออกจากหน้าจอนี้",
+                text: AppStrings.stat.processingWarning,
                 fontSize: Dimension.fontSizes.md,
                 fontWeight: Dimension.fontWeights.bold,
                 color: CustomColor.gray600,
