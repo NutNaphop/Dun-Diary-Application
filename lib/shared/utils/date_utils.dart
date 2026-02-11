@@ -168,6 +168,11 @@ class DateTimeUtils {
     ];
     return months[month - 1];
   }
+
+  static String getDayName(int weekday) {
+    const days = ["จ", "อ", "พ", "พฤ", "ศ", "ส", "อา"];
+    return days[weekday - 1];
+  }
 }
 
 /// Extension เพื่อเพิ่ม dayOfYear property ให้ DateTime
