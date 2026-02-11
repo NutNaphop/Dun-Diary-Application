@@ -1,4 +1,4 @@
-import 'package:dun_diary_app/data/blood_pressure/model/bp_record.dart';
+import 'package:dun_diary_app/feature/history/presentation/history_viewmodel.dart';
 import 'package:dun_diary_app/feature/history/presentation/widgets/history_card.dart';
 import 'package:dun_diary_app/shared/constant/app_icons.dart';
 import 'package:dun_diary_app/shared/style/color.dart';
@@ -11,9 +11,17 @@ import 'package:dun_diary_app/shared/widgets/custom/text/text_widget.dart';
 import 'package:dun_diary_app/shared/widgets/ui/bp_graph_sdk/bp_graph_sdk.dart';
 import 'package:dun_diary_app/shared/widgets/ui/guage/guage.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class HistoryScreen extends StatefulWidget {
   const HistoryScreen({super.key});
+
+  static Widget create() {
+    return ChangeNotifierProvider(
+      create: (context) => HistoryViewmodel(),
+      child: const HistoryScreen(),
+    );
+  }
 
   @override
   State<HistoryScreen> createState() => _HistoryScreenState();
@@ -21,6 +29,11 @@ class HistoryScreen extends StatefulWidget {
 
 class _HistoryScreenState extends State<HistoryScreen> {
   final ScrollController _scrollController = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   void dispose() {
@@ -89,24 +102,23 @@ class _HistoryScreenState extends State<HistoryScreen> {
                     thickness: 4,
                     thumbVisibility: true,
                     controller: _scrollController,
-                    child: ListView.builder(
-                      controller: _scrollController,
-                      shrinkWrap: true,
-                      itemCount: 5,
-                      itemBuilder: (context, index) {
-                        return Padding(
-                          padding: const EdgeInsets.only(bottom: 5),
-                          child: HistoryCard(
-                            record: BPRecord(
-                              ownerId: "",
-                              id: "",
-                              sys: 115,
-                              dia: 98,
-                              pulse: 72,
-                              createdAt: DateTime.now(),
-                            ),
-                            isHaveDivider: index != 4,
-                          ),
+                    child: Consumer<HistoryViewmodel>(
+                      builder: (context, viewModel, child) {
+                        return ListView.builder(
+                          controller: _scrollController,
+                          shrinkWrap: true,
+                          itemCount: viewModel.bpRecord.length,
+                          itemBuilder: (context, index) {
+                            final record = viewModel.bpRecord[index];
+                            return Padding(
+                              padding: const EdgeInsets.only(bottom: 5),
+                              child: HistoryCard(
+                                record: record,
+                                isHaveDivider:
+                                    index != viewModel.bpRecord.length - 1,
+                              ),
+                            );
+                          },
                         );
                       },
                     ),
