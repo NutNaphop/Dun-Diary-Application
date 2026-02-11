@@ -13,7 +13,25 @@ import 'package:flutter/painting.dart';
 /// - Level 3 (High Stage 1): SYS 130-139 หรือ DIA 80-89
 /// - Level 4 (High Stage 2): SYS 140-179 หรือ DIA 90-119
 /// - Level 5 (Crisis): SYS >= 180 หรือ DIA >= 120
+import 'package:dun_diary_app/data/blood_pressure/model/bp_record.dart';
+import 'package:dun_diary_app/shared/widgets/ui/bp_graph_sdk/models/blood_pressure_graph_models.dart';
+
 class BloodPressureUtils {
+  /// แปลง List<BPRecord> เป็น List<BloodPressureGraphData> สำหรับกราฟ
+  static List<BloodPressureGraphData> mapToGraphData(List<BPRecord> records) {
+    return records.map((record) {
+      final levelIndex = calculateBloodPressureLevel(record.sys, record.dia);
+      final level = BloodPressureLevel.values[levelIndex];
+      final timeLabel =
+          "${record.createdAt.hour.toString().padLeft(2, '0')}:${record.createdAt.minute.toString().padLeft(2, '0')}";
+
+      return BloodPressureGraphData(
+        xLabel: timeLabel,
+        level: level,
+        sourceData: record,
+      );
+    }).toList();
+  }
   // ===========================================================================
   // 📊 SECTION 1: Parsing Functions
   // ===========================================================================
@@ -163,7 +181,49 @@ class BloodPressureUtils {
 
   static int calculateAVGLevel(List<int> levelList) {
     if (levelList.isEmpty) return 1; // default to normal
+
+    // 🚨 Safety First: ถ้ามีค่าวิกฤต หรือ สูงมาก ให้ยึดค่านั้นทันที (ไม่เฉลี่ย)
+    if (levelList.contains(5)) return 5; // Crisis
+    if (levelList.contains(4)) return 4; // High Stage 2
+
+    // ถ้าไม่มีอันตรายร้ายแรง ค่อยใช้ค่าเฉลี่ยตามปกติ
     int sumLevel = levelList.fold(0, (prev, element) => prev + element);
     return (sumLevel / levelList.length).round();
+  }
+
+  /// คำนวณความเสี่ยงรวม (Safety First Strategy)
+  /// ใช้สำหรับ Stat view โดยเฉพาะ
+  /// 1. ถ้าเจอ Crisis ในช่วง -> Crisis
+  /// 2. ถ้าเจอ High Stage 2 -> High Stage 2
+  /// 3. ถ้าไม่มีตัวร้ายแรง -> ใช้ค่าเฉลี่ย
+  /// คำนวณความเสี่ยงรวม (Safety First Strategy)
+  ///
+  /// [isStrict] - ถ้า true (default) จะใช้ Safety First (Crisis -> Crisis)
+  ///              ถ้า false จะใช้ค่าเฉลี่ยปกติ (สำหรับ Monthly/Yearly Stats)
+  static int calculateOverallRiskLevel(
+    List<BPRecord> records, {
+    bool isStrict = true,
+  }) {
+    if (records.isEmpty) return 1;
+
+    // 🚨 Strict Mode (Safety First): สำหรับรายวัน หรือต้องการความเข้มงวด
+    if (isStrict) {
+      bool hasCrisis = false;
+      bool hasHighStage2 = false;
+
+      for (var r in records) {
+        final level = calculateBloodPressureLevel(r.sys, r.dia);
+        if (level == 5) hasCrisis = true;
+        if (level == 4) hasHighStage2 = true;
+      }
+
+      if (hasCrisis) return 5; // Crisis
+      if (hasHighStage2) return 4; // High Stage 2
+    }
+
+    // Default / Long Period: ใช้ค่าเฉลี่ยตามปกติ
+    final avgSys = calculateAVGSYS(records.map((e) => e.sys).toList()).round();
+    final avgDia = calculateAVGDIA(records.map((e) => e.dia).toList()).round();
+    return calculateBloodPressureLevel(avgSys, avgDia);
   }
 }
