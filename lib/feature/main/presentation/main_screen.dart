@@ -22,7 +22,7 @@ class MainScreen extends StatelessWidget {
       case 0:
         return HomeScreen.create();
       case 1:
-        return HistoryScreen();
+        return HistoryScreen.create();
       case 2:
         return Center(child: Text(AppStrings.main.addPage));
       case 3:
