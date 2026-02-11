@@ -99,7 +99,7 @@ class BloodPressureUtils {
 
   /// แปลง level (0-5) เป็นสี
   static Color mapLevelColor(int? level) {
-    if (level == null) return CustomColor.gray500;
+    if (level == null) return CustomColor.transparent;
     switch (level) {
       case 0:
         return CustomColor.lowColor; // น้ำเงิน - ต่ำ

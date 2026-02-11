@@ -3,6 +3,8 @@ import 'package:dun_diary_app/feature/history/presentation/widgets/history_card.
 import 'package:dun_diary_app/shared/constant/app_icons.dart';
 import 'package:dun_diary_app/shared/style/color.dart';
 import 'package:dun_diary_app/shared/style/dimension.dart';
+import 'package:dun_diary_app/shared/utils/blood_pressure_utils.dart';
+import 'package:dun_diary_app/shared/widgets/ui/date_slider/date_slider.dart';
 import 'package:dun_diary_app/shared/widgets/custom/card/custom_card.dart';
 import 'package:dun_diary_app/shared/widgets/custom/img/custom_svg_widget.dart';
 import 'package:dun_diary_app/shared/widgets/custom/scaffold/custom_scaffold.dart';
@@ -10,6 +12,8 @@ import 'package:dun_diary_app/shared/widgets/custom/scaffold/main_appbar.dart';
 import 'package:dun_diary_app/shared/widgets/custom/text/text_widget.dart';
 import 'package:dun_diary_app/shared/widgets/ui/bp_graph_sdk/bp_graph_sdk.dart';
 import 'package:dun_diary_app/shared/widgets/ui/guage/guage.dart';
+import 'package:dun_diary_app/shared/widgets/ui/calendar_sdk/calendar_sdk.dart';
+import 'package:dun_diary_app/shared/widgets/ui/calendar_sdk/models/calendar_types.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -48,7 +52,10 @@ class _HistoryScreenState extends State<HistoryScreen> {
         title: "รายการบันทึก",
         showBack: false,
         actions: [
-          IconButtonSVG(path: AppIcons.outline.calendar, onPressed: () {}),
+          IconButtonSVG(
+            path: AppIcons.outline.calendar,
+            onPressed: () => _openCalendar(context),
+          ),
           IconButtonSVG(path: AppIcons.outline.dotThree, onPressed: () {}),
         ],
       ),
@@ -58,7 +65,22 @@ class _HistoryScreenState extends State<HistoryScreen> {
           child: Column(
             spacing: 15,
             children: [
-              Text("Slidable Section"),
+              Consumer<HistoryViewmodel>(
+                builder: (context, vm, child) {
+                  return SizedBox(
+                    height: 110,
+                    child: DateSlider(
+                      selectedDate: vm.selectedDate,
+                      onDateSelected: vm.selectDate,
+                      enableScrollFutureUntil: vm.latestDataDate,
+                      dateColorBuilder: (date) {
+                        final level = vm.getAverageLevelForDate(date);
+                        return BloodPressureUtils.mapLevelColor(level);
+                      },
+                    ),
+                  );
+                },
+              ),
               CustomCard(
                 contentPadding: EdgeInsets.all(10),
                 content: Column(
@@ -107,15 +129,16 @@ class _HistoryScreenState extends State<HistoryScreen> {
                         return ListView.builder(
                           controller: _scrollController,
                           shrinkWrap: true,
-                          itemCount: viewModel.bpRecord.length,
+                          itemCount: viewModel.selectedDateRecords.length,
                           itemBuilder: (context, index) {
-                            final record = viewModel.bpRecord[index];
+                            final record = viewModel.selectedDateRecords[index];
                             return Padding(
                               padding: const EdgeInsets.only(bottom: 5),
                               child: HistoryCard(
                                 record: record,
                                 isHaveDivider:
-                                    index != viewModel.bpRecord.length - 1,
+                                    index !=
+                                    viewModel.selectedDateRecords.length - 1,
                               ),
                             );
                           },
@@ -130,5 +153,22 @@ class _HistoryScreenState extends State<HistoryScreen> {
         ),
       ),
     );
+  }
+
+  void _openCalendar(BuildContext context) async {
+    final vm = context.read<HistoryViewmodel>();
+    final DateTime? result = await showDialog<DateTime>(
+      context: context,
+      builder: (context) {
+        return CalendarSDK(
+          type: CalendarType.week,
+          initialDate: vm.selectedDate,
+        );
+      },
+    );
+
+    if (result != null) {
+      vm.selectDate(result);
+    }
   }
 }
