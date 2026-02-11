@@ -1,9 +1,11 @@
+import 'package:dun_diary_app/data/blood_pressure/repository/blood_pressure_repository.dart';
 import 'package:dun_diary_app/feature/history/presentation/history_viewmodel.dart';
 import 'package:dun_diary_app/feature/history/presentation/widgets/history_card.dart';
 import 'package:dun_diary_app/shared/constant/app_icons.dart';
 import 'package:dun_diary_app/shared/style/color.dart';
 import 'package:dun_diary_app/shared/style/dimension.dart';
 import 'package:dun_diary_app/shared/utils/blood_pressure_utils.dart';
+import 'package:dun_diary_app/shared/utils/date_utils.dart';
 import 'package:dun_diary_app/shared/widgets/ui/date_slider/date_slider.dart';
 import 'package:dun_diary_app/shared/widgets/custom/card/custom_card.dart';
 import 'package:dun_diary_app/shared/widgets/custom/img/custom_svg_widget.dart';
@@ -22,7 +24,8 @@ class HistoryScreen extends StatefulWidget {
 
   static Widget create() {
     return ChangeNotifierProvider(
-      create: (context) => HistoryViewmodel(),
+      create: (context) =>
+          HistoryViewmodel(repository: context.read<BloodPressureRepository>()),
       child: const HistoryScreen(),
     );
   }
@@ -56,7 +59,12 @@ class _HistoryScreenState extends State<HistoryScreen> {
             path: AppIcons.outline.calendar,
             onPressed: () => _openCalendar(context),
           ),
-          IconButtonSVG(path: AppIcons.outline.dotThree, onPressed: () {}),
+          IconButtonSVG(
+            path: AppIcons.outline.dotThree,
+            onPressed: () {
+              context.read<HistoryViewmodel>().seedData();
+            },
+          ),
         ],
       ),
       body: SingleChildScrollView(
@@ -81,36 +89,62 @@ class _HistoryScreenState extends State<HistoryScreen> {
                   );
                 },
               ),
-              CustomCard(
-                contentPadding: EdgeInsets.all(10),
-                content: Column(
-                  children: [
-                    CustomText(
-                      text: "ปกติ",
-                      fontSize: Dimension.fontSizes.h1,
-                      fontWeight: Dimension.fontWeights.bold,
-                      color: CustomColor.gray900,
-                      textAlign: TextAlign.center,
+
+              Consumer<HistoryViewmodel>(
+                builder: (context, vm, child) {
+                  final label = BloodPressureUtils.mapLevelLabel(
+                    vm.getAverageLevelForDate(vm.selectedDate),
+                  );
+                  final lastRecordLevel =
+                      BloodPressureUtils.calculateBloodPressureLevel(
+                        vm.selectedDateRecords.last.sys,
+                        vm.selectedDateRecords.last.dia,
+                      );
+                  final avgLevel = vm.getAverageLevelForDate(vm.selectedDate);
+                  return CustomCard(
+                    contentPadding: EdgeInsets.all(10),
+                    content: Column(
+                      children: [
+                        CustomText(
+                          text: label,
+                          fontSize: Dimension.fontSizes.h1,
+                          fontWeight: Dimension.fontWeights.bold,
+                          color: CustomColor.gray900,
+                          textAlign: TextAlign.center,
+                        ),
+                        SizedBox(height: 4),
+                        CustomText(
+                          text: DateTimeUtils.getHistoryTimeLabel(
+                            vm.selectedDateRecords.firstOrNull?.createdAt,
+                          ),
+                          fontSize: Dimension.fontSizes.md,
+                          fontWeight: Dimension.fontWeights.medium,
+                          color: CustomColor.gray500,
+                          textAlign: TextAlign.center,
+                        ),
+                        BloodPressureGauge(
+                          level: lastRecordLevel,
+                          avgLevel: avgLevel,
+                        ),
+                      ],
                     ),
-                    SizedBox(height: 4),
-                    CustomText(
-                      text: "ล่าสุด 11:58",
-                      fontSize: Dimension.fontSizes.md,
-                      fontWeight: Dimension.fontWeights.medium,
-                      color: CustomColor.gray500,
-                      textAlign: TextAlign.center,
-                    ),
-                    BloodPressureGauge(level: 0),
-                  ],
-                ),
+                  );
+                },
               ),
 
-              CustomCard(
-                contentPadding: EdgeInsets.all(10),
-                content: SizedBox(
-                  height: 343,
-                  child: BpGraphSdk(data: List.empty()),
-                ),
+              Consumer<HistoryViewmodel>(
+                builder: (context, vm, child) {
+                  return CustomCard(
+                    title: DateTimeUtils.formatToThaiDateFull(vm.selectedDate),
+                    titleFontSize: Dimension.fontSizes.h2,
+                    contentPadding: EdgeInsets.all(20),
+                    content: Container(
+                      height: 343,
+                      margin: const EdgeInsets.only(top: 10),
+                      child: BpGraphSdk(data: vm.selectedDateGraphData),
+                    ),
+                  );
+                },
               ),
 
               CustomCard(
@@ -157,12 +191,15 @@ class _HistoryScreenState extends State<HistoryScreen> {
 
   void _openCalendar(BuildContext context) async {
     final vm = context.read<HistoryViewmodel>();
+    final repository = context.read<BloodPressureRepository>();
     final DateTime? result = await showDialog<DateTime>(
       context: context,
       builder: (context) {
         return CalendarSDK(
           type: CalendarType.week,
           initialDate: vm.selectedDate,
+          firstDate: DateTime(repository.getMinYear()),
+          lastDate: DateTime.now(),
         );
       },
     );

@@ -47,7 +47,7 @@ class HistoryCard extends StatelessWidget {
                 ),
               ],
             ),
-            SizedBox(width: 5),
+            SizedBox(width: 10),
             Row(
               spacing: 15,
               children: [

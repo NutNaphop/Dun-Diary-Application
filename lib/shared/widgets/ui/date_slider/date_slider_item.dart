@@ -68,7 +68,7 @@ class DateSliderItem extends StatelessWidget {
       ),
       child: CustomText(
         text: text,
-        color: backgroundColor.computeLuminance() > 0.3
+        color: backgroundColor.computeLuminance() > 0.2
             ? CustomColor.white
             : CustomColor.gray900,
         fontSize: Dimension.fontSizes.md,
