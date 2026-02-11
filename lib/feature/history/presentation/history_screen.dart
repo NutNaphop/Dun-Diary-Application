@@ -70,12 +70,12 @@ class _HistoryScreenState extends State<HistoryScreen> {
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 22),
-          child: Column(
-            spacing: 15,
-            children: [
-              Consumer<HistoryViewmodel>(
-                builder: (context, vm, child) {
-                  return SizedBox(
+          child: Consumer<HistoryViewmodel>(
+            builder: (context, vm, child) {
+              return Column(
+                spacing: 15,
+                children: [
+                  SizedBox(
                     height: 110,
                     child: DateSlider(
                       selectedDate: vm.selectedDate,
@@ -86,55 +86,53 @@ class _HistoryScreenState extends State<HistoryScreen> {
                         return BloodPressureUtils.mapLevelColor(level);
                       },
                     ),
-                  );
-                },
-              ),
+                  ),
 
-              Consumer<HistoryViewmodel>(
-                builder: (context, vm, child) {
-                  final label = BloodPressureUtils.mapLevelLabel(
-                    vm.getAverageLevelForDate(vm.selectedDate),
-                  );
-                  final lastRecordLevel =
-                      BloodPressureUtils.calculateBloodPressureLevel(
-                        vm.selectedDateRecords.last.sys,
-                        vm.selectedDateRecords.last.dia,
+                  Builder(
+                    builder: (context) {
+                      final label = BloodPressureUtils.mapLevelLabel(
+                        vm.getAverageLevelForDate(vm.selectedDate),
                       );
-                  final avgLevel = vm.getAverageLevelForDate(vm.selectedDate);
-                  return CustomCard(
-                    contentPadding: EdgeInsets.all(10),
-                    content: Column(
-                      children: [
-                        CustomText(
-                          text: label,
-                          fontSize: Dimension.fontSizes.h1,
-                          fontWeight: Dimension.fontWeights.bold,
-                          color: CustomColor.gray900,
-                          textAlign: TextAlign.center,
+                      final lastRecordLevel =
+                          BloodPressureUtils.calculateBloodPressureLevel(
+                            vm.selectedDateRecords.last.sys,
+                            vm.selectedDateRecords.last.dia,
+                          );
+                      final avgLevel = vm.getAverageLevelForDate(
+                        vm.selectedDate,
+                      );
+                      return CustomCard(
+                        contentPadding: EdgeInsets.all(10),
+                        content: Column(
+                          children: [
+                            CustomText(
+                              text: label,
+                              fontSize: Dimension.fontSizes.h1,
+                              fontWeight: Dimension.fontWeights.bold,
+                              color: CustomColor.gray900,
+                              textAlign: TextAlign.center,
+                            ),
+                            SizedBox(height: 4),
+                            CustomText(
+                              text: DateTimeUtils.getHistoryTimeLabel(
+                                vm.selectedDateRecords.firstOrNull?.createdAt,
+                              ),
+                              fontSize: Dimension.fontSizes.md,
+                              fontWeight: Dimension.fontWeights.medium,
+                              color: CustomColor.gray500,
+                              textAlign: TextAlign.center,
+                            ),
+                            BloodPressureGauge(
+                              level: lastRecordLevel,
+                              avgLevel: avgLevel,
+                            ),
+                          ],
                         ),
-                        SizedBox(height: 4),
-                        CustomText(
-                          text: DateTimeUtils.getHistoryTimeLabel(
-                            vm.selectedDateRecords.firstOrNull?.createdAt,
-                          ),
-                          fontSize: Dimension.fontSizes.md,
-                          fontWeight: Dimension.fontWeights.medium,
-                          color: CustomColor.gray500,
-                          textAlign: TextAlign.center,
-                        ),
-                        BloodPressureGauge(
-                          level: lastRecordLevel,
-                          avgLevel: avgLevel,
-                        ),
-                      ],
-                    ),
-                  );
-                },
-              ),
+                      );
+                    },
+                  ),
 
-              Consumer<HistoryViewmodel>(
-                builder: (context, vm, child) {
-                  return CustomCard(
+                  CustomCard(
                     title: DateTimeUtils.formatToThaiDateFull(vm.selectedDate),
                     titleFontSize: Dimension.fontSizes.h2,
                     contentPadding: EdgeInsets.all(20),
@@ -143,46 +141,42 @@ class _HistoryScreenState extends State<HistoryScreen> {
                       margin: const EdgeInsets.only(top: 10),
                       child: BpGraphSdk(data: vm.selectedDateGraphData),
                     ),
-                  );
-                },
-              ),
+                  ),
 
-              CustomCard(
-                title: "รายการบันทึกความดัน",
-                contentPadding: const EdgeInsets.all(10),
-                content: ConstrainedBox(
-                  constraints: const BoxConstraints(maxHeight: 250),
-                  child: RawScrollbar(
-                    thumbColor: CustomColor.gray300,
-                    radius: const Radius.circular(90),
-                    thickness: 4,
-                    thumbVisibility: true,
-                    controller: _scrollController,
-                    child: Consumer<HistoryViewmodel>(
-                      builder: (context, viewModel, child) {
-                        return ListView.builder(
+                  CustomCard(
+                    title: "รายการบันทึกความดัน",
+                    contentPadding: const EdgeInsets.all(10),
+                    content: ConstrainedBox(
+                      constraints: const BoxConstraints(maxHeight: 250),
+                      child: RawScrollbar(
+                        thumbColor: CustomColor.gray300,
+                        radius: const Radius.circular(90),
+                        thickness: 4,
+                        thumbVisibility: true,
+                        controller: _scrollController,
+                        padding: const EdgeInsets.only(top: 20, bottom: 20),
+                        child: ListView.builder(
                           controller: _scrollController,
                           shrinkWrap: true,
-                          itemCount: viewModel.selectedDateRecords.length,
+                          itemCount: vm.selectedDateRecords.length,
                           itemBuilder: (context, index) {
-                            final record = viewModel.selectedDateRecords[index];
+                            final record = vm.selectedDateRecords[index];
                             return Padding(
                               padding: const EdgeInsets.only(bottom: 5),
                               child: HistoryCard(
                                 record: record,
                                 isHaveDivider:
-                                    index !=
-                                    viewModel.selectedDateRecords.length - 1,
+                                    index != vm.selectedDateRecords.length - 1,
                               ),
                             );
                           },
-                        );
-                      },
+                        ),
+                      ),
                     ),
                   ),
-                ),
-              ),
-            ],
+                ],
+              );
+            },
           ),
         ),
       ),
