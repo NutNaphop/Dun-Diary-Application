@@ -56,6 +56,7 @@ class _OutlineIcons {
   static const _path = '${AppIcons._base}/outline';
 
   final leftArrow = '$_path/left_arrow.svg';
+  final rightArrow = '$_path/right_arrow.svg';
   final arrowClockwise = '$_path/arrow_clockwise.svg';
   final x = '$_path/x.svg';
   final calendar = '$_path/calendar.svg';
