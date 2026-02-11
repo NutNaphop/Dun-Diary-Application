@@ -1,46 +1,121 @@
-// lib/feature/history/history_screen.dart
-
-import 'package:dun_diary_app/core/constant/hive_constants.dart';
-import 'package:dun_diary_app/feature/history/presentation/widgets/history_item.dart';
-import 'package:flutter/material.dart';
-import 'package:hive_flutter/hive_flutter.dart';
 import 'package:dun_diary_app/data/blood_pressure/model/bp_record.dart';
+import 'package:dun_diary_app/feature/history/presentation/widgets/history_card.dart';
+import 'package:dun_diary_app/shared/constant/app_icons.dart';
+import 'package:dun_diary_app/shared/style/color.dart';
+import 'package:dun_diary_app/shared/style/dimension.dart';
+import 'package:dun_diary_app/shared/widgets/custom/card/custom_card.dart';
+import 'package:dun_diary_app/shared/widgets/custom/img/custom_svg_widget.dart';
+import 'package:dun_diary_app/shared/widgets/custom/scaffold/custom_scaffold.dart';
+import 'package:dun_diary_app/shared/widgets/custom/scaffold/main_appbar.dart';
+import 'package:dun_diary_app/shared/widgets/custom/text/text_widget.dart';
+import 'package:dun_diary_app/shared/widgets/ui/bp_graph_sdk/bp_graph_sdk.dart';
+import 'package:dun_diary_app/shared/widgets/ui/guage/guage.dart';
+import 'package:flutter/material.dart';
 
-class HistoryScreen extends StatelessWidget {
-  const HistoryScreen({Key? key}) : super(key: key);
+class HistoryScreen extends StatefulWidget {
+  const HistoryScreen({super.key});
+
+  @override
+  State<HistoryScreen> createState() => _HistoryScreenState();
+}
+
+class _HistoryScreenState extends State<HistoryScreen> {
+  final ScrollController _scrollController = ScrollController();
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('ประวัติความดัน'),
-        centerTitle: true,
+    return CustomScaffold(
+      appBar: MainAppBar(
+        title: "รายการบันทึก",
+        showBack: false,
+        actions: [
+          IconButtonSVG(path: AppIcons.outline.calendar, onPressed: () {}),
+          IconButtonSVG(path: AppIcons.outline.dotThree, onPressed: () {}),
+        ],
       ),
-      // ใช้ ValueListenableBuilder ดักฟังการเปลี่ยนแปลงของกล่อง 'bp_records'
-      // พอมีข้อมูลใหม่ปุ๊บ หน้านี้จะอัปเดตเองทันที!
-      body: ValueListenableBuilder(
-        valueListenable: Hive.box<BPRecord>(HiveBoxName.bpRecord).listenable(),
-        builder: (context, Box<BPRecord> box, _) {
-          
-          if (box.values.isEmpty) {
-            return const Center(
-              child: Text("ยังไม่มีข้อมูล เริ่มบันทึกกันเถอะ!"),
-            );
-          }
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 22),
+          child: Column(
+            spacing: 15,
+            children: [
+              Text("Slidable Section"),
+              CustomCard(
+                contentPadding: EdgeInsets.all(10),
+                content: Column(
+                  children: [
+                    CustomText(
+                      text: "ปกติ",
+                      fontSize: Dimension.fontSizes.h1,
+                      fontWeight: Dimension.fontWeights.bold,
+                      color: CustomColor.gray900,
+                      textAlign: TextAlign.center,
+                    ),
+                    SizedBox(height: 4),
+                    CustomText(
+                      text: "ล่าสุด 11:58",
+                      fontSize: Dimension.fontSizes.md,
+                      fontWeight: Dimension.fontWeights.medium,
+                      color: CustomColor.gray500,
+                      textAlign: TextAlign.center,
+                    ),
+                    BloodPressureGauge(level: 0),
+                  ],
+                ),
+              ),
 
-          // แปลงข้อมูลเป็น List และเรียงลำดับ (ใหม่ -> เก่า)
-          final records = box.values.toList()
-            ..sort((a, b) => b.createdAt.compareTo(a.createdAt));
+              CustomCard(
+                contentPadding: EdgeInsets.all(10),
+                content: SizedBox(
+                  height: 343,
+                  child: BpGraphSdk(data: List.empty()),
+                ),
+              ),
 
-          return ListView.builder(
-            itemCount: records.length,
-            padding: const EdgeInsets.only(top: 8, bottom: 80), // เผื่อที่ให้ปุ่ม FAB (ถ้ามี)
-            itemBuilder: (context, index) {
-              final record = records[index];
-              return HistoryItemCard(record: record);
-            },
-          );
-        },
+              CustomCard(
+                title: "รายการบันทึกความดัน",
+                contentPadding: const EdgeInsets.all(10),
+                content: ConstrainedBox(
+                  constraints: const BoxConstraints(maxHeight: 250),
+                  child: RawScrollbar(
+                    thumbColor: CustomColor.gray300,
+                    radius: const Radius.circular(90),
+                    thickness: 4,
+                    thumbVisibility: true,
+                    controller: _scrollController,
+                    child: ListView.builder(
+                      controller: _scrollController,
+                      shrinkWrap: true,
+                      itemCount: 5,
+                      itemBuilder: (context, index) {
+                        return Padding(
+                          padding: const EdgeInsets.only(bottom: 5),
+                          child: HistoryCard(
+                            record: BPRecord(
+                              ownerId: "",
+                              id: "",
+                              sys: 115,
+                              dia: 98,
+                              pulse: 72,
+                              createdAt: DateTime.now(),
+                            ),
+                            isHaveDivider: index != 4,
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }

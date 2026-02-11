@@ -8,6 +8,10 @@ class CustomCard extends StatelessWidget {
   final String? description;
   final double titleFontSize;
   final double descriptionFontSize;
+  final FontWeight titleFontWeight;
+  final FontWeight descriptionFontWeight;
+  final Color? titleColor;
+  final Color? descriptionColor;
   final TextAlign titleTextAlign;
   final TextAlign descriptionTextAlign;
   final Widget content;
@@ -19,6 +23,10 @@ class CustomCard extends StatelessWidget {
     this.description,
     this.titleFontSize = 18,
     this.descriptionFontSize = 18,
+    this.titleFontWeight = FontWeight.bold,
+    this.descriptionFontWeight = FontWeight.bold,
+    this.titleColor,
+    this.descriptionColor,
     this.titleTextAlign = TextAlign.start,
     this.descriptionTextAlign = TextAlign.start,
     required this.content,
@@ -49,14 +57,16 @@ class CustomCard extends StatelessWidget {
                   CustomText(
                     text: title!,
                     fontSize: titleFontSize,
-                    fontWeight: FontWeight.bold,
+                    fontWeight: titleFontWeight,
+                    color: titleColor,
                     textAlign: titleTextAlign,
                   ),
                 if (description != null)
                   CustomText(
                     text: description!,
                     fontSize: descriptionFontSize,
-                    fontWeight: FontWeight.bold,
+                    fontWeight: descriptionFontWeight,
+                    color: descriptionColor,
                     textAlign: descriptionTextAlign,
                   ),
               ],
