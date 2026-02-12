@@ -40,9 +40,19 @@ class DateTimeUtils {
     return "${date.day}/${date.month}/${date.year + 543}";
   }
 
+  /// แปลง DateTime เป็น String รูปแบบ "d MMM yyyy" เช่น 12 ก.พ. 2569
+  static String formatToThaiDateMedium(DateTime date) {
+    return "${date.day} ${getMonthShort(date.month)} ${date.year + 543}";
+  }
+
   /// แปลง DateTime เป็น String รูปแบบ "ว/ด/ป(พ.ศ.) HH:mm" เช่น 28/12/2568 14:30
   static String formatToThaiDateWithTime(DateTime date) {
     return "${date.day}/${date.month}/${date.year + 543} ${date.hour.toString().padLeft(2, '0')}:${date.minute.toString().padLeft(2, '0')}";
+  }
+
+  /// แปลงเป็น String แบบ มกราคม 2567
+  static String formatMonthYear(DateTime date) {
+    return "${getMonthFull(date.month)} ${date.year + 543}";
   }
 
   /// แปลงเป็น String แบบ 1 มกราคม 2567

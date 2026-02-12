@@ -11,6 +11,8 @@ class MonthPickerView extends StatelessWidget {
   final int selectedYear;
   final int viewingYear;
   final Function(int) onMonthSelected;
+  final DateTime? minDate;
+  final DateTime? maxDate;
 
   const MonthPickerView({
     super.key,
@@ -18,6 +20,8 @@ class MonthPickerView extends StatelessWidget {
     required this.selectedYear,
     required this.viewingYear,
     required this.onMonthSelected,
+    this.minDate,
+    this.maxDate,
   });
 
   @override
@@ -39,12 +43,35 @@ class MonthPickerView extends StatelessWidget {
       itemBuilder: (context, index) {
         final monthIndex = index + 1;
 
-        // Logic Future
-        bool isFuture = false;
-        if (viewingYear > currentYear) {
-          isFuture = true;
-        } else if (viewingYear == currentYear && monthIndex > currentMonth) {
-          isFuture = true;
+        // Logic Future / Out of Range
+        bool isDisabled = false;
+
+        // Check Max Date (Future)
+        if (maxDate != null) {
+          // Compare as YYYY-MM
+          final maxY = maxDate!.year;
+          final maxM = maxDate!.month;
+          if (viewingYear > maxY ||
+              (viewingYear == maxY && monthIndex > maxM)) {
+            isDisabled = true;
+          }
+        } else {
+          // Default: Future check if maxDate not provided
+          if (viewingYear > currentYear) {
+            isDisabled = true;
+          } else if (viewingYear == currentYear && monthIndex > currentMonth) {
+            isDisabled = true;
+          }
+        }
+
+        // Check Min Date (Past limit)
+        if (minDate != null) {
+          final minY = minDate!.year;
+          final minM = minDate!.month;
+          if (viewingYear < minY ||
+              (viewingYear == minY && monthIndex < minM)) {
+            isDisabled = true;
+          }
         }
 
         final isSelected =
@@ -56,7 +83,7 @@ class MonthPickerView extends StatelessWidget {
 
         return CalendarBaseCell(
           text: CalendarUtils.thaiMonths[monthIndex - 1],
-          textColor: isFuture ? CustomColor.gray500 : CustomColor.gray900,
+          textColor: isDisabled ? CustomColor.gray300 : CustomColor.gray900,
           backgroundColor: isSelected
               ? CustomColor.secondaryColor
               : Colors.transparent,
@@ -70,7 +97,7 @@ class MonthPickerView extends StatelessWidget {
           // margin: const EdgeInsets.only(bottom: 8),
           dotOffset: -8, // ยัด Offset 0 ให้จุดติดขอบล่างสุด (ใต้แคปซูล)
 
-          onTap: isFuture ? null : () => onMonthSelected(monthIndex),
+          onTap: isDisabled ? null : () => onMonthSelected(monthIndex),
         );
       },
     );
