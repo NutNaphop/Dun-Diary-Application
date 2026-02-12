@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:collection';
 
+import 'package:dun_diary_app/core/services/export_service.dart';
+import 'package:dun_diary_app/core/services/flushbar_service.dart';
 import 'package:dun_diary_app/data/blood_pressure/model/bp_record.dart';
 import 'package:dun_diary_app/data/blood_pressure/repository/blood_pressure_repository.dart';
 import 'package:dun_diary_app/shared/utils/blood_pressure_utils.dart';
@@ -23,6 +25,15 @@ class HistoryViewmodel extends ChangeNotifier {
 
   DateTime _selectedDate = DateTime.now();
   DateTime get selectedDate => _selectedDate;
+
+  DateTime? _exportStartDate;
+  DateTime? get exportStartDate => _exportStartDate;
+
+  DateTime? _exportEndDate;
+  DateTime? get exportEndDate => _exportEndDate;
+
+  bool _isExporting = false;
+  bool get isExporting => _isExporting;
 
   Future<void> _loadDataWindow(DateTime date) async {
     final currentKey = DateTimeUtils.getYearMonthKey(date);
@@ -125,6 +136,59 @@ class HistoryViewmodel extends ChangeNotifier {
       _monthlyCache.clear();
       _loadDataWindow(_selectedDate);
     });
+  }
+
+  // Export Data Section
+  void setExportStartDate(DateTime date) {
+    // Force to 1st of month
+    _exportStartDate = DateTime(date.year, date.month, 1);
+
+    // ถ้าวันจบ น้อยกว่าวันเริ่ม ให้รีเซ็ตวันจบ (กันงง)
+    if (_exportEndDate != null && _exportEndDate!.isBefore(_exportStartDate!)) {
+      _exportEndDate = null;
+    }
+    notifyListeners();
+  }
+
+  void setExportEndDate(DateTime date) {
+    // Force to 1st of month
+    _exportEndDate = DateTime(date.year, date.month, 1);
+    notifyListeners();
+  }
+
+  void resetExportState() {
+    _exportStartDate = null;
+    _exportEndDate = null;
+    notifyListeners();
+  }
+
+  void exportToCsv() async {
+    if (_exportStartDate == null || _exportEndDate == null) return;
+    _isExporting = true;
+    notifyListeners();
+    try {
+      // Calculate end of the selected end month
+      final endOfDay = DateTime(
+        _exportEndDate!.year,
+        _exportEndDate!.month + 1,
+        0, // Last day of current month
+        23,
+        59,
+        59,
+      );
+      final records = _repository.getRecordsByRange(
+        _exportStartDate!,
+        endOfDay,
+      );
+
+      await ExportService.instance.exportToCsv(records);
+      FlushbarService.instance.showSuccess("ส่งออกสำเร็จ");
+    } catch (e) {
+      FlushbarService.instance.showError("ส่งออกไม่สำเร็จ โปรดลองอีกครั้ง");
+    } finally {
+      _isExporting = false;
+      notifyListeners();
+    }
   }
 
   @override

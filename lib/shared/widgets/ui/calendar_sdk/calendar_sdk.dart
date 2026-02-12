@@ -119,6 +119,8 @@ class CalendarSDK extends StatelessWidget {
           selectedYear: viewModel.selectedDate.year,
           viewingYear: viewModel.focusedDate.year,
           onMonthSelected: viewModel.onMonthSelected,
+          minDate: firstDate,
+          maxDate: lastDate,
         );
 
       case CalendarView.year:

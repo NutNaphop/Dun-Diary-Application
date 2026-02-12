@@ -1,19 +1,18 @@
 import 'package:dun_diary_app/data/blood_pressure/repository/blood_pressure_repository.dart';
 import 'package:dun_diary_app/feature/history/presentation/history_viewmodel.dart';
-import 'package:dun_diary_app/feature/history/presentation/widgets/history_card.dart';
+import 'package:dun_diary_app/feature/history/presentation/widgets/history_export_sheet.dart';
+import 'package:dun_diary_app/feature/history/presentation/widgets/history_graph_card.dart';
+import 'package:dun_diary_app/feature/history/presentation/widgets/history_record_list.dart';
+import 'package:dun_diary_app/feature/history/presentation/widgets/history_summary_card.dart';
 import 'package:dun_diary_app/shared/constant/app_icons.dart';
-import 'package:dun_diary_app/shared/style/color.dart';
 import 'package:dun_diary_app/shared/style/dimension.dart';
 import 'package:dun_diary_app/shared/utils/blood_pressure_utils.dart';
-import 'package:dun_diary_app/shared/utils/date_utils.dart';
+import 'package:dun_diary_app/shared/widgets/custom/button/custom_popup_menu.dart';
 import 'package:dun_diary_app/shared/widgets/ui/date_slider/date_slider.dart';
-import 'package:dun_diary_app/shared/widgets/custom/card/custom_card.dart';
 import 'package:dun_diary_app/shared/widgets/custom/img/custom_svg_widget.dart';
 import 'package:dun_diary_app/shared/widgets/custom/scaffold/custom_scaffold.dart';
 import 'package:dun_diary_app/shared/widgets/custom/scaffold/main_appbar.dart';
 import 'package:dun_diary_app/shared/widgets/custom/text/text_widget.dart';
-import 'package:dun_diary_app/shared/widgets/ui/bp_graph_sdk/bp_graph_sdk.dart';
-import 'package:dun_diary_app/shared/widgets/ui/guage/guage.dart';
 import 'package:dun_diary_app/shared/widgets/ui/calendar_sdk/calendar_sdk.dart';
 import 'package:dun_diary_app/shared/widgets/ui/calendar_sdk/models/calendar_types.dart';
 import 'package:flutter/material.dart';
@@ -35,19 +34,6 @@ class HistoryScreen extends StatefulWidget {
 }
 
 class _HistoryScreenState extends State<HistoryScreen> {
-  final ScrollController _scrollController = ScrollController();
-
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    _scrollController.dispose();
-    super.dispose();
-  }
-
   @override
   Widget build(BuildContext context) {
     return CustomScaffold(
@@ -59,11 +45,32 @@ class _HistoryScreenState extends State<HistoryScreen> {
             path: AppIcons.outline.calendar,
             onPressed: () => _openCalendar(context),
           ),
-          IconButtonSVG(
-            path: AppIcons.outline.dotThree,
-            onPressed: () {
-              context.read<HistoryViewmodel>().seedData();
-            },
+          CustomPopupMenuButton(
+            openAbove: false,
+            offset: const Offset(0, 30),
+            icon: SVGImage(path: AppIcons.outline.dotThree),
+            items: [
+              PopupMenuItem(
+                child: CustomText(
+                  text: "ส่งออกเป็นรูปภาพ",
+                  fontSize: Dimension.fontSizes.md,
+                  fontWeight: Dimension.fontWeights.regular,
+                ),
+                onTap: () {},
+              ),
+              PopupMenuItem(
+                child: CustomText(
+                  text: "ส่งออกข้อมูล csv",
+                  fontSize: Dimension.fontSizes.md,
+                  fontWeight: Dimension.fontWeights.regular,
+                ),
+                onTap: () async {
+                  await Future.delayed(Duration.zero);
+                  if (!context.mounted) return;
+                  _showCsvExportSheet(context);
+                },
+              ),
+            ],
           ),
         ],
       ),
@@ -87,93 +94,9 @@ class _HistoryScreenState extends State<HistoryScreen> {
                       },
                     ),
                   ),
-
-                  Builder(
-                    builder: (context) {
-                      final label = BloodPressureUtils.mapLevelLabel(
-                        vm.getAverageLevelForDate(vm.selectedDate),
-                      );
-                      final lastRecordLevel =
-                          BloodPressureUtils.calculateBloodPressureLevel(
-                            vm.selectedDateRecords.last.sys,
-                            vm.selectedDateRecords.last.dia,
-                          );
-                      final avgLevel = vm.getAverageLevelForDate(
-                        vm.selectedDate,
-                      );
-                      return CustomCard(
-                        contentPadding: EdgeInsets.all(10),
-                        content: Column(
-                          children: [
-                            CustomText(
-                              text: label,
-                              fontSize: Dimension.fontSizes.h1,
-                              fontWeight: Dimension.fontWeights.bold,
-                              color: CustomColor.gray900,
-                              textAlign: TextAlign.center,
-                            ),
-                            SizedBox(height: 4),
-                            CustomText(
-                              text: DateTimeUtils.getHistoryTimeLabel(
-                                vm.selectedDateRecords.firstOrNull?.createdAt,
-                              ),
-                              fontSize: Dimension.fontSizes.md,
-                              fontWeight: Dimension.fontWeights.medium,
-                              color: CustomColor.gray500,
-                              textAlign: TextAlign.center,
-                            ),
-                            BloodPressureGauge(
-                              level: lastRecordLevel,
-                              avgLevel: avgLevel,
-                            ),
-                          ],
-                        ),
-                      );
-                    },
-                  ),
-
-                  CustomCard(
-                    title: DateTimeUtils.formatToThaiDateFull(vm.selectedDate),
-                    titleFontSize: Dimension.fontSizes.h2,
-                    contentPadding: EdgeInsets.all(20),
-                    content: Container(
-                      height: 343,
-                      margin: const EdgeInsets.only(top: 10),
-                      child: BpGraphSdk(data: vm.selectedDateGraphData),
-                    ),
-                  ),
-
-                  CustomCard(
-                    title: "รายการบันทึกความดัน",
-                    contentPadding: const EdgeInsets.all(10),
-                    content: ConstrainedBox(
-                      constraints: const BoxConstraints(maxHeight: 250),
-                      child: RawScrollbar(
-                        thumbColor: CustomColor.gray300,
-                        radius: const Radius.circular(90),
-                        thickness: 4,
-                        thumbVisibility: true,
-                        controller: _scrollController,
-                        padding: const EdgeInsets.only(top: 20, bottom: 20),
-                        child: ListView.builder(
-                          controller: _scrollController,
-                          shrinkWrap: true,
-                          itemCount: vm.selectedDateRecords.length,
-                          itemBuilder: (context, index) {
-                            final record = vm.selectedDateRecords[index];
-                            return Padding(
-                              padding: const EdgeInsets.only(bottom: 5),
-                              child: HistoryCard(
-                                record: record,
-                                isHaveDivider:
-                                    index != vm.selectedDateRecords.length - 1,
-                              ),
-                            );
-                          },
-                        ),
-                      ),
-                    ),
-                  ),
+                  const HistorySummaryCard(),
+                  const HistoryGraphCard(),
+                  const HistoryRecordList(),
                 ],
               );
             },
@@ -201,5 +124,15 @@ class _HistoryScreenState extends State<HistoryScreen> {
     if (result != null) {
       vm.selectDate(result);
     }
+  }
+
+  void _showCsvExportSheet(BuildContext context) {
+    HistoryExportSheet.show(
+      context,
+      onExport: () {
+        final vm = context.read<HistoryViewmodel>();
+        vm.exportToCsv();
+      },
+    );
   }
 }
