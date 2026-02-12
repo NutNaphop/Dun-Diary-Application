@@ -59,7 +59,7 @@ class BloodPressureLocalDataSource {
 
   /// อัปเดต Record (ใช้เมื่อแก้ไขสถานะ เช่น isSynced)
   Future<void> updateRecord(BPRecord record) async {
-    await record.save();
+    await _box.put(record.id, record);
   }
 
   /// ดึง Record ตาม ID
