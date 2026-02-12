@@ -5,9 +5,8 @@ class BloodPressureRemoteDataSource {
   final FirebaseFirestore _firestore;
 
   // รับ firestore เข้ามา (Dependency Injection)
-  BloodPressureRemoteDataSource({
-    required FirebaseFirestore firestore, 
-  }) : _firestore = firestore;
+  BloodPressureRemoteDataSource({required FirebaseFirestore firestore})
+    : _firestore = firestore;
 
   /// ส่งข้อมูล 1 รายการไป Firebase
   Future<void> saveRecordToFirebase(BPRecord record, String uid) async {
@@ -21,12 +20,26 @@ class BloodPressureRemoteDataSource {
 
       // ส่งขึ้น Cloud
       await docRef.set(record.toJson());
-      
+
       print("✅ Firebase: Synced record ${record.id} success");
-      
     } catch (e) {
       print("❌ Firebase Error (ID: ${record.id}): $e");
       rethrow; // โยน error กลับไปให้ Repository จัดการต่อ
+    }
+  }
+
+  Future<void> deleteRecordFromFirebase(String recordId, String uid) async {
+    try {
+      await _firestore
+          .collection('users')
+          .doc(uid)
+          .collection('records')
+          .doc(recordId)
+          .delete();
+      print("✅ Firebase: Deleted record $recordId success");
+    } catch (e) {
+      print("❌ Firebase Delete Error: $e");
+      rethrow;
     }
   }
 }

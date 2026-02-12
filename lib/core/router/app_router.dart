@@ -1,10 +1,10 @@
 import 'dart:io';
 
+import 'package:dun_diary_app/data/blood_pressure/model/bp_record.dart';
 import 'package:dun_diary_app/feature/main/presentation/main_screen.dart';
-import 'package:dun_diary_app/data/blood_pressure/model/record_model.dart';
 import 'package:dun_diary_app/feature/record/presentation/record_screen.dart';
-import 'package:dun_diary_app/feature/splash_screen/presentation/splash_screen.dart';
 import 'package:dun_diary_app/feature/record/presentation/resultScreen/result_screen.dart';
+import 'package:dun_diary_app/feature/splash_screen/presentation/splash_screen.dart';
 import 'package:dun_diary_app/shared/widgets/ui/page/mock_page.dart';
 import 'package:flutter/material.dart';
 
@@ -27,8 +27,8 @@ class AppRouter {
         return _buildRoute(const MainScreen());
 
       case AppRoutes.record:
-        if (args is BloodPressure) {
-          return _buildRoute(RecordScreen.createWithArgs(args));
+        if (args is BPRecord) {
+          return _buildRoute(RecordScreen.createWithRecord(args));
         }
         return _buildRoute(RecordScreen.create());
 

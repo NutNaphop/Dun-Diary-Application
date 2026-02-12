@@ -125,8 +125,8 @@ class HistoryViewmodel extends ChangeNotifier {
     NavigationService.instance.pushNamed(AppRoutes.record);
   }
 
-  void redirectToBloodPressureDetail() {
-    // TODO: Implement Blood Pressure Detail
+  void redirectToBloodPressureDetail(BPRecord record) {
+    NavigationService.instance.pushNamed(AppRoutes.record, arguments: record);
   }
 
   void selectDate(DateTime date) {

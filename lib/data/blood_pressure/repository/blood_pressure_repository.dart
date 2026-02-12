@@ -79,6 +79,53 @@ class BloodPressureRepository {
     return _localDataSource.watchRecords();
   }
 
+  // Update Record
+  Future<void> updateRecord(BPRecord record, bool isOnline) async {
+    try {
+      // Step 1: บันทึก Local ก่อน (ให้ UI ตอบสนองทันที)
+      await _localDataSource.updateRecord(record);
+      print("✅ Repository: Updated locally. ID: ${record.id}");
+
+      // Step 2: ถ้า online → sync ทั้งหมดที่ค้าง
+      if (isOnline) await syncAllPending();
+
+      // Debug: แสดงจำนวน record ที่ยังค้าง sync
+      final remainingQueueIDs = _localDataSource.getAllRecordIdsInQueueBox();
+      print(
+        "✅ Sync completed. Remaining in QueueBox: ${remainingQueueIDs.length}",
+      );
+      for (final id in remainingQueueIDs) {
+        print("   - $id");
+      }
+    } catch (e) {
+      print("❌ Update Error: $e");
+      rethrow;
+    }
+  }
+
+  // Delete Record
+  Future<void> deleteRecord(String id, bool isOnline) async {
+    try {
+      // 1. ลบ Local (ทำเหมือนเดิม)
+      await _localDataSource.deleteRecord(id);
+
+      // 2. ลบ Firebase (เพิ่มส่วนนี้)
+      if (isOnline) {
+        final user = FirebaseAuth.instance.currentUser;
+        if (user != null) {
+          await _remoteDataSource.deleteRecordFromFirebase(id, user.uid);
+        }
+      } else {
+        print(
+          "⚠️ Offline: Deleted locally only. Will not sync delete to cloud.",
+        );
+      }
+    } catch (e) {
+      print("❌ Delete Error: $e");
+      rethrow;
+    }
+  }
+
   /// 🧪 Debug: ลบข้อมูล Local ทั้งหมด
   void deleteAllLocalData() {
     _localDataSource.getAllRecords().forEach((record) {

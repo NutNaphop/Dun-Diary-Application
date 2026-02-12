@@ -45,9 +45,12 @@ class _HistoryRecordListState extends State<HistoryRecordList> {
               final record = vm.selectedDateRecords[index];
               return Padding(
                 padding: const EdgeInsets.only(bottom: 5),
-                child: HistoryCard(
-                  record: record,
-                  isHaveDivider: index != vm.selectedDateRecords.length - 1,
+                child: GestureDetector(
+                  onTap: () => vm.redirectToBloodPressureDetail(record),
+                  child: HistoryCard(
+                    record: record,
+                    isHaveDivider: index != vm.selectedDateRecords.length - 1,
+                  ),
                 ),
               );
             },
