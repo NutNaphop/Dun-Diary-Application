@@ -23,7 +23,7 @@ class HistoryCSVExportSheet extends StatelessWidget {
     CustomBottomSheet.show(
       context: context,
       padding: EdgeInsets.zero,
-      height: MediaQuery.of(context).size.height * 0.5,
+      height: MediaQuery.of(context).size.height * 0.55,
       child: ChangeNotifierProvider.value(
         value: vm,
         child: HistoryCSVExportSheet(onExport: vm.exportToCsv),

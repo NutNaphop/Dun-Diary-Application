@@ -40,7 +40,9 @@ class BloodPressureCard extends StatelessWidget {
                 text: resultLabel,
                 fontSize: Dimension.fontSizes.xl,
                 fontWeight: Dimension.fontWeights.bold,
-                color: BloodPressureUtils.mapLevelColor(bloodPressureLevel),
+                color: bloodPressureLevel == null
+                    ? CustomColor.gray500
+                    : BloodPressureUtils.mapLevelColor(bloodPressureLevel),
               ),
               CustomText(
                 text: date,

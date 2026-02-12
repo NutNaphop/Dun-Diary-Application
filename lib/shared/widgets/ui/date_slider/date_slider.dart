@@ -139,7 +139,9 @@ class _DateSliderState extends State<DateSlider> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       crossAxisAlignment: CrossAxisAlignment.start,
-      children: days.map((date) => _buildDayItem(context, date)).toList(),
+      children: days
+          .map((date) => Expanded(child: _buildDayItem(context, date)))
+          .toList(),
     );
   }
 

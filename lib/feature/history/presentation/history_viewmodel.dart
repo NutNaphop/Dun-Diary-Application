@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:collection';
 import 'dart:typed_data';
 
+import 'package:dun_diary_app/core/constant/app_routes.dart';
 import 'package:dun_diary_app/core/services/export_service.dart';
 import 'package:dun_diary_app/core/services/flushbar_service.dart';
 import 'package:dun_diary_app/core/services/navigation_service.dart';
@@ -9,7 +10,6 @@ import 'package:dun_diary_app/data/blood_pressure/model/bp_record.dart';
 import 'package:dun_diary_app/data/blood_pressure/repository/blood_pressure_repository.dart';
 import 'package:dun_diary_app/shared/utils/blood_pressure_utils.dart';
 import 'package:dun_diary_app/shared/utils/date_utils.dart';
-import 'package:dun_diary_app/shared/utils/mock_data_seeder.dart';
 import 'package:dun_diary_app/shared/widgets/ui/bp_graph_sdk/models/blood_pressure_graph_models.dart';
 import 'package:flutter/material.dart';
 
@@ -53,10 +53,6 @@ class HistoryViewmodel extends ChangeNotifier {
     ]);
 
     notifyListeners();
-  }
-
-  Future<void> seedData() async {
-    await MockDataSeeder(_repository).generateBigData();
   }
 
   Future<void> _fetchMonthByKey(String key) async {
@@ -120,7 +116,17 @@ class HistoryViewmodel extends ChangeNotifier {
   }
 
   List<BloodPressureGraphData> get selectedDateGraphData {
-    return BloodPressureUtils.mapToGraphData(selectedDateRecords);
+    final sortedDateRecord = selectedDateRecords.toList();
+    sortedDateRecord.sort((a, b) => a.createdAt.compareTo(b.createdAt));
+    return BloodPressureUtils.mapToGraphData(sortedDateRecord);
+  }
+
+  void redirectToRecord() {
+    NavigationService.instance.pushNamed(AppRoutes.record);
+  }
+
+  void redirectToBloodPressureDetail() {
+    // TODO: Implement Blood Pressure Detail
   }
 
   void selectDate(DateTime date) {

@@ -35,11 +35,14 @@ class DateSliderItem extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           // 1. ชื่อวัน: อยู่นอกส่วนสีขาวเสมอ ตาม Design
-          CustomText(
-            text: DateTimeUtils.getDayName(date.weekday),
-            color: isSunday ? CustomColor.red4 : CustomColor.gray900,
-            fontSize: Dimension.fontSizes.h2,
-            fontWeight: Dimension.fontWeights.semiBold,
+          Flexible(
+            child: CustomText(
+              text: DateTimeUtils.getDayName(date.weekday),
+              color: isSunday ? CustomColor.red4 : CustomColor.gray900,
+              fontSize: Dimension.fontSizes.h2,
+              fontWeight: Dimension.fontWeights.semiBold,
+              overflow: TextOverflow.ellipsis, // กันล้น
+            ),
           ),
           const SizedBox(height: 10),
           Container(
@@ -66,13 +69,16 @@ class DateSliderItem extends StatelessWidget {
         color: backgroundColor, // สีตามระดับความดัน
         shape: BoxShape.circle,
       ),
-      child: CustomText(
-        text: text,
-        color: backgroundColor.computeLuminance() > 0.2
-            ? CustomColor.white
-            : CustomColor.gray900,
-        fontSize: Dimension.fontSizes.md,
-        fontWeight: Dimension.fontWeights.semiBold,
+      child: FittedBox(
+        fit: BoxFit.scaleDown,
+        child: CustomText(
+          text: text,
+          color: backgroundColor.computeLuminance() > 0.2
+              ? CustomColor.white
+              : CustomColor.gray900,
+          fontSize: Dimension.fontSizes.md,
+          fontWeight: Dimension.fontWeights.semiBold,
+        ),
       ),
     );
   }
