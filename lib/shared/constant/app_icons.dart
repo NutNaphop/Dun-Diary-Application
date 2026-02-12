@@ -64,4 +64,5 @@ class _OutlineIcons {
   final camera = '$_path/camera.svg';
   final dotThree = '$_path/dot_three.svg';
   final fileDownload = '$_path/file_download.svg';
+  final share = '$_path/share.svg';
 }
