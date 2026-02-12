@@ -12,11 +12,11 @@ import 'package:dun_diary_app/shared/widgets/ui/calendar_sdk/models/calendar_typ
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class HistoryExportSheet extends StatelessWidget {
+class HistoryCSVExportSheet extends StatelessWidget {
   final VoidCallback onExport;
-  const HistoryExportSheet({super.key, required this.onExport});
+  const HistoryCSVExportSheet({super.key, required this.onExport});
 
-  static void show(BuildContext context, {required VoidCallback onExport}) {
+  static void show(BuildContext context) {
     final vm = context.read<HistoryViewmodel>();
     vm.resetExportState();
 
@@ -26,7 +26,7 @@ class HistoryExportSheet extends StatelessWidget {
       height: MediaQuery.of(context).size.height * 0.5,
       child: ChangeNotifierProvider.value(
         value: vm,
-        child: HistoryExportSheet(onExport: onExport),
+        child: HistoryCSVExportSheet(onExport: vm.exportToCsv),
       ),
     );
   }

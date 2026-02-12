@@ -63,4 +63,5 @@ class _OutlineIcons {
   final clock = '$_path/clock.svg';
   final camera = '$_path/camera.svg';
   final dotThree = '$_path/dot_three.svg';
+  final fileDownload = '$_path/file_download.svg';
 }

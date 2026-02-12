@@ -1,7 +1,8 @@
 import 'package:dun_diary_app/data/blood_pressure/repository/blood_pressure_repository.dart';
 import 'package:dun_diary_app/feature/history/presentation/history_viewmodel.dart';
-import 'package:dun_diary_app/feature/history/presentation/widgets/history_export_sheet.dart';
+import 'package:dun_diary_app/feature/history/presentation/widgets/history_csv_export_sheet.dart';
 import 'package:dun_diary_app/feature/history/presentation/widgets/history_graph_card.dart';
+import 'package:dun_diary_app/feature/history/presentation/widgets/history_pic_export_sheet.dart';
 import 'package:dun_diary_app/feature/history/presentation/widgets/history_record_list.dart';
 import 'package:dun_diary_app/feature/history/presentation/widgets/history_summary_card.dart';
 import 'package:dun_diary_app/shared/constant/app_icons.dart';
@@ -56,7 +57,11 @@ class _HistoryScreenState extends State<HistoryScreen> {
                   fontSize: Dimension.fontSizes.md,
                   fontWeight: Dimension.fontWeights.regular,
                 ),
-                onTap: () {},
+                onTap: () async {
+                  await Future.delayed(Duration.zero);
+                  if (!context.mounted) return;
+                  _showImageExportSheet(context);
+                },
               ),
               PopupMenuItem(
                 child: CustomText(
@@ -127,12 +132,10 @@ class _HistoryScreenState extends State<HistoryScreen> {
   }
 
   void _showCsvExportSheet(BuildContext context) {
-    HistoryExportSheet.show(
-      context,
-      onExport: () {
-        final vm = context.read<HistoryViewmodel>();
-        vm.exportToCsv();
-      },
-    );
+    HistoryCSVExportSheet.show(context);
+  }
+
+  void _showImageExportSheet(BuildContext context) {
+    HistoryPicExportSheet.show(context);
   }
 }
