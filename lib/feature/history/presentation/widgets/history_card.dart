@@ -29,23 +29,26 @@ class HistoryCard extends StatelessWidget {
       children: [
         Row(
           children: [
-            Column(
-              children: [
-                CustomText(
-                  text: record.sys.toString(),
-                  fontSize: Dimension.fontSizes.h1,
-                  fontWeight: Dimension.fontWeights.bold,
-                  color: CustomColor.gray900,
-                  textAlign: TextAlign.center,
-                ),
-                CustomText(
-                  text: record.dia.toString(),
-                  fontSize: Dimension.fontSizes.h1,
-                  fontWeight: Dimension.fontWeights.bold,
-                  color: CustomColor.gray900,
-                  textAlign: TextAlign.center,
-                ),
-              ],
+            SizedBox(
+              width: 60,
+              child: Column(
+                children: [
+                  CustomText(
+                    text: record.sys.toString(),
+                    fontSize: Dimension.fontSizes.h1,
+                    fontWeight: Dimension.fontWeights.bold,
+                    color: CustomColor.gray900,
+                    textAlign: TextAlign.center,
+                  ),
+                  CustomText(
+                    text: record.dia.toString(),
+                    fontSize: Dimension.fontSizes.h1,
+                    fontWeight: Dimension.fontWeights.bold,
+                    color: CustomColor.gray900,
+                    textAlign: TextAlign.center,
+                  ),
+                ],
+              ),
             ),
             SizedBox(width: 10),
             Row(

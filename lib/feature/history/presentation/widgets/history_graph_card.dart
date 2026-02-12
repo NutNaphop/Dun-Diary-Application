@@ -20,7 +20,10 @@ class HistoryGraphCard extends StatelessWidget {
       content: Container(
         height: 343,
         margin: const EdgeInsets.only(top: 10),
-        child: BpGraphSdk(data: vm.selectedDateGraphData),
+        child: BpGraphSdk(
+          data: vm.selectedDateGraphData,
+          onButtonPress: vm.redirectToRecord,
+        ),
       ),
     );
   }
