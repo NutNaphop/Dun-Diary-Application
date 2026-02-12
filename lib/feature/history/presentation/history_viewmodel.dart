@@ -1,8 +1,10 @@
 import 'dart:async';
 import 'dart:collection';
+import 'dart:typed_data';
 
 import 'package:dun_diary_app/core/services/export_service.dart';
 import 'package:dun_diary_app/core/services/flushbar_service.dart';
+import 'package:dun_diary_app/core/services/navigation_service.dart';
 import 'package:dun_diary_app/data/blood_pressure/model/bp_record.dart';
 import 'package:dun_diary_app/data/blood_pressure/repository/blood_pressure_repository.dart';
 import 'package:dun_diary_app/shared/utils/blood_pressure_utils.dart';
@@ -185,6 +187,37 @@ class HistoryViewmodel extends ChangeNotifier {
       FlushbarService.instance.showSuccess("ส่งออกสำเร็จ");
     } catch (e) {
       FlushbarService.instance.showError("ส่งออกไม่สำเร็จ โปรดลองอีกครั้ง");
+    } finally {
+      _isExporting = false;
+      notifyListeners();
+    }
+  }
+
+  Future exportImage(Uint8List imageBytes) async {
+    _isExporting = true;
+    notifyListeners();
+
+    try {
+      await ExportService.instance.saveToGallery(imageBytes);
+      FlushbarService.instance.showSuccess("บันทึกรูปภาพสำเร็จ");
+      await ExportService.instance.shareImage(imageBytes);
+    } catch (e) {
+      FlushbarService.instance.showError("เกิดข้อผิดพลาดในการบันทึกรูปภาพ");
+    } finally {
+      _isExporting = false;
+      notifyListeners();
+      NavigationService.instance.goBack();
+    }
+  }
+
+  // Share Image
+  Future<void> shareImage(Uint8List imageBytes) async {
+    _isExporting = true;
+    notifyListeners();
+    try {
+      await ExportService.instance.shareImage(imageBytes);
+    } catch (e) {
+      FlushbarService.instance.showError("เกิดข้อผิดพลาดในการแชร์รูปภาพ");
     } finally {
       _isExporting = false;
       notifyListeners();

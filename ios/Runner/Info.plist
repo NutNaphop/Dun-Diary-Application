@@ -48,6 +48,8 @@
 		<!-- Permission -->
 		<key>NSPhotoLibraryUsageDescription</key>
 		<string>แอปต้องการเข้าถึงคลังรูปภาพ เพื่อเลือกรูปผลวัดความดันของคุณ</string>
+		<key>NSPhotoLibraryAddUsageDescription</key>
+		<string>ขออนุญาตบันทึกรูปสรุปสุขภาพลงในอัลบั้มของคุณ</string>
 		<key>NSCameraUsageDescription</key>
 		<string>แอปต้องการเข้าถึงกล้อง เพื่อถ่ายรูปผลวัดความดันของคุณ</string>
 		<key>UIStatusBarHidden</key>
