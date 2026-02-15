@@ -25,7 +25,7 @@ class HomeViewmodel extends ChangeNotifier with RecordNavigationMixin {
   }) : _recordRepo = recordRepo,
        _authService = authService,
        _networkInfo = networkInfo {
-    // _startAutoDetect();
+    _startAutoDetect();
     _initData();
   }
 

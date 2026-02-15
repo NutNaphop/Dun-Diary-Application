@@ -53,7 +53,8 @@ initHive() async {
   Hive.registerAdapter(AnalyzeResultModelAdapter());
   await Hive.openBox<BPRecord>(HiveBoxName.bpRecord);
   await Hive.openBox(HiveBoxName.settingsBox);
-  await Hive.openBox<String>(HiveBoxName.QueueBox);
+  await Hive.openBox<String>(HiveBoxName.queueUpsertBox);
+  await Hive.openBox<String>(HiveBoxName.queueDeleteBox);
   await Hive.openBox(HiveBoxName.metaBox);
   await Hive.openBox<AnalysisCache>(HiveBoxName.analysisCacheBox);
   await Hive.openBox<List<String>>(HiveBoxName.indexBox);
