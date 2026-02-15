@@ -1,4 +1,5 @@
 import 'package:dun_diary_app/core/constant/hive_constants.dart';
+import 'package:dun_diary_app/core/services/app_logger.dart';
 import 'package:dun_diary_app/data/blood_pressure/model/bp_record.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
@@ -46,7 +47,9 @@ class BloodPressureLocalDataSource {
     if (!currentIds.contains(record.id)) {
       currentIds.add(record.id);
       await _indexBox.put(indexKey, currentIds);
-      print("✅ Saved to Index [$indexKey]: Total ${currentIds.length} records");
+      AppLogger.debug(
+        "Saved to Index [$indexKey]: Total ${currentIds.length} records",
+      );
     }
 
     // 3. อัปเดต Metadata
@@ -124,8 +127,8 @@ class BloodPressureLocalDataSource {
   /// 2. ดึง Record IDs จากแต่ละ Index
   /// 3. Filter ให้เหลือเฉพาะที่อยู่ในช่วงเวลาจริง
   List<BPRecord> getRecordsByRange(DateTime start, DateTime end) {
-    print(
-      "🔍 Fetching from ${start.toIso8601String()} to ${end.toIso8601String()}",
+    AppLogger.debug(
+      "Fetching from ${start.toIso8601String()} to ${end.toIso8601String()}",
     );
 
     // Step 1: หา Index Keys ทุกเดือนในช่วงเวลา
@@ -139,7 +142,7 @@ class BloodPressureLocalDataSource {
       current = DateTime(current.year, current.month + 1);
     }
 
-    print("📂 Index Keys involved: $keys");
+    AppLogger.debug("Index Keys involved: $keys");
 
     // Step 2: ดึง Records จากทุก Index
     List<BPRecord> results = [];
@@ -152,7 +155,7 @@ class BloodPressureLocalDataSource {
       results.addAll(records);
     }
 
-    print("📥 Raw Records Found: ${results.length}");
+    AppLogger.debug("Raw Records Found: ${results.length}");
 
     // Step 3: Filter ให้เหลือเฉพาะที่อยู่ในช่วงเวลาจริง
     final filtered = results.where((r) {
@@ -163,7 +166,7 @@ class BloodPressureLocalDataSource {
     // Step 4: เรียงตามวันที่
     filtered.sort((a, b) => a.createdAt.compareTo(b.createdAt));
 
-    print("✨ Final Filtered Records: ${filtered.length}");
+    AppLogger.debug("Final Filtered Records: ${filtered.length}");
     return filtered;
   }
 
@@ -187,7 +190,7 @@ class BloodPressureLocalDataSource {
     // ใส่ลง Upsert Queue (ถ้ามีอยู่แล้ว ไม่ต้องใส่ซ้ำ)
     if (!_upsertQueue.values.contains(id)) {
       await _upsertQueue.add(id);
-      print("📥 Queue: Added $id to Upsert Queue");
+      AppLogger.debug("Queue: Added $id to Upsert Queue");
     }
   }
 
@@ -205,14 +208,16 @@ class BloodPressureLocalDataSource {
 
       if (keyToDelete != null) {
         await _upsertQueue.delete(keyToDelete);
-        print("♻️ Queue: Cancelled Sync for $id (Created & Deleted offline)");
+        AppLogger.debug(
+          "Queue: Cancelled Sync for $id (Created & Deleted offline)",
+        );
       }
     } else {
       // CASE B: ข้อมูลเก่าที่มีบน Server แล้ว -> ต้องสั่ง Server ลบด้วย
       // Action: ใส่ลง Delete Queue
       if (!_deleteQueue.values.contains(id)) {
         await _deleteQueue.add(id);
-        print("🗑️ Queue: Added $id to Delete Queue");
+        AppLogger.debug("Queue: Added $id to Delete Queue");
       }
     }
   }

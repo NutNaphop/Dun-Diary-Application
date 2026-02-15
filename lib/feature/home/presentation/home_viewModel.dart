@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:dun_diary_app/core/auth/auth_service.dart';
 import 'package:dun_diary_app/core/mixins/record_navigation_mixin.dart';
 import 'package:dun_diary_app/core/network/network_info.dart';
+import 'package:dun_diary_app/core/services/app_logger.dart';
 import 'package:dun_diary_app/core/services/dialog_service.dart';
 import 'package:dun_diary_app/core/services/flushbar_service.dart';
 import 'package:dun_diary_app/core/services/snackbar_service.dart';
@@ -50,7 +51,7 @@ class HomeViewmodel extends ChangeNotifier with RecordNavigationMixin {
       final hasNet = await _networkInfo.isConnected;
       _authService.initializeUserIdentity();
       if (hasNet) {
-        print("📶 Internet Connected! Checking status...");
+        AppLogger.info("Internet Connected! Checking status...");
 
         // Step 1: ลอง Login (ถ้ายังไม่ได้ Login)
         // (signInAnonymously ฉลาดพอที่จะไม่ Login ซ้ำถ้ามี User อยู่แล้ว แต่เพื่อความชัวร์เช็คก่อนก็ได้)
@@ -65,7 +66,7 @@ class HomeViewmodel extends ChangeNotifier with RecordNavigationMixin {
 
   void toggleHasRecord() {
     _hasRecords = !_hasRecords;
-    print(_hasRecords);
+    AppLogger.debug("hasRecords: $_hasRecords");
     notifyListeners();
   }
 

@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:dun_diary_app/core/services/app_logger.dart';
 import 'package:dun_diary_app/data/blood_pressure/model/bp_record.dart';
 import 'package:dun_diary_app/feature/main/presentation/main_screen.dart';
 import 'package:dun_diary_app/feature/record/presentation/record_screen.dart';
@@ -13,7 +14,7 @@ import '../constant/app_routes.dart';
 class AppRouter {
   static Route<dynamic> generate(RouteSettings settings) {
     // 1. Debugging: ปริ้นท์ดูหน่อยว่ากำลังจะไปหน้าไหน
-    print('Navigate to: ${settings.name}');
+    AppLogger.debug('Navigate to: ${settings.name}');
 
     // 2. Arguments: ดึงค่าที่ส่งมาเตรียมไว้ (เผื่อใช้)
     final args = settings.arguments;
@@ -34,7 +35,7 @@ class AppRouter {
 
       case AppRoutes.mock:
         if (args != null) {
-          print("args: ${args.toString()}");
+          AppLogger.debug("args: ${args.toString()}");
         }
         return _buildRoute(const MockPage());
 

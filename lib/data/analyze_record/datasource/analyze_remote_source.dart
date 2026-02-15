@@ -1,5 +1,6 @@
 import 'package:dun_diary_app/core/auth/auth_service.dart';
 import 'package:dun_diary_app/core/network/network_client.dart';
+import 'package:dun_diary_app/core/services/app_logger.dart';
 import 'package:dun_diary_app/data/analyze_record/model/analyze_result_model.dart';
 import 'package:dun_diary_app/data/analyze_record/model/analyze_summary_model.dart';
 
@@ -35,7 +36,7 @@ class AnalyzeRemoteDataSource {
       }
       throw Exception("API Error: Response is null");
     } catch (e) {
-      print("API Error: $e");
+      AppLogger.error("API Error", e);
       rethrow;
     }
   }
