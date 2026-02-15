@@ -25,7 +25,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
-class RecordScreen extends StatefulWidget {
+class RecordScreen extends StatelessWidget {
   final BPRecord? record;
 
   const RecordScreen({super.key, this.record});
@@ -58,14 +58,6 @@ class RecordScreen extends StatefulWidget {
   }
 
   @override
-  State<RecordScreen> createState() => _RecordScreenState();
-}
-
-class _RecordScreenState extends State<RecordScreen> {
-  bool _isMenuOpen = false;
-  bool _isEditMenuOpen = false;
-
-  @override
   Widget build(BuildContext context) {
     // Use watch to rebuild when state changes (e.g. isReadOnly)
     final viewModel = context.watch<RecordViewmodel>();
@@ -84,21 +76,24 @@ class _RecordScreenState extends State<RecordScreen> {
         padding: EdgeInsets.symmetric(vertical: 36),
         child: Column(
           children: [
-            AbsorbPointer(
-              absorbing: isReadOnly,
-              child: Consumer<RecordViewmodel>(
-                builder: (context, viewModel, child) {
-                  return CustomCard(
-                    content: BpCardLayout(
-                      sys: viewModel.bpValue.sys,
-                      dia: viewModel.bpValue.dia,
-                      pul: viewModel.bpValue.pul,
-                      onSysChanged: (val) => viewModel.updateSys(val),
-                      onDiaChanged: (val) => viewModel.updateDia(val),
-                      onPulChanged: (val) => viewModel.updatePul(val),
-                    ),
-                  );
-                },
+            Opacity(
+              opacity: isReadOnly ? 0.7 : 1.0,
+              child: AbsorbPointer(
+                absorbing: isReadOnly,
+                child: Consumer<RecordViewmodel>(
+                  builder: (context, viewModel, child) {
+                    return CustomCard(
+                      content: BpCardLayout(
+                        sys: viewModel.bpValue.sys,
+                        dia: viewModel.bpValue.dia,
+                        pul: viewModel.bpValue.pul,
+                        onSysChanged: (val) => viewModel.updateSys(val),
+                        onDiaChanged: (val) => viewModel.updateDia(val),
+                        onPulChanged: (val) => viewModel.updatePul(val),
+                      ),
+                    );
+                  },
+                ),
               ),
             ),
 
@@ -121,24 +116,32 @@ class _RecordScreenState extends State<RecordScreen> {
             const SizedBox(height: 25),
 
             // Date time picker
-            Selector<RecordViewmodel, DateTime>(
-              selector: (_, viewModel) => viewModel.recordDate,
-              builder: (context, recordDate, child) => Row(
-                children: [
-                  Expanded(
-                    child: DatePicker(
-                      selectedDate: recordDate,
-                      onDateTimeChanged: (val) => viewModel.setRecordDate(val),
-                    ),
+            Opacity(
+              opacity: isReadOnly ? 0.5 : 1.0,
+              child: AbsorbPointer(
+                absorbing: isReadOnly,
+                child: Selector<RecordViewmodel, DateTime>(
+                  selector: (_, viewModel) => viewModel.recordDate,
+                  builder: (context, recordDate, child) => Row(
+                    children: [
+                      Expanded(
+                        child: DatePicker(
+                          selectedDate: recordDate,
+                          onDateTimeChanged: (val) =>
+                              viewModel.setRecordDate(val),
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: TimePicker(
+                          selectedDate: recordDate,
+                          onDateTimeChanged: (val) =>
+                              viewModel.setRecordDate(val),
+                        ),
+                      ),
+                    ],
                   ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: TimePicker(
-                      selectedDate: recordDate,
-                      onDateTimeChanged: (val) => viewModel.setRecordDate(val),
-                    ),
-                  ),
-                ],
+                ),
               ),
             ),
             Spacer(),
@@ -156,62 +159,92 @@ class _RecordScreenState extends State<RecordScreen> {
   // -----------------------------------------------------
   Widget _buildActionButtons(RecordViewmodel vm) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.end, // จัดชิดขวา
+      crossAxisAlignment: CrossAxisAlignment.end,
       mainAxisSize: MainAxisSize.min,
       children: [
         // 📸 1. ปุ่มกล้อง (โชว์เฉพาะตอนสร้างใหม่ หรือถ้าอยากให้แก้รูปได้ก็เอา if ออก)
         if (!vm.hasExistingData) ...[
-          CustomPopupMenuButton<ImageSource>(
-            openAbove: true,
-            icon: CustomBoxIcon(
-              iconPath: AppIcons.outline.camera,
-              activeIconPath: AppIcons.outline.x,
-              isActive: _isMenuOpen,
-            ),
-            onOpened: () => setState(() => _isMenuOpen = true),
-            onCanceled: () => setState(() => _isMenuOpen = false),
-            onSelected: (source) {
-              vm.handlePickImage(source);
-              setState(() => _isMenuOpen = false);
-            },
-            items: [
-              CustomPopupMenuItem(
-                value: ImageSource.camera,
-                title: AppStrings.record.snapPhoto,
-                icon: SVGImage(
-                  path: AppIcons.duotone.camera,
-                  width: 22,
-                  height: 22,
-                  color: CustomColor.accentColor,
+          Selector<RecordViewmodel, bool>(
+            selector: (_, viewModel) => viewModel.isMenuOpen,
+            builder: (context, isMenuOpen, child) =>
+                CustomPopupMenuButton<ImageSource>(
+                  openAbove: true,
+                  icon: CustomBoxIcon(
+                    iconPath: AppIcons.outline.camera,
+                    activeIconPath: AppIcons.outline.x,
+                    isActive: isMenuOpen,
+                  ),
+                  onOpened: () => vm.setMenuOpen(true),
+                  onCanceled: () => vm.setMenuOpen(false),
+                  onSelected: (source) {
+                    vm.handlePickImage(source);
+                    vm.setMenuOpen(false);
+                  },
+                  items: [
+                    CustomPopupMenuItem(
+                      value: ImageSource.camera,
+                      title: AppStrings.record.snapPhoto,
+                      icon: SVGImage(
+                        path: AppIcons.duotone.camera,
+                        width: 22,
+                        height: 22,
+                        color: CustomColor.accentColor,
+                      ),
+                    ),
+                    CustomPopupMenuItem(
+                      value: ImageSource.gallery,
+                      title: AppStrings.record.uploadPhoto,
+                      icon: SVGImage(
+                        path: AppIcons.duotone.image,
+                        width: 22,
+                        height: 22,
+                        color: CustomColor.accentColor,
+                      ),
+                    ),
+                  ],
                 ),
-              ),
-              CustomPopupMenuItem(
-                value: ImageSource.gallery,
-                title: AppStrings.record.uploadPhoto,
-                icon: SVGImage(
-                  path: AppIcons.duotone.image,
-                  width: 22,
-                  height: 22,
-                  color: CustomColor.accentColor,
-                ),
-              ),
-            ],
           ),
           const SizedBox(height: 20),
         ],
 
-        // 💾 2. ปุ่ม Save (ใช้ Selector เพื่อประสิทธิภาพ)
+        // 💾 2. ปุ่ม Save (และปุ่มยกเลิกตอนแก้ไข)
         Selector<RecordViewmodel, bool>(
           selector: (_, viewModel) => viewModel.isLoading,
-          builder: (context, isLoading, child) => CustomButton(
-            text: isLoading ? AppStrings.common.saving : "บันทึก",
-            type: CustomButtonType.fill,
-            backgroundColor: isLoading
-                ? CustomColor.gray400
-                : CustomColor.accentColor,
-            boxShadow: [DropShadow.drop_thumb],
-            onPressed: isLoading ? () {} : () => vm.saveResult(),
-          ),
+          builder: (context, isLoading, child) => vm.hasExistingData
+              ? Row(
+                  children: [
+                    Expanded(
+                      child: CustomButton(
+                        text: "ยกเลิก",
+                        type: CustomButtonType.outline,
+                        onPressed: isLoading
+                            ? () {}
+                            : () => vm.cancelEditMode(),
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: CustomButton(
+                        text: isLoading ? AppStrings.common.saving : "บันทึก",
+                        type: CustomButtonType.fill,
+                        backgroundColor: isLoading
+                            ? CustomColor.gray400
+                            : CustomColor.accentColor,
+                        boxShadow: [DropShadow.drop_thumb],
+                        onPressed: isLoading ? () {} : () => vm.saveResult(),
+                      ),
+                    ),
+                  ],
+                )
+              : CustomButton(
+                  text: isLoading ? AppStrings.common.saving : "บันทึก",
+                  type: CustomButtonType.fill,
+                  backgroundColor: isLoading
+                      ? CustomColor.gray400
+                      : CustomColor.accentColor,
+                  boxShadow: [DropShadow.drop_thumb],
+                  onPressed: isLoading ? () {} : () => vm.saveResult(),
+                ),
         ),
       ],
     );
@@ -239,8 +272,8 @@ class _RecordScreenState extends State<RecordScreen> {
             child: Icon(Icons.edit, color: Colors.white),
           ),
         ),
-        onOpened: () => setState(() => _isEditMenuOpen = true),
-        onCanceled: () => setState(() => _isEditMenuOpen = false),
+        onOpened: () {},
+        onCanceled: () {},
         onSelected: (action) {
           if (action == 'edit_mode') {
             // ✅ สั่ง VM ให้ปลดล็อก UI เพื่อแก้ไข
@@ -249,7 +282,6 @@ class _RecordScreenState extends State<RecordScreen> {
             // เรียกฟังก์ชันลบ
             vm.deleteRecord();
           }
-          setState(() => _isEditMenuOpen = false);
         },
         items: [
           // ✏️ เมนู: แก้ไข
