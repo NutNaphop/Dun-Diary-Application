@@ -43,4 +43,25 @@ class BloodPressureRemoteDataSource {
       rethrow;
     }
   }
+
+  /// 🔧 Debug Mode : Delete All Data
+  Future<void> deleteAllRecords(String uid) async {
+    try {
+      final collection = _firestore
+          .collection('users')
+          .doc(uid)
+          .collection('records');
+
+      final snapshots = await collection.get();
+
+      for (var doc in snapshots.docs) {
+        await doc.reference.delete();
+      }
+
+      print("🔥 Firebase: All records deleted for user $uid");
+    } catch (e) {
+      print("❌ Firebase Clear Error: $e");
+      rethrow;
+    }
+  }
 }

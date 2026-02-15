@@ -183,7 +183,6 @@ class BloodPressureRepository {
           await _remoteDataSource.saveRecordToFirebase(record, user.uid);
 
           // Sync สำเร็จ -> update สถานะ isSynced = true
-          // หมายเหตุ: การ update ตรงนี้ไม่ต้อง enqueue ซ้ำแล้วนะ
           record.isSynced = true;
           await _localDataSource.updateRecord(record);
 
@@ -225,5 +224,24 @@ class BloodPressureRepository {
   /// ดึง Records ตามช่วงเวลา (start - end)
   List<BPRecord> getRecordsByRange(DateTime start, DateTime end) {
     return _localDataSource.getRecordsByRange(start, end);
+  }
+
+  // ===========================================================================
+  // 🔧 SECTION 4: Debug / Testing Tools
+  // ===========================================================================
+
+  /// 🔥 HARD RESET: ลบข้อมูลทิ้งทั้งหมดทั้ง Local และ Cloud
+  Future<void> debugClearAllData() async {
+    try {
+      final user = FirebaseAuth.instance.currentUser;
+      if (user != null) {
+        await _remoteDataSource.deleteAllRecords(user.uid);
+      }
+
+      await _localDataSource.clearAll();
+    } catch (e) {
+      print("❌ Hard Reset Error: $e");
+      rethrow;
+    }
   }
 }
