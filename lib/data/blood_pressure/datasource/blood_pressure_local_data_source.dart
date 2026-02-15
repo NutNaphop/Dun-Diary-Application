@@ -329,4 +329,14 @@ class BloodPressureLocalDataSource {
   Stream<dynamic> watchRecords() {
     return _box.watch();
   }
+
+  /// 🔧 Debug Mode : Delete All Data
+  Future<void> clearAll() async {
+    await _box.clear(); // ลบข้อมูลความดัน
+    await _indexBox.clear(); // ลบ Index
+    await _metaBox.clear(); // ลบสถิติปี
+    await _upsertQueue.clear(); // ลบคิว Upsert
+    await _deleteQueue.clear(); // ลบคิว Delete
+    print("🧹 Local Hive: All boxes cleared!");
+  }
 }

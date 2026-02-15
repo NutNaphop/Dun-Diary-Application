@@ -97,7 +97,7 @@ class HomeViewmodel extends ChangeNotifier with RecordNavigationMixin {
   }
 
   // Debug function delete local storage data
-  void deleteLocalData() {
-    _recordRepo.deleteAllLocalData();
+  void deleteLocalData() async {
+    await _recordRepo.debugClearAllData();
   }
 }
