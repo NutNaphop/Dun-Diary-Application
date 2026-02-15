@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'package:dun_diary_app/core/services/app_logger.dart';
 import 'package:uuid/uuid.dart';
 import 'package:dun_diary_app/data/blood_pressure/model/bp_record.dart';
 import 'package:dun_diary_app/data/blood_pressure/repository/blood_pressure_repository.dart';
@@ -9,7 +10,7 @@ class MockDataSeeder {
   MockDataSeeder(this._repo);
 
   Future<void> generateBigData() async {
-    print("🚀 Start Seeding Data...");
+    AppLogger.info("Start Seeding Data...");
     final random = Random();
     final uuid = Uuid();
 
@@ -51,6 +52,6 @@ class MockDataSeeder {
         await _repo.saveRecord(record, false);
       }
     }
-    print("✅ Seeding Complete! Enjoy your data.");
+    AppLogger.info("Seeding Complete! Enjoy your data.");
   }
 }

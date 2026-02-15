@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'dart:typed_data';
+import 'package:dun_diary_app/core/services/app_logger.dart';
 import 'package:dun_diary_app/data/blood_pressure/model/bp_record.dart';
 import 'package:gal/gal.dart';
 import 'package:intl/intl.dart';
@@ -72,7 +73,7 @@ class ExportService {
         ),
       );
     } catch (e) {
-      print("Export Image Error: $e");
+      AppLogger.error("Export Image Error", e);
       rethrow;
     }
   }
@@ -84,7 +85,7 @@ class ExportService {
         name: "dun_diary_${DateFormat('yyyyMMdd_HHmm').format(DateTime.now())}",
       );
     } catch (e) {
-      print("Save Gallery Error: $e");
+      AppLogger.error("Save Gallery Error", e);
       rethrow;
     }
   }

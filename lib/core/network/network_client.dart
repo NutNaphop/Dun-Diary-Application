@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:dun_diary_app/core/network/model/api_error_msg.dart';
 import 'package:dun_diary_app/core/network/network_config.dart';
+import 'package:dun_diary_app/core/services/app_logger.dart';
 import 'package:http/http.dart' as http;
 import '../error/network/exceptions.dart';
 
@@ -68,7 +69,9 @@ class NetworkClient {
   /// Header Merger
   Map<String, String> _mergeHeaders(Map<String, String>? headers) {
     // final defaultHeaders = ClientConfig.DEFAULT_HEADER;
-    final Map<String, String> defaultHeaders= Map.from(ClientConfig.DEFAULT_HEADER);
+    final Map<String, String> defaultHeaders = Map.from(
+      ClientConfig.DEFAULT_HEADER,
+    );
 
     if (headers != null) {
       defaultHeaders.addAll(headers);
@@ -87,16 +90,18 @@ class NetworkClient {
     } on TimeoutException {
       throw NetworkException("Request Timeout");
     } catch (e) {
-      print("Unknown Error in NetworkClient: $e");
+      AppLogger.error("Unknown Error in NetworkClient", e);
       rethrow;
     }
   }
 
   dynamic _processResponse(http.Response response) {
     if (response.statusCode < 200 || response.statusCode >= 300) {
-      print("❌ API Error: ${response.request?.method} ${response.request?.url}");
-      print("Status Code: ${response.statusCode}");
-      print("Response Body: ${response.body}");
+      AppLogger.error(
+        "API Error: ${response.request?.method} ${response.request?.url}\n"
+        "Status Code: ${response.statusCode}\n"
+        "Response Body: ${response.body}",
+      );
     }
 
     if (response.statusCode >= 200 && response.statusCode < 300) {

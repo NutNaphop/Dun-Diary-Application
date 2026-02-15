@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:io';
+import 'package:dun_diary_app/core/services/app_logger.dart';
 
 import 'package:flutter/services.dart';
 import 'package:ultralytics_yolo/ultralytics_yolo.dart';
@@ -32,10 +33,10 @@ class ModelService {
       );
 
       await _yolo!.loadModel();
-      print("Loaded Model: $modelName");
+      AppLogger.info("Loaded Model: $modelName");
       _loadingCompleter!.complete();
     } catch (e) {
-      print("Error loading model: $e");
+      AppLogger.error("Error loading model", e);
       _loadingCompleter!.completeError(e);
       _loadingCompleter = null; // Allow retry on next call
       rethrow;

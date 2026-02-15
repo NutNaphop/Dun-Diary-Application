@@ -1,3 +1,4 @@
+import 'package:dun_diary_app/core/services/app_logger.dart';
 import 'package:dun_diary_app/data/blood_pressure/datasource/blood_pressure_remote_data_source.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -40,16 +41,16 @@ class BloodPressureRepository {
     try {
       // Step 1: บันทึก Local ก่อน
       await _localDataSource.addRecord(record);
-      print("✅ Repository: Saved locally. ID: ${record.id}");
+      AppLogger.info("Repository: Saved locally. ID: ${record.id}");
 
       // 2. เข้าคิว Upsert เสมอ (กันพลาด)
       await _localDataSource.enqueueUpsert(record.id);
-      print("✅ Repo: Saved & Enqueued ${record.id}");
+      AppLogger.info("Repo: Saved & Enqueued ${record.id}");
 
       // 3. ถ้า Online -> ยิง Sync เลย
       if (isOnline) await syncAllPending();
     } catch (e) {
-      print("❌ Save Error: $e");
+      AppLogger.error("Save Error", e);
       rethrow;
     }
   }
@@ -82,12 +83,12 @@ class BloodPressureRepository {
 
       // 2. เข้าคิว Upsert (ถ้ามีอยู่แล้วมันจะไม่ซ้ำ)
       await _localDataSource.enqueueUpsert(record.id);
-      print("✅ Repo: Updated & Enqueued ${record.id}");
+      AppLogger.info("Repo: Updated & Enqueued ${record.id}");
 
       // 3. ถ้า Online -> ยิง Sync เลย
       if (isOnline) await syncAllPending();
     } catch (e) {
-      print("❌ Update Error: $e");
+      AppLogger.error("Update Error", e);
       rethrow;
     }
   }
@@ -100,12 +101,12 @@ class BloodPressureRepository {
 
       // 2. เข้าคิว Delete (ระบบจะเช็คเองว่าถ้าเพิ่งสร้างจะไม่อยู่ในคิวนี้)
       await _localDataSource.enqueueDelete(id);
-      print("✅ Repo: Deleted & Processed Queue logic for $id");
+      AppLogger.info("Repo: Deleted & Processed Queue logic for $id");
 
       // 3. ถ้า Online -> ยิง Sync เลย
       if (isOnline) await syncAllPending();
     } catch (e) {
-      print("❌ Delete Error: $e");
+      AppLogger.error("Delete Error", e);
       rethrow;
     }
   }
@@ -132,18 +133,18 @@ class BloodPressureRepository {
     // ต้อง login ก่อนถึงจะ sync ได้
     final user = FirebaseAuth.instance.currentUser;
     if (user == null) {
-      print("🚫 Sync aborted: No User Logged in");
+      AppLogger.warning("Sync aborted: No User Logged in");
       return;
     }
 
-    print("☁️ Starting Sync Process...");
+    AppLogger.info("Starting Sync Process...");
 
     // -------------------------------------------------
     // Phase 1: Manage item need to delete first
     // -------------------------------------------------
     final deleteIds = _localDataSource.getDeleteQueueIds();
     if (deleteIds.isNotEmpty) {
-      print("🗑️ Processing Delete Queue (${deleteIds.length} items)...");
+      AppLogger.debug("Processing Delete Queue (${deleteIds.length} items)...");
       for (final id in deleteIds) {
         try {
           // สั่งลบบน Firebase
@@ -151,9 +152,9 @@ class BloodPressureRepository {
 
           // สำเร็จ -> ลบออกจาก Queue
           await _localDataSource.clearFromDeleteQueue(id);
-          print("   -> Deleted remote: $id");
+          AppLogger.debug("   -> Deleted remote: $id");
         } catch (e) {
-          print("   ❌ Failed to delete remote $id: $e");
+          AppLogger.error("Failed to delete remote $id", e);
           // ปล่อยไว้ใน Queue รอ Sync รอบหน้า
         }
       }
@@ -164,14 +165,16 @@ class BloodPressureRepository {
     // -------------------------------------------------
     final upsertIds = _localDataSource.getUpsertQueueIds();
     if (upsertIds.isNotEmpty) {
-      print("📥 Processing Upsert Queue (${upsertIds.length} items)...");
+      AppLogger.debug("Processing Upsert Queue (${upsertIds.length} items)...");
       for (final id in upsertIds) {
         try {
           final record = _localDataSource.getRecordById(id);
 
           // กรณีหายาก: ID อยู่ใน Queue แต่ตัวข้อมูลหายไปจาก Box แล้ว
           if (record == null) {
-            print("   ⚠️ Record $id not found in box. Removing from queue.");
+            AppLogger.warning(
+              "Record $id not found in box. Removing from queue.",
+            );
             await _localDataSource.clearFromUpsertQueue(id);
             continue;
           }
@@ -186,13 +189,13 @@ class BloodPressureRepository {
 
           // ลบออกจาก Queue
           await _localDataSource.clearFromUpsertQueue(id);
-          print("   -> Synced upsert: $id");
+          AppLogger.debug("   -> Synced upsert: $id");
         } catch (e) {
-          print("   ❌ Failed to sync upsert $id: $e");
+          AppLogger.error("Failed to sync upsert $id", e);
         }
       }
     }
-    print("✅ Sync Process Completed.");
+    AppLogger.info("Sync Process Completed.");
   }
 
   // /// เพิ่ม Record ID เข้า Sync Queue (ใช้เมื่อ save แบบ offline)

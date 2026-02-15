@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dun_diary_app/core/services/app_logger.dart';
 import '../model/bp_record.dart'; // import model ของคุณ
 
 class BloodPressureRemoteDataSource {
@@ -21,9 +22,9 @@ class BloodPressureRemoteDataSource {
       // ส่งขึ้น Cloud
       await docRef.set(record.toJson());
 
-      print("✅ Firebase: Synced record ${record.id} success");
+      AppLogger.info("Firebase: Synced record ${record.id} success");
     } catch (e) {
-      print("❌ Firebase Error (ID: ${record.id}): $e");
+      AppLogger.error("Firebase Error (ID: ${record.id})", e);
       rethrow; // โยน error กลับไปให้ Repository จัดการต่อ
     }
   }
@@ -36,9 +37,9 @@ class BloodPressureRemoteDataSource {
           .collection('records')
           .doc(recordId)
           .delete();
-      print("✅ Firebase: Deleted record $recordId success");
+      AppLogger.info("Firebase: Deleted record $recordId success");
     } catch (e) {
-      print("❌ Firebase Delete Error: $e");
+      AppLogger.error("Firebase Delete Error", e);
       rethrow;
     }
   }

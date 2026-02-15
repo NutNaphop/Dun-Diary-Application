@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:dun_diary_app/core/auth/auth_service.dart';
 import 'package:dun_diary_app/core/constant/app_routes.dart';
 import 'package:dun_diary_app/core/network/network_info.dart';
+import 'package:dun_diary_app/core/services/app_logger.dart';
 import 'package:dun_diary_app/core/services/flushbar_service.dart';
 import 'package:dun_diary_app/core/services/media_service.dart';
 import 'package:dun_diary_app/core/services/navigation_service.dart';
@@ -172,7 +173,7 @@ class RecordViewmodel extends ChangeNotifier {
         NavigationService.instance.goBack(result: true);
       }
     } catch (e) {
-      print("❌ ViewModel Save Error: $e");
+      AppLogger.error("ViewModel Save Error", e);
       FlushbarService.instance.showError(AppStrings.record.errorRecord);
       _isLoading = false;
       notifyListeners();
@@ -194,7 +195,7 @@ class RecordViewmodel extends ChangeNotifier {
       NavigationService.instance.goBack(result: true);
       FlushbarService.instance.showSuccess("ลบบันทึกเรียบร้อย");
     } catch (e) {
-      print("Delete Error: $e");
+      AppLogger.error("Delete Error", e);
       FlushbarService.instance.showError("ลบไม่สำเร็จ");
       _isLoading = false;
       notifyListeners();

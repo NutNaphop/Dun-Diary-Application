@@ -1,5 +1,6 @@
 import 'package:dun_diary_app/core/constant/app_routes.dart';
 import 'package:dun_diary_app/core/network/network_info.dart';
+import 'package:dun_diary_app/core/services/app_logger.dart';
 import 'package:dun_diary_app/core/services/navigation_service.dart';
 import 'package:dun_diary_app/data/analyze_record/model/analyze_result_model.dart';
 import 'package:dun_diary_app/data/analyze_record/repository/analyze_repository.dart';
@@ -251,7 +252,7 @@ class StatViewmodel extends ChangeNotifier {
       _analyzeState = AnalyzeState.success;
       _aiResultContent = result.content;
     } catch (e) {
-      print(e);
+      AppLogger.error("AI Analyze Error", e);
       _analyzeState = AnalyzeState.error;
     }
     notifyListeners();
