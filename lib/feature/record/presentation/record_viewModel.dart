@@ -164,11 +164,9 @@ class RecordViewmodel extends ChangeNotifier {
           note: "",
         );
 
-        // 4. Save record id into boxQueue
-        await _repository.saveRecordIdToQueueBox(newRecord.id);
-
-        // 5. Save record into Local storage
+        // 4. Save to enqueue and sync
         await _repository.saveRecord(newRecord, await _networkInfo.isConnected);
+
         _isLoading = false;
         notifyListeners();
         NavigationService.instance.goBack(result: true);
