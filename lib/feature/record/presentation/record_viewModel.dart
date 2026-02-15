@@ -38,6 +38,10 @@ class RecordViewmodel extends ChangeNotifier {
   DateTime _recordDate = DateTime.now();
   DateTime get recordDate => _recordDate;
 
+  // ค่าเดิมสำหรับ restore ตอนยกเลิกแก้ไข
+  BloodPressure? _originalBpValue;
+  DateTime? _originalRecordDate;
+
   int get level => BloodPressureUtils.calculateBloodPressureLevel(
     _bpValue.sys,
     _bpValue.dia,
@@ -48,6 +52,14 @@ class RecordViewmodel extends ChangeNotifier {
 
   bool _isLoading = false;
   bool get isLoading => _isLoading;
+
+  bool _isMenuOpen = false;
+  bool get isMenuOpen => _isMenuOpen;
+
+  void setMenuOpen(bool value) {
+    _isMenuOpen = value;
+    notifyListeners();
+  }
 
   String? _editingRecordId;
   bool get isEditMode => _editingRecordId != null;
@@ -66,6 +78,14 @@ class RecordViewmodel extends ChangeNotifier {
       );
       _recordDate = record.createdAt;
       _isReadOnly = true;
+
+      // เก็บค่าเดิมไว้สำหรับ cancel
+      _originalBpValue = BloodPressure(
+        sys: record.sys,
+        dia: record.dia,
+        pul: record.pulse,
+      );
+      _originalRecordDate = record.createdAt;
     } else {
       _editingRecordId = null;
       _bpValue = BloodPressure(sys: 113, dia: 64, pul: 74);
@@ -76,7 +96,30 @@ class RecordViewmodel extends ChangeNotifier {
   }
 
   void enterEditMode() {
+    // เก็บค่าปัจจุบันก่อนเข้าโหมดแก้ไข
+    _originalBpValue = BloodPressure(
+      sys: _bpValue.sys,
+      dia: _bpValue.dia,
+      pul: _bpValue.pul,
+    );
+    _originalRecordDate = _recordDate;
     _isReadOnly = false;
+    notifyListeners();
+  }
+
+  void cancelEditMode() {
+    // คืนค่าเดิมและกลับไปโหมด read-only
+    if (_originalBpValue != null) {
+      _bpValue = BloodPressure(
+        sys: _originalBpValue!.sys,
+        dia: _originalBpValue!.dia,
+        pul: _originalBpValue!.pul,
+      );
+    }
+    if (_originalRecordDate != null) {
+      _recordDate = _originalRecordDate!;
+    }
+    _isReadOnly = true;
     notifyListeners();
   }
 
