@@ -5,6 +5,7 @@ import 'package:dun_diary_app/feature/history/presentation/widgets/history_graph
 import 'package:dun_diary_app/feature/history/presentation/widgets/history_pic_export_sheet.dart';
 import 'package:dun_diary_app/feature/history/presentation/widgets/history_record_list.dart';
 import 'package:dun_diary_app/feature/history/presentation/widgets/history_summary_card.dart';
+import 'package:dun_diary_app/shared/constant/app_strings.dart';
 import 'package:dun_diary_app/shared/constant/app_icons.dart';
 import 'package:dun_diary_app/shared/style/dimension.dart';
 import 'package:dun_diary_app/shared/utils/blood_pressure_utils.dart';
@@ -39,7 +40,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
   Widget build(BuildContext context) {
     return CustomScaffold(
       appBar: MainAppBar(
-        title: "รายการบันทึก",
+        title: AppStrings.history.pageTitle,
         showBack: false,
         actions: [
           IconButtonSVG(
@@ -53,7 +54,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
             items: [
               PopupMenuItem(
                 child: CustomText(
-                  text: "ส่งออกเป็นรูปภาพ",
+                  text: AppStrings.history.exportImage,
                   fontSize: Dimension.fontSizes.md,
                   fontWeight: Dimension.fontWeights.regular,
                 ),
@@ -65,7 +66,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
               ),
               PopupMenuItem(
                 child: CustomText(
-                  text: "ส่งออกข้อมูล csv",
+                  text: AppStrings.history.exportCsv,
                   fontSize: Dimension.fontSizes.md,
                   fontWeight: Dimension.fontWeights.regular,
                 ),
