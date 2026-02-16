@@ -47,7 +47,7 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Column(
           children: [
             HomeHeader(userName: "ราชาปีศาจ"),
-            SizedBox(height: 30),
+            SizedBox(height: 15),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 15),
               child: Column(
