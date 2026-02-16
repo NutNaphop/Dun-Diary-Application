@@ -1,5 +1,6 @@
 import 'package:dun_diary_app/data/blood_pressure/repository/blood_pressure_repository.dart';
 import 'package:dun_diary_app/feature/home/presentation/home_viewModel.dart';
+import 'package:dun_diary_app/feature/home/presentation/widgets/card/home_bp_card.dart';
 import 'package:dun_diary_app/feature/home/presentation/widgets/home_header.dart';
 import 'package:dun_diary_app/shared/constant/app_icons.dart';
 import 'package:dun_diary_app/shared/constant/app_image.dart';
@@ -106,6 +107,9 @@ class _HomeScreenState extends State<HomeScreen> {
                       ],
                     ),
                   ),
+
+                  // Blood Pressure Card
+                  HomeBpCard(),
                 ],
               ),
             ),
