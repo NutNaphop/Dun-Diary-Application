@@ -68,8 +68,10 @@ class RecordScreen extends StatelessWidget {
     return CustomScaffold(
       appBar: MainAppBar(
         title: isReadOnly
-            ? "รายละเอียด"
-            : (viewModel.hasExistingData ? "แก้ไขข้อมูล" : "บันทึกความดัน"),
+            ? AppStrings.record.detailTitle
+            : (viewModel.hasExistingData
+                  ? AppStrings.record.editTitle
+                  : AppStrings.record.recordBloodPressure),
         showBack: true,
         backIconPath: AppIcons.outline.x,
         onBackPressed: () => NavigationService.instance.goBack(),
@@ -219,7 +221,7 @@ class RecordScreen extends StatelessWidget {
                   children: [
                     Expanded(
                       child: CustomButton(
-                        text: "ยกเลิก",
+                        text: AppStrings.common.cancel,
                         type: CustomButtonType.outline,
                         onPressed: isLoading
                             ? () {}
@@ -229,7 +231,9 @@ class RecordScreen extends StatelessWidget {
                     const SizedBox(width: 12),
                     Expanded(
                       child: CustomButton(
-                        text: isLoading ? AppStrings.common.saving : "บันทึก",
+                        text: isLoading
+                            ? AppStrings.common.saving
+                            : AppStrings.common.save,
                         type: CustomButtonType.fill,
                         backgroundColor: isLoading
                             ? CustomColor.gray400
@@ -241,7 +245,9 @@ class RecordScreen extends StatelessWidget {
                   ],
                 )
               : CustomButton(
-                  text: isLoading ? AppStrings.common.saving : "บันทึก",
+                  text: isLoading
+                      ? AppStrings.common.saving
+                      : AppStrings.common.save,
                   type: CustomButtonType.fill,
                   backgroundColor: isLoading
                       ? CustomColor.gray400
@@ -288,7 +294,7 @@ class RecordScreen extends StatelessWidget {
         items: [
           CustomPopupMenuItem(
             value: 'edit_mode',
-            title: 'แก้ไข',
+            title: AppStrings.common.edit,
             icon: SVGImage(
               path: AppIcons.duotone.pen,
               width: 22,
@@ -298,7 +304,7 @@ class RecordScreen extends StatelessWidget {
           ),
           CustomPopupMenuItem(
             value: 'delete',
-            title: 'ลบ',
+            title: AppStrings.record.delete,
             icon: SVGImage(
               path: AppIcons.duotone.bin,
               width: 22,
@@ -318,10 +324,10 @@ class RecordScreen extends StatelessWidget {
     final result = await CustomDialog.show<bool>(
       context,
       child: CustomDialog(
-        title: "ลบบันทึกนี้หรือไม่ ?",
-        description: "ข้อมูลนี้จะถูกลบออกจากประวัติของคุณ",
-        primaryButtonText: "ลบ",
-        secondaryButtonText: "ยกเลิก",
+        title: AppStrings.record.confirmDeleteTitle,
+        description: AppStrings.record.confirmDeleteDesc,
+        primaryButtonText: AppStrings.record.delete,
+        secondaryButtonText: AppStrings.common.cancel,
         content: SVGImage(
           path: AppImage.confirmDelete,
           width: 163,

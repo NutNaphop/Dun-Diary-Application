@@ -13,6 +13,7 @@ class AppStrings {
   // Feature
   static const main = _MainStrings();
   static const home = _HomeStrings();
+  static const history = _HistoryStrings();
   static const record = _RecordStrings();
   static const result = _ResultStrings();
   static const stat = _StatStrings();
@@ -39,6 +40,7 @@ class _CommonStrings {
   final String save = "บันทึก";
 
   final String cancel = "ยกเลิก";
+  final String edit = "แก้ไข";
 }
 
 class _BottomNavigationStrings {
@@ -121,6 +123,20 @@ class _RecordStrings {
   final String uploadPhoto = "เลือกรูปจากคลัง";
   final String errorRecord = "เกิดข้อผิดพลาดในการบันทึกข้อมูล";
   final String canNotReadImage = "ไม่สามารถอ่านค่าจากรูปภาพได้";
+
+  final String detailTitle = "รายละเอียด";
+  final String editTitle = "แก้ไขข้อมูล";
+  final String confirmDeleteTitle = "ลบบันทึกนี้หรือไม่ ?";
+  final String confirmDeleteDesc = "ข้อมูลนี้จะถูกลบออกจากประวัติของคุณ";
+  final String delete = "ลบ";
+}
+
+class _HistoryStrings {
+  const _HistoryStrings();
+
+  final String pageTitle = "รายการบันทึก";
+  final String exportImage = "ส่งออกเป็นรูปภาพ";
+  final String exportCsv = "ส่งออกข้อมูล csv";
 }
 
 class _StatStrings {
