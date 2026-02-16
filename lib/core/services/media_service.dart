@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:dun_diary_app/core/services/app_logger.dart';
 import 'package:image_picker/image_picker.dart';
 
 class MediaService {
@@ -23,7 +24,7 @@ class MediaService {
 
       return File(pickedFile.path);
     } catch (e) {
-      print("Error picking image: $e");
+      AppLogger.error("Error picking image", e);
       return null;
     }
   }

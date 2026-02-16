@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:dun_diary_app/core/services/app_logger.dart';
 import 'package:dun_diary_app/core/services/flushbar_service.dart';
 import 'package:dun_diary_app/core/services/model_service.dart';
 import 'package:dun_diary_app/core/services/navigation_service.dart';
@@ -51,7 +52,7 @@ class ResultViewmodel extends ChangeNotifier {
         FlushbarService.instance.showError(AppStrings.record.canNotReadImage);
       }
     } catch (e) {
-      print("Error during model inference: $e");
+      AppLogger.error("Error during model inference", e);
       FlushbarService.instance.showError("เกิดข้อผิดพลาดในการวิเคราะห์รูปภาพ");
     } finally {
       _isAnalysisCompleted = true;
@@ -91,7 +92,7 @@ class ResultViewmodel extends ChangeNotifier {
       _selectedImage = file;
       notifyListeners();
     } catch (e) {
-      print("Error loading mock image: $e");
+      AppLogger.error("Error loading mock image", e);
     }
   }
 }

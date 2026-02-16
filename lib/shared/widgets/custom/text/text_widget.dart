@@ -9,6 +9,7 @@ class CustomText extends StatelessWidget {
   final Color? color;
   final double fontSize;
   final FontWeight fontWeight;
+  final TextOverflow? overflow;
 
   const CustomText({
     Key? key,
@@ -17,6 +18,7 @@ class CustomText extends StatelessWidget {
     this.color,
     this.fontSize = 12.0,
     this.fontWeight = FontWeight.normal,
+    this.overflow,
   }) : super(key: key);
 
   @override
@@ -32,6 +34,7 @@ class CustomText extends StatelessWidget {
         fontFamily: "NotoSanThai",
       ),
       textAlign: textAlign,
+      overflow: overflow,
     );
   }
 }

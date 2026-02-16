@@ -1,5 +1,3 @@
-import 'package:dun_diary_app/core/auth/auth_service.dart';
-import 'package:dun_diary_app/core/network/network_info.dart';
 import 'package:dun_diary_app/data/blood_pressure/repository/blood_pressure_repository.dart';
 import 'package:dun_diary_app/feature/home/presentation/home_viewModel.dart';
 import 'package:dun_diary_app/shared/constant/app_icons.dart';
@@ -23,11 +21,8 @@ class HomeScreen extends StatefulWidget {
 
   static Widget create() {
     return ChangeNotifierProvider(
-      create: (context) => HomeViewmodel(
-        recordRepo: context.read<BloodPressureRepository>(),
-        networkInfo: context.read<NetworkInfo>(),
-        authService: context.read<AuthService>(),
-      ),
+      create: (context) =>
+          HomeViewmodel(recordRepo: context.read<BloodPressureRepository>()),
       child: const HomeScreen(),
     );
   }

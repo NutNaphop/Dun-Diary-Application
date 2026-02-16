@@ -1,3 +1,4 @@
+import 'package:dun_diary_app/core/services/app_logger.dart';
 import 'package:dun_diary_app/data/blood_pressure/datasource/blood_pressure_remote_data_source.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -10,10 +11,10 @@ import '../model/bp_record.dart';
 /// - Local Storage (Hive) สำหรับ offline-first
 /// - Remote Storage (Firebase) สำหรับ sync ข้อมูลขึ้น Cloud
 ///
-/// Flow การทำงาน:
-/// 1. บันทึกข้อมูลลง Local ก่อนเสมอ (immediate response)
-/// 2. ถ้ามี internet → sync ขึ้น Cloud อัตโนมัติ
-/// 3. ถ้าไม่มี internet → เก็บใน Queue รอ sync ทีหลัง
+/// Flow การทำงานใหม่ (2-Queue Strategy):
+/// 1. บันทึกข้อมูลลง Local
+/// 2. ใส่ ID ลง Queue (Upsert หรือ Delete) ทันที
+/// 3. ถ้ามี internet → เรียก syncAllPending() เพื่อเคลียร์ Queue
 class BloodPressureRepository {
   final BloodPressureLocalDataSource _localDataSource;
   final BloodPressureRemoteDataSource _remoteDataSource;
@@ -38,23 +39,18 @@ class BloodPressureRepository {
   /// 2. ถ้า online → trigger sync ที่ค้างอยู่ทั้งหมด
   Future<void> saveRecord(BPRecord record, bool isOnline) async {
     try {
-      // Step 1: บันทึก Local ก่อน (ให้ UI ตอบสนองทันที)
+      // Step 1: บันทึก Local ก่อน
       await _localDataSource.addRecord(record);
-      print("✅ Repository: Saved locally. ID: ${record.id}");
+      AppLogger.info("Repository: Saved locally. ID: ${record.id}");
 
-      // Step 2: ถ้า online → sync ทั้งหมดที่ค้าง
+      // 2. เข้าคิว Upsert เสมอ (กันพลาด)
+      await _localDataSource.enqueueUpsert(record.id);
+      AppLogger.info("Repo: Saved & Enqueued ${record.id}");
+
+      // 3. ถ้า Online -> ยิง Sync เลย
       if (isOnline) await syncAllPending();
-
-      // Debug: แสดงจำนวน record ที่ยังค้าง sync
-      final remainingQueueIDs = _localDataSource.getAllRecordIdsInQueueBox();
-      print(
-        "✅ Sync completed. Remaining in QueueBox: ${remainingQueueIDs.length}",
-      );
-      for (final id in remainingQueueIDs) {
-        print("   - $id");
-      }
     } catch (e) {
-      print("❌ Save Error: $e");
+      AppLogger.error("Save Error", e);
       rethrow;
     }
   }
@@ -79,6 +75,42 @@ class BloodPressureRepository {
     return _localDataSource.watchRecords();
   }
 
+  // Update Record
+  Future<void> updateRecord(BPRecord record, bool isOnline) async {
+    try {
+      // Step 1: บันทึก Local ก่อน (ให้ UI ตอบสนองทันที)
+      await _localDataSource.updateRecord(record);
+
+      // 2. เข้าคิว Upsert (ถ้ามีอยู่แล้วมันจะไม่ซ้ำ)
+      await _localDataSource.enqueueUpsert(record.id);
+      AppLogger.info("Repo: Updated & Enqueued ${record.id}");
+
+      // 3. ถ้า Online -> ยิง Sync เลย
+      if (isOnline) await syncAllPending();
+    } catch (e) {
+      AppLogger.error("Update Error", e);
+      rethrow;
+    }
+  }
+
+  // Delete Record
+  Future<void> deleteRecord(String id, bool isOnline) async {
+    try {
+      // 1. ลบ Local (ทำเหมือนเดิม)
+      await _localDataSource.deleteRecord(id);
+
+      // 2. เข้าคิว Delete (ระบบจะเช็คเองว่าถ้าเพิ่งสร้างจะไม่อยู่ในคิวนี้)
+      await _localDataSource.enqueueDelete(id);
+      AppLogger.info("Repo: Deleted & Processed Queue logic for $id");
+
+      // 3. ถ้า Online -> ยิง Sync เลย
+      if (isOnline) await syncAllPending();
+    } catch (e) {
+      AppLogger.error("Delete Error", e);
+      rethrow;
+    }
+  }
+
   /// 🧪 Debug: ลบข้อมูล Local ทั้งหมด
   void deleteAllLocalData() {
     _localDataSource.getAllRecords().forEach((record) {
@@ -101,50 +133,74 @@ class BloodPressureRepository {
     // ต้อง login ก่อนถึงจะ sync ได้
     final user = FirebaseAuth.instance.currentUser;
     if (user == null) {
-      print("🚫 Sync aborted: No User Logged in");
+      AppLogger.warning("Sync aborted: No User Logged in");
       return;
     }
 
-    // ดึง IDs ที่รอ sync
-    final pendingQueueID = _localDataSource.getAllRecordIdsInQueueBox();
+    AppLogger.info("Starting Sync Process...");
 
-    if (pendingQueueID.isEmpty) {
-      print("✅ Sync: No pending records");
-      return;
-    }
+    // -------------------------------------------------
+    // Phase 1: Manage item need to delete first
+    // -------------------------------------------------
+    final deleteIds = _localDataSource.getDeleteQueueIds();
+    if (deleteIds.isNotEmpty) {
+      AppLogger.debug("Processing Delete Queue (${deleteIds.length} items)...");
+      for (final id in deleteIds) {
+        try {
+          // สั่งลบบน Firebase
+          await _remoteDataSource.deleteRecordFromFirebase(id, user.uid);
 
-    print("☁️ Syncing ${pendingQueueID.length} records...");
-
-    // Loop sync ทีละ record
-    for (final recordID in pendingQueueID) {
-      try {
-        final record = _localDataSource.getRecordById(recordID);
-
-        if (record == null) {
-          print("⚠️ Record with ID $recordID not found locally. Skipping...");
-          continue;
+          // สำเร็จ -> ลบออกจาก Queue
+          await _localDataSource.clearFromDeleteQueue(id);
+          AppLogger.debug("   -> Deleted remote: $id");
+        } catch (e) {
+          AppLogger.error("Failed to delete remote $id", e);
+          // ปล่อยไว้ใน Queue รอ Sync รอบหน้า
         }
-
-        // ส่งขึ้น Firebase (path: users/{uid}/records/{record_id})
-        await _remoteDataSource.saveRecordToFirebase(record, user.uid);
-
-        // Sync สำเร็จ → update สถานะ local
-        record.isSynced = true;
-        await _localDataSource.updateRecord(record);
-        await _localDataSource.deleteRecordIdFromQueueBox(record.id);
-
-        print(" -> Synced record: ${record.id}");
-      } catch (e) {
-        print("❌ Failed to sync record $recordID: $e");
-        // ไม่ throw → ให้ทำ record อื่นต่อ
       }
     }
+
+    // -------------------------------------------------
+    // Phase 2: Manage Item need to add/update first
+    // -------------------------------------------------
+    final upsertIds = _localDataSource.getUpsertQueueIds();
+    if (upsertIds.isNotEmpty) {
+      AppLogger.debug("Processing Upsert Queue (${upsertIds.length} items)...");
+      for (final id in upsertIds) {
+        try {
+          final record = _localDataSource.getRecordById(id);
+
+          // กรณีหายาก: ID อยู่ใน Queue แต่ตัวข้อมูลหายไปจาก Box แล้ว
+          if (record == null) {
+            AppLogger.warning(
+              "Record $id not found in box. Removing from queue.",
+            );
+            await _localDataSource.clearFromUpsertQueue(id);
+            continue;
+          }
+
+          // ส่งขึ้น Firebase (ใช้ .set ทับได้เลยทั้ง Add/Edit)
+          await _remoteDataSource.saveRecordToFirebase(record, user.uid);
+
+          // Sync สำเร็จ -> update สถานะ isSynced = true
+          record.isSynced = true;
+          await _localDataSource.updateRecord(record);
+
+          // ลบออกจาก Queue
+          await _localDataSource.clearFromUpsertQueue(id);
+          AppLogger.debug("   -> Synced upsert: $id");
+        } catch (e) {
+          AppLogger.error("Failed to sync upsert $id", e);
+        }
+      }
+    }
+    AppLogger.info("Sync Process Completed.");
   }
 
-  /// เพิ่ม Record ID เข้า Sync Queue (ใช้เมื่อ save แบบ offline)
-  Future<void> saveRecordIdToQueueBox(String recordId) async {
-    await _localDataSource.saveRecordIdToQueueBox(recordId);
-  }
+  // /// เพิ่ม Record ID เข้า Sync Queue (ใช้เมื่อ save แบบ offline)
+  // Future<void> saveRecordIdToQueueBox(String recordId) async {
+  //   await _localDataSource.saveRecordIdToQueueBox(recordId);
+  // }
 
   // ===========================================================================
   // 📈 SECTION 3: Metadata & Range Queries
@@ -168,5 +224,24 @@ class BloodPressureRepository {
   /// ดึง Records ตามช่วงเวลา (start - end)
   List<BPRecord> getRecordsByRange(DateTime start, DateTime end) {
     return _localDataSource.getRecordsByRange(start, end);
+  }
+
+  // ===========================================================================
+  // 🔧 SECTION 4: Debug / Testing Tools
+  // ===========================================================================
+
+  /// 🔥 HARD RESET: ลบข้อมูลทิ้งทั้งหมดทั้ง Local และ Cloud
+  Future<void> debugClearAllData() async {
+    try {
+      final user = FirebaseAuth.instance.currentUser;
+      if (user != null) {
+        await _remoteDataSource.deleteAllRecords(user.uid);
+      }
+
+      await _localDataSource.clearAll();
+    } catch (e) {
+      print("❌ Hard Reset Error: $e");
+      rethrow;
+    }
   }
 }

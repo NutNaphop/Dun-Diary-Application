@@ -1,4 +1,5 @@
 import 'package:dun_diary_app/core/constant/hive_constants.dart';
+import 'package:dun_diary_app/core/services/app_logger.dart';
 import 'package:dun_diary_app/data/blood_pressure/model/bp_record.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
@@ -16,10 +17,16 @@ class BloodPressureLocalDataSource {
   /// Box เก็บ Metadata เช่น minYear, yearCounts
   final Box _metaBox;
 
+  /// Box เก็บ Queue สำหรับการอัปเดตข้อมูล
+  final Box<String> _upsertQueue;
+  final Box<String> _deleteQueue;
+
   BloodPressureLocalDataSource()
     : _metaBox = Hive.box(HiveBoxName.metaBox),
       _indexBox = Hive.box(HiveBoxName.indexBox),
-      _box = Hive.box(HiveBoxName.bpRecord);
+      _box = Hive.box(HiveBoxName.bpRecord),
+      _upsertQueue = Hive.box(HiveBoxName.queueUpsertBox),
+      _deleteQueue = Hive.box(HiveBoxName.queueDeleteBox);
 
   // ===========================================================================
   // 📝 SECTION 1: CRUD Operations
@@ -40,7 +47,9 @@ class BloodPressureLocalDataSource {
     if (!currentIds.contains(record.id)) {
       currentIds.add(record.id);
       await _indexBox.put(indexKey, currentIds);
-      print("✅ Saved to Index [$indexKey]: Total ${currentIds.length} records");
+      AppLogger.debug(
+        "Saved to Index [$indexKey]: Total ${currentIds.length} records",
+      );
     }
 
     // 3. อัปเดต Metadata
@@ -59,7 +68,7 @@ class BloodPressureLocalDataSource {
 
   /// อัปเดต Record (ใช้เมื่อแก้ไขสถานะ เช่น isSynced)
   Future<void> updateRecord(BPRecord record) async {
-    await record.save();
+    await _box.put(record.id, record);
   }
 
   /// ดึง Record ตาม ID
@@ -118,8 +127,8 @@ class BloodPressureLocalDataSource {
   /// 2. ดึง Record IDs จากแต่ละ Index
   /// 3. Filter ให้เหลือเฉพาะที่อยู่ในช่วงเวลาจริง
   List<BPRecord> getRecordsByRange(DateTime start, DateTime end) {
-    print(
-      "🔍 Fetching from ${start.toIso8601String()} to ${end.toIso8601String()}",
+    AppLogger.debug(
+      "Fetching from ${start.toIso8601String()} to ${end.toIso8601String()}",
     );
 
     // Step 1: หา Index Keys ทุกเดือนในช่วงเวลา
@@ -133,7 +142,7 @@ class BloodPressureLocalDataSource {
       current = DateTime(current.year, current.month + 1);
     }
 
-    print("📂 Index Keys involved: $keys");
+    AppLogger.debug("Index Keys involved: $keys");
 
     // Step 2: ดึง Records จากทุก Index
     List<BPRecord> results = [];
@@ -146,7 +155,7 @@ class BloodPressureLocalDataSource {
       results.addAll(records);
     }
 
-    print("📥 Raw Records Found: ${results.length}");
+    AppLogger.debug("Raw Records Found: ${results.length}");
 
     // Step 3: Filter ให้เหลือเฉพาะที่อยู่ในช่วงเวลาจริง
     final filtered = results.where((r) {
@@ -157,7 +166,7 @@ class BloodPressureLocalDataSource {
     // Step 4: เรียงตามวันที่
     filtered.sort((a, b) => a.createdAt.compareTo(b.createdAt));
 
-    print("✨ Final Filtered Records: ${filtered.length}");
+    AppLogger.debug("Final Filtered Records: ${filtered.length}");
     return filtered;
   }
 
@@ -165,35 +174,76 @@ class BloodPressureLocalDataSource {
   // 🔄 SECTION 3: Sync Queue Operations
   // ===========================================================================
 
-  /// ดึง Records ที่ยังไม่ได้ Sync ขึ้น Cloud
-  List<BPRecord> getUnsyncedRecords() {
-    return _box.values.where((r) => !r.isSynced).toList();
+  /// Enqueue Upsert: ใส่ ID ลงคิว "เพิ่ม/แก้ไข"
+  /// ใช้เมื่อ: User กดบันทึก หรือ แก้ไขข้อมูล
+  Future<void> enqueueUpsert(String id) async {
+    // Safety: ถ้า ID นี้เคยอยู่ในถังขยะ (Delete Queue) ให้เอาออกก่อน (แปลว่าเปลี่ยนใจไม่ลบแล้ว)
+    if (_deleteQueue.values.contains(id)) {
+      final keyMap = _deleteQueue.toMap();
+      final keyToDelete = keyMap.keys.firstWhere(
+        (k) => keyMap[k] == id,
+        orElse: () => null,
+      );
+      if (keyToDelete != null) await _deleteQueue.delete(keyToDelete);
+    }
+
+    // ใส่ลง Upsert Queue (ถ้ามีอยู่แล้ว ไม่ต้องใส่ซ้ำ)
+    if (!_upsertQueue.values.contains(id)) {
+      await _upsertQueue.add(id);
+      AppLogger.debug("Queue: Added $id to Upsert Queue");
+    }
   }
 
-  /// บันทึก Record ID เข้า Queue สำหรับ Sync
-  Future<void> saveRecordIdToQueueBox(String recordId) async {
-    final queueBox = Hive.box<String>(HiveBoxName.QueueBox);
-    await queueBox.add(recordId);
+  Future<void> enqueueDelete(String id) async {
+    // 🔥 MASTER LOGIC: เช็คก่อนว่า ID นี้ "เพิ่งสร้างแบบ Offline" หรือไม่?
+
+    if (_upsertQueue.values.contains(id)) {
+      // CASE A: เพิ่งสร้าง (อยู่ใน Upsert) แล้วลบเลย -> เสมือนไม่เคยเกิดขึ้น
+      // Action: ลบออกจาก Upsert Queue ทิ้งไปเลย ไม่ต้องส่งอะไรไป Server
+      final keyMap = _upsertQueue.toMap();
+      final keyToDelete = keyMap.keys.firstWhere(
+        (k) => keyMap[k] == id,
+        orElse: () => null,
+      );
+
+      if (keyToDelete != null) {
+        await _upsertQueue.delete(keyToDelete);
+        AppLogger.debug(
+          "Queue: Cancelled Sync for $id (Created & Deleted offline)",
+        );
+      }
+    } else {
+      // CASE B: ข้อมูลเก่าที่มีบน Server แล้ว -> ต้องสั่ง Server ลบด้วย
+      // Action: ใส่ลง Delete Queue
+      if (!_deleteQueue.values.contains(id)) {
+        await _deleteQueue.add(id);
+        AppLogger.debug("Queue: Added $id to Delete Queue");
+      }
+    }
   }
 
-  /// ดึง Record IDs ทั้งหมดใน Sync Queue
-  List<String> getAllRecordIdsInQueueBox() {
-    final queueBox = Hive.box<String>(HiveBoxName.QueueBox);
-    return queueBox.values.toList();
-  }
+  /// 📤 Getters: ดึงรายการ ID ในคิว
+  List<String> getUpsertQueueIds() => _upsertQueue.values.toList();
+  List<String> getDeleteQueueIds() => _deleteQueue.values.toList();
 
-  /// ลบ Record ID ออกจาก Sync Queue (หลัง Sync สำเร็จ)
-  Future<void> deleteRecordIdFromQueueBox(String recordId) async {
-    final queueBox = Hive.box<String>(HiveBoxName.QueueBox);
-    final keyToDelete = queueBox.keys.firstWhere(
-      (key) => queueBox.get(key) == recordId,
+  /// ✅ Clear: ลบออกจากคิว Upsert (เมื่อ Sync สำเร็จ)
+  Future<void> clearFromUpsertQueue(String id) async {
+    final keyMap = _upsertQueue.toMap();
+    final keyToDelete = keyMap.keys.firstWhere(
+      (k) => keyMap[k] == id,
       orElse: () => null,
     );
+    if (keyToDelete != null) await _upsertQueue.delete(keyToDelete);
+  }
 
-    if (keyToDelete != null) {
-      await queueBox.delete(keyToDelete);
-      print("🗑️ Deleted record ID $recordId from QueueBox");
-    }
+  /// ✅ Clear: ลบออกจากคิว Delete (เมื่อ Sync สำเร็จ)
+  Future<void> clearFromDeleteQueue(String id) async {
+    final keyMap = _deleteQueue.toMap();
+    final keyToDelete = keyMap.keys.firstWhere(
+      (k) => keyMap[k] == id,
+      orElse: () => null,
+    );
+    if (keyToDelete != null) await _deleteQueue.delete(keyToDelete);
   }
 
   // ===========================================================================
@@ -278,5 +328,15 @@ class BloodPressureLocalDataSource {
   /// Stream สำหรับ listen การเปลี่ยนแปลงของ Records
   Stream<dynamic> watchRecords() {
     return _box.watch();
+  }
+
+  /// 🔧 Debug Mode : Delete All Data
+  Future<void> clearAll() async {
+    await _box.clear(); // ลบข้อมูลความดัน
+    await _indexBox.clear(); // ลบ Index
+    await _metaBox.clear(); // ลบสถิติปี
+    await _upsertQueue.clear(); // ลบคิว Upsert
+    await _deleteQueue.clear(); // ลบคิว Delete
+    print("🧹 Local Hive: All boxes cleared!");
   }
 }

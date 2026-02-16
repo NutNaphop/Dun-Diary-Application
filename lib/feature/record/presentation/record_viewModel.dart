@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:dun_diary_app/core/auth/auth_service.dart';
 import 'package:dun_diary_app/core/constant/app_routes.dart';
 import 'package:dun_diary_app/core/network/network_info.dart';
+import 'package:dun_diary_app/core/services/app_logger.dart';
 import 'package:dun_diary_app/core/services/flushbar_service.dart';
 import 'package:dun_diary_app/core/services/media_service.dart';
 import 'package:dun_diary_app/core/services/navigation_service.dart';
@@ -37,6 +38,10 @@ class RecordViewmodel extends ChangeNotifier {
   DateTime _recordDate = DateTime.now();
   DateTime get recordDate => _recordDate;
 
+  // ค่าเดิมสำหรับ restore ตอนยกเลิกแก้ไข
+  BloodPressure? _originalBpValue;
+  DateTime? _originalRecordDate;
+
   int get level => BloodPressureUtils.calculateBloodPressureLevel(
     _bpValue.sys,
     _bpValue.dia,
@@ -47,6 +52,75 @@ class RecordViewmodel extends ChangeNotifier {
 
   bool _isLoading = false;
   bool get isLoading => _isLoading;
+
+  bool _isMenuOpen = false;
+  bool get isMenuOpen => _isMenuOpen;
+
+  void setMenuOpen(bool value) {
+    _isMenuOpen = value;
+    notifyListeners();
+  }
+
+  String? _editingRecordId;
+  bool get isEditMode => _editingRecordId != null;
+
+  bool _isReadOnly = false;
+  bool get isReadOnly => _isReadOnly;
+  bool get hasExistingData => _editingRecordId != null;
+
+  void init(BPRecord? record) {
+    if (record != null) {
+      _editingRecordId = record.id;
+      _bpValue = BloodPressure(
+        sys: record.sys,
+        dia: record.dia,
+        pul: record.pulse,
+      );
+      _recordDate = record.createdAt;
+      _isReadOnly = true;
+
+      // เก็บค่าเดิมไว้สำหรับ cancel
+      _originalBpValue = BloodPressure(
+        sys: record.sys,
+        dia: record.dia,
+        pul: record.pulse,
+      );
+      _originalRecordDate = record.createdAt;
+    } else {
+      _editingRecordId = null;
+      _bpValue = BloodPressure(sys: 113, dia: 64, pul: 74);
+      _recordDate = DateTime.now();
+      _isReadOnly = false;
+    }
+    notifyListeners();
+  }
+
+  void enterEditMode() {
+    // เก็บค่าปัจจุบันก่อนเข้าโหมดแก้ไข
+    _originalBpValue = BloodPressure(
+      sys: _bpValue.sys,
+      dia: _bpValue.dia,
+      pul: _bpValue.pul,
+    );
+    _originalRecordDate = _recordDate;
+    _isReadOnly = false;
+    notifyListeners();
+  }
+
+  void cancelEditMode() {
+    if (_originalBpValue != null) {
+      _bpValue = BloodPressure(
+        sys: _originalBpValue!.sys,
+        dia: _originalBpValue!.dia,
+        pul: _originalBpValue!.pul,
+      );
+    }
+    if (_originalRecordDate != null) {
+      _recordDate = _originalRecordDate!;
+    }
+    _isReadOnly = true;
+    notifyListeners();
+  }
 
   void updateSys(int value) {
     _bpValue.sys = value;
@@ -100,31 +174,84 @@ class RecordViewmodel extends ChangeNotifier {
       // 2. หา Owner ID -> ได้ทันทีไม่ต้องรอเน็ต
       final userId = await _authService.getUserIdForSaving();
 
-      // 3. สร้าง Record Object
-      final newRecord = BPRecord(
-        id: const Uuid().v4(),
-        ownerId: userId,
-        sys: _bpValue.sys,
-        dia: _bpValue.dia,
-        pulse: _bpValue.pul,
-        createdAt: _recordDate,
-        isSynced: false,
-        note: "",
-      );
+      if (isEditMode) {
+        // Check if data is unchanged
+        if (_originalBpValue != null &&
+            _originalBpValue!.sys == _bpValue.sys &&
+            _originalBpValue!.dia == _bpValue.dia &&
+            _originalBpValue!.pul == _bpValue.pul &&
+            _originalRecordDate == _recordDate) {
+          _isReadOnly = true;
+          _isLoading = false;
+          FlushbarService.instance.showSuccess("แก้ไขข้อมูลเรียบร้อย");
+          notifyListeners();
+          return;
+        }
 
-      // 4. Save record id into boxQueue
-      await _repository.saveRecordIdToQueueBox(newRecord.id);
+        final updatedRecord = BPRecord(
+          id: _editingRecordId!,
+          ownerId: userId,
+          sys: _bpValue.sys,
+          dia: _bpValue.dia,
+          pulse: _bpValue.pul,
+          createdAt: _recordDate,
+          isSynced: false,
+          note: "",
+        );
 
-      // 5. Save record into Local storage
-      await _repository.saveRecord(newRecord, await _networkInfo.isConnected);
+        await _repository.updateRecord(
+          updatedRecord,
+          await _networkInfo.isConnected,
+        );
+        _isReadOnly = true;
+        _isLoading = false;
+        FlushbarService.instance.showSuccess("แก้ไขข้อมูลเรียบร้อย");
+        notifyListeners();
+      } else {
+        // 3. สร้าง Record Object
+        final newRecord = BPRecord(
+          id: const Uuid().v4(),
+          ownerId: userId,
+          sys: _bpValue.sys,
+          dia: _bpValue.dia,
+          pulse: _bpValue.pul,
+          createdAt: _recordDate,
+          isSynced: false,
+          note: "",
+        );
 
-      NavigationService.instance.goBack(result: true);
+        // 4. Save to enqueue and sync
+        await _repository.saveRecord(newRecord, await _networkInfo.isConnected);
+
+        _isLoading = false;
+        notifyListeners();
+        NavigationService.instance.goBack(result: true);
+      }
     } catch (e) {
-      print("❌ ViewModel Save Error: $e");
+      AppLogger.error("ViewModel Save Error", e);
       FlushbarService.instance.showError(AppStrings.record.errorRecord);
       _isLoading = false;
       notifyListeners();
-    } finally {
+    }
+  }
+
+  Future<void> deleteRecord() async {
+    if (_editingRecordId == null) return;
+
+    _isLoading = true;
+    notifyListeners();
+
+    try {
+      await _repository.deleteRecord(
+        _editingRecordId!,
+        await _networkInfo.isConnected,
+      );
+
+      NavigationService.instance.goBack(result: true);
+      FlushbarService.instance.showSuccess("ลบบันทึกเรียบร้อย");
+    } catch (e) {
+      AppLogger.error("Delete Error", e);
+      FlushbarService.instance.showError("ลบไม่สำเร็จ");
       _isLoading = false;
       notifyListeners();
     }
