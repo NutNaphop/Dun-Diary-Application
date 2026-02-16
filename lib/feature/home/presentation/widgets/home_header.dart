@@ -1,3 +1,4 @@
+import 'package:dun_diary_app/feature/home/presentation/home_viewModel.dart';
 import 'package:dun_diary_app/shared/constant/app_icons.dart';
 import 'package:dun_diary_app/shared/constant/app_image.dart';
 import 'package:dun_diary_app/shared/constant/app_strings.dart';
@@ -8,19 +9,24 @@ import 'package:dun_diary_app/shared/widgets/custom/button/custom_button.dart';
 import 'package:dun_diary_app/shared/widgets/custom/img/custom_svg_widget.dart';
 import 'package:dun_diary_app/shared/widgets/custom/text/text_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class HomeHeader extends StatelessWidget {
   final String userName;
-  final VoidCallback onRecordTap; // เมื่อกดปุ่มบันทึก
 
-  const HomeHeader({
-    super.key,
-    required this.userName,
-    required this.onRecordTap,
-  });
+  const HomeHeader({super.key, required this.userName});
 
   @override
   Widget build(BuildContext context) {
+    final viewModel = context.read<HomeViewmodel>(); // เอาไว้กดปุ่ม
+
+    // Responsive height: Takes 35% of screen height, but at least 340px to fit content
+    final double screenHeight = MediaQuery.of(context).size.height;
+    final double headerHeight = (screenHeight * 0.35).clamp(
+      340.0,
+      double.infinity,
+    );
+
     return Stack(
       alignment: Alignment.topCenter,
       children: [
@@ -29,7 +35,7 @@ class HomeHeader extends StatelessWidget {
           top: 0,
           left: 0,
           right: 0,
-          height: 340,
+          bottom: 0,
           child: Image.asset(
             AppImages.homeBackground,
             width: double.infinity,
@@ -38,6 +44,9 @@ class HomeHeader extends StatelessWidget {
           ),
         ),
 
+        // Layer 1.5: Invisible spacer to force minimum height
+        SizedBox(height: headerHeight, width: double.infinity),
+
         // Layer 2: Header, User greeting, Card
         SafeArea(
           bottom: false,
@@ -45,8 +54,8 @@ class HomeHeader extends StatelessWidget {
             children: [
               Padding(
                 padding: const EdgeInsets.symmetric(
-                  horizontal: 24,
-                  vertical: 10,
+                  horizontal: 16,
+                  vertical: 20,
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -58,30 +67,30 @@ class HomeHeader extends StatelessWidget {
                         // Logo Area
                         Row(
                           children: [
-                            Icon(
-                              Icons.favorite,
-                              color: Colors.redAccent,
-                              size: 28,
-                            ),
-                            const SizedBox(width: 8),
-                            const CustomText(
-                              text: "DUNDIARY",
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
+                            Image.asset(
+                              AppConfigImages.logoWithText,
+                              width: 144,
+                              height: 39,
                             ),
                           ],
                         ),
                         // Bell Icon
-                        Container(
-                          padding: const EdgeInsets.all(8),
-                          decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(0.2),
-                            shape: BoxShape.circle,
-                          ),
-                          child: const Icon(
-                            Icons.notifications_outlined,
-                            color: Colors.white,
+                        GestureDetector(
+                          onTap: () {
+                            viewModel.deleteLocalData();
+                          },
+                          child: Container(
+                            padding: const EdgeInsets.all(4),
+                            decoration: BoxDecoration(
+                              color: CustomColor.white,
+                              shape: BoxShape.circle,
+                            ),
+                            child: SVGImage(
+                              path: AppIcons.outline.bell,
+                              width: 24,
+                              height: 24,
+                              color: CustomColor.accentColor,
+                            ),
                           ),
                         ),
                       ],
@@ -95,30 +104,22 @@ class HomeHeader extends StatelessWidget {
                       children: [
                         // Profile Circle
                         Container(
-                          width: 60,
-                          height: 60,
                           decoration: BoxDecoration(
-                            color: Colors.white,
-                            shape: BoxShape.circle,
-                            border: Border.all(color: Colors.white, width: 2),
-                            image: const DecorationImage(
-                              image: AssetImage(
-                                'assets/images/heart_mascot.png',
-                              ),
-                              fit: BoxFit.cover,
-                            ),
+                            boxShadow: [DropShadow.drop_card],
                           ),
-                          // Fallback
-                          child: const Icon(
-                            Icons.person,
-                            color: CustomColor.accentColor,
+                          child: CircleAvatar(
+                            radius: 32,
+                            backgroundColor: Colors.white,
+                            backgroundImage: AssetImage(
+                              AppImages.profile.avatar1,
+                            ),
                           ),
                         ),
                         const SizedBox(height: 12),
                         CustomText(
-                          text: "สวัสดี คุณ$userName",
-                          fontSize: 18,
-                          color: CustomColor.gray900.withOpacity(0.8),
+                          text: AppStrings.home.greeting(userName),
+                          fontSize: Dimension.fontSizes.h2,
+                          fontWeight: Dimension.fontWeights.medium,
                         ),
                       ],
                     ),
@@ -126,13 +127,13 @@ class HomeHeader extends StatelessWidget {
                 ),
               ),
 
-              const SizedBox(height: 40),
+              const SizedBox(height: 5),
 
               // 🃏 Layer 3: การ์ด "บันทึกความดัน" (อยู่ใน Flow ของ Column)
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 24),
                 child: CustomButton(
-                  text: AppStrings.home.startRecord,
+                  text: AppStrings.home.recordPressure,
                   textStyle: TextStyle(
                     color: CustomColor.gray900,
                     fontSize: Dimension.fontSizes.h2,
@@ -155,7 +156,7 @@ class HomeHeader extends StatelessWidget {
                     horizontal: 15,
                   ),
                   boxShadow: [DropShadow.drop_thumb],
-                  onPressed: onRecordTap,
+                  onPressed: viewModel.redirectToRecord,
                 ),
               ),
 

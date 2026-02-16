@@ -5,9 +5,6 @@ import 'package:dun_diary_app/shared/constant/app_icons.dart';
 import 'package:dun_diary_app/shared/constant/app_image.dart';
 import 'package:dun_diary_app/shared/constant/app_strings.dart';
 import 'package:dun_diary_app/shared/style/color.dart';
-import 'package:dun_diary_app/shared/style/dimension.dart';
-import 'package:dun_diary_app/shared/style/drop_shadow.dart';
-import 'package:dun_diary_app/shared/widgets/custom/button/custom_button.dart';
 import 'package:dun_diary_app/shared/widgets/custom/card/custom_card.dart';
 import 'package:dun_diary_app/shared/widgets/custom/card/no_content_card.dart';
 import 'package:dun_diary_app/shared/widgets/custom/card/stat_row.dart';
@@ -41,7 +38,6 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     final hasRecords = context.select((HomeViewmodel vm) => vm.hasRecords);
     final latestRecord = context.select((HomeViewmodel vm) => vm.latestRecord);
-    final viewModel = context.read<HomeViewmodel>(); // เอาไว้กดปุ่ม
 
     return CustomScaffold(
       useSafeArea: false,
@@ -49,7 +45,8 @@ class _HomeScreenState extends State<HomeScreen> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            HomeHeader(userName: "", onRecordTap: () {}),
+            HomeHeader(userName: "ราชาปีศาจ"),
+            SizedBox(height: 30),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 15),
               child: Column(
@@ -100,9 +97,10 @@ class _HomeScreenState extends State<HomeScreen> {
                         ] else ...[
                           NoContentCard(
                             title: AppStrings.home.noContent,
-                            subtitle: AppStrings.home.recordTodayTogether,
-                            imagePath: AppImages.cuate,
-                            imageWidth: 80,
+                            subtitle: AppStrings.home.pressToRecord,
+                            imagePath: AppImages.emptyFolder,
+                            imageWidth: 106,
+                            imageHeight: 117,
                           ),
                         ],
                       ],

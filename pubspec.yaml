@@ -109,6 +109,7 @@ flutter:
     - assets/icons/bottom_navigation/
     - assets/models/
     - assets/images/
+    - assets/images/profile/
     - assets/appIcon/
     - assets/animations/
   # An image asset can refer to one or more resolution-specific "variants", see
