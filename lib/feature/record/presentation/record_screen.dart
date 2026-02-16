@@ -7,6 +7,7 @@ import 'package:dun_diary_app/data/blood_pressure/repository/blood_pressure_repo
 import 'package:dun_diary_app/feature/record/presentation/record_viewModel.dart';
 import 'package:dun_diary_app/feature/record/presentation/widgets/bp_card/bp_card_layout.dart';
 import 'package:dun_diary_app/shared/constant/app_icons.dart';
+import 'package:dun_diary_app/shared/constant/app_image.dart';
 import 'package:dun_diary_app/shared/constant/app_strings.dart';
 import 'package:dun_diary_app/shared/style/color.dart';
 import 'package:dun_diary_app/shared/style/drop_shadow.dart';
@@ -15,6 +16,7 @@ import 'package:dun_diary_app/shared/widgets/custom/button/custom_box_icon.dart'
 import 'package:dun_diary_app/shared/widgets/custom/button/custom_button.dart';
 import 'package:dun_diary_app/shared/widgets/custom/button/custom_popup_menu.dart';
 import 'package:dun_diary_app/shared/widgets/custom/card/custom_card.dart';
+import 'package:dun_diary_app/shared/widgets/custom/dialog/custom_dialog.dart';
 import 'package:dun_diary_app/shared/widgets/custom/img/custom_svg_widget.dart';
 import 'package:dun_diary_app/shared/widgets/custom/scaffold/custom_scaffold.dart';
 import 'package:dun_diary_app/shared/widgets/custom/scaffold/main_appbar.dart';
@@ -102,7 +104,9 @@ class RecordScreen extends StatelessWidget {
             Selector<RecordViewmodel, int>(
               selector: (_, viewModel) => viewModel.level,
               builder: (context, level, child) => CustomCard(
-                title: BloodPressureUtils.mapLevelLabel(level),
+                title: AppStrings.bloodPressure.bloodPressure(
+                  BloodPressureUtils.mapLevelLabel(level),
+                ),
                 titleFontSize: 21,
                 titleTextAlign: TextAlign.center,
                 contentPadding: EdgeInsets.symmetric(
@@ -146,7 +150,7 @@ class RecordScreen extends StatelessWidget {
             ),
             Spacer(),
             isReadOnly
-                ? _buildViewMenu(viewModel)
+                ? _buildViewMenu(context, viewModel)
                 : _buildActionButtons(viewModel),
           ],
         ),
@@ -253,7 +257,7 @@ class RecordScreen extends StatelessWidget {
   // -----------------------------------------------------
   // 👁️ View Mode: ปุ่มเมนูดินสอ (แก้ไข/ลบ)
   // -----------------------------------------------------
-  Widget _buildViewMenu(RecordViewmodel vm) {
+  Widget _buildViewMenu(BuildContext context, RecordViewmodel vm) {
     return Align(
       alignment: Alignment.bottomRight,
       child: CustomPopupMenuButton<String>(
@@ -276,28 +280,58 @@ class RecordScreen extends StatelessWidget {
         onCanceled: () {},
         onSelected: (action) {
           if (action == 'edit_mode') {
-            // ✅ สั่ง VM ให้ปลดล็อก UI เพื่อแก้ไข
             vm.enterEditMode();
           } else if (action == 'delete') {
-            // เรียกฟังก์ชันลบ
-            vm.deleteRecord();
+            _showDeleteConfirmDialog(context, vm);
           }
         },
         items: [
-          // ✏️ เมนู: แก้ไข
           CustomPopupMenuItem(
             value: 'edit_mode',
             title: 'แก้ไข',
-            icon: Icon(Icons.edit, color: CustomColor.accentColor, size: 20),
+            icon: SVGImage(
+              path: AppIcons.duotone.pen,
+              width: 22,
+              height: 22,
+              color: CustomColor.infoColor,
+            ),
           ),
-          // 🗑️ เมนู: ลบ
           CustomPopupMenuItem(
             value: 'delete',
             title: 'ลบ',
-            icon: Icon(Icons.delete_outline, color: Colors.red, size: 20),
+            icon: SVGImage(
+              path: AppIcons.duotone.bin,
+              width: 22,
+              height: 22,
+              color: CustomColor.highLevel3CrisisColor,
+            ),
           ),
         ],
       ),
     );
+  }
+
+  Future<void> _showDeleteConfirmDialog(
+    BuildContext context,
+    RecordViewmodel viewModel,
+  ) async {
+    final result = await CustomDialog.show<bool>(
+      context,
+      child: CustomDialog(
+        title: "ลบบันทึกนี้หรือไม่ ?",
+        description: "ข้อมูลนี้จะถูกลบออกจากประวัติของคุณ",
+        primaryButtonText: "ลบ",
+        secondaryButtonText: "ยกเลิก",
+        content: SVGImage(
+          path: AppImage.confirmDelete,
+          width: 163,
+          height: 120,
+        ),
+      ),
+    );
+
+    if (result == true) {
+      viewModel.deleteRecord();
+    }
   }
 }

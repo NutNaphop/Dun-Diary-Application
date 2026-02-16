@@ -1,4 +1,5 @@
 import 'package:dun_diary_app/feature/history/presentation/history_viewmodel.dart';
+import 'package:dun_diary_app/shared/constant/app_strings.dart';
 import 'package:dun_diary_app/shared/style/color.dart';
 import 'package:dun_diary_app/shared/style/dimension.dart';
 import 'package:dun_diary_app/shared/utils/blood_pressure_utils.dart';
@@ -23,8 +24,10 @@ class HistorySummaryCard extends StatelessWidget {
 
     final vm = context.watch<HistoryViewmodel>();
 
-    final label = BloodPressureUtils.mapLevelLabel(
-      vm.getAverageLevelForDate(vm.selectedDate),
+    final label = AppStrings.bloodPressure.bloodPressure(
+      BloodPressureUtils.mapLevelLabel(
+        vm.getAverageLevelForDate(vm.selectedDate),
+      ),
     );
 
     // Guard against empty records if needed, though previously it seemed safe or handled by logic?

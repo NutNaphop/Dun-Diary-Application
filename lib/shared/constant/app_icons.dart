@@ -38,6 +38,8 @@ class _DuotoneIcons {
   final dangerTriangle = '$_path/danger_triangle.svg';
   final check_circle = '$_path/check_circle.svg';
   final info_circle = '$_path/info_circle.svg';
+  final bin = '$_path/bin.svg';
+  final pen = '$_path/pen.svg';
 }
 
 class _FillIcons {

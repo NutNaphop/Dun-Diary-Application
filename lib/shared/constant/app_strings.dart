@@ -53,6 +53,7 @@ class _BottomNavigationStrings {
 class _BloodPressureStrings {
   const _BloodPressureStrings();
 
+  String bloodPressure(String label) => "ความดัน $label";
   final String sysTitle = "Systolic";
   final String sysLabel = "Systolic (ตัวบน)";
   final String sysShortLabel = "SYS";
