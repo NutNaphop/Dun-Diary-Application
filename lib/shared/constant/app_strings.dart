@@ -109,10 +109,11 @@ class _MainStrings {
 class _HomeStrings {
   const _HomeStrings();
 
-  String greeting(String name) => "สวัสดี, $name";
-  final String startRecord = "เริ่มบันทึกความดันโลหิต";
+  String greeting(String name) => "สวัสดี คุณ$name";
+  final String recordPressure = "บันทึกความดัน";
   final String healthToday = "สุขภาพของคุณวันนี้";
-  final String noContent = "ยังไม่มีข้อมูลความดันโลหิต";
+  final String noContent = "ยังไม่มีการบันทึกวันนี้";
+  final String pressToRecord = "กดปุ่มบันทึกเพื่อเริ่มต้น";
   final String recordTodayTogether =
       "บันทึกความดันของวันนี้ เพื่อให้ข้อมูลสุขภาพสมบูรณ์";
 }

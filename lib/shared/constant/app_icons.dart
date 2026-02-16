@@ -68,4 +68,5 @@ class _OutlineIcons {
   final fileDownload = '$_path/file_download.svg';
   final share = '$_path/share.svg';
   final pen = '$_path/pen.svg';
+  final bell = '$_path/bell.svg';
 }
