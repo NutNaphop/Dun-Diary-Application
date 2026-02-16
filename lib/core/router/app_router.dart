@@ -1,10 +1,11 @@
 import 'dart:io';
 
+import 'package:dun_diary_app/core/services/app_logger.dart';
+import 'package:dun_diary_app/data/blood_pressure/model/bp_record.dart';
 import 'package:dun_diary_app/feature/main/presentation/main_screen.dart';
-import 'package:dun_diary_app/data/blood_pressure/model/record_model.dart';
 import 'package:dun_diary_app/feature/record/presentation/record_screen.dart';
-import 'package:dun_diary_app/feature/splash_screen/presentation/splash_screen.dart';
 import 'package:dun_diary_app/feature/record/presentation/resultScreen/result_screen.dart';
+import 'package:dun_diary_app/feature/splash_screen/presentation/splash_screen.dart';
 import 'package:dun_diary_app/shared/widgets/ui/page/mock_page.dart';
 import 'package:flutter/material.dart';
 
@@ -13,7 +14,7 @@ import '../constant/app_routes.dart';
 class AppRouter {
   static Route<dynamic> generate(RouteSettings settings) {
     // 1. Debugging: ปริ้นท์ดูหน่อยว่ากำลังจะไปหน้าไหน
-    print('Navigate to: ${settings.name}');
+    AppLogger.debug('Navigate to: ${settings.name}');
 
     // 2. Arguments: ดึงค่าที่ส่งมาเตรียมไว้ (เผื่อใช้)
     final args = settings.arguments;
@@ -27,14 +28,14 @@ class AppRouter {
         return _buildRoute(const MainScreen());
 
       case AppRoutes.record:
-        if (args is BloodPressure) {
-          return _buildRoute(RecordScreen.createWithArgs(args));
+        if (args is BPRecord) {
+          return _buildRoute(RecordScreen.createWithRecord(args));
         }
         return _buildRoute(RecordScreen.create());
 
       case AppRoutes.mock:
         if (args != null) {
-          print("args: ${args.toString()}");
+          AppLogger.debug("args: ${args.toString()}");
         }
         return _buildRoute(const MockPage());
 

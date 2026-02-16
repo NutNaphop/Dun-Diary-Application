@@ -7,6 +7,30 @@ import 'package:intl/intl.dart';
 /// - คำนวณ Date Range สำหรับ Week/Month/Year view
 /// - สร้าง Label สำหรับแสดงผล
 class DateTimeUtils {
+  /// แปลง DateTime เป็น Key ปี_เดือน เช่น "2024_01" (ใช้สำหรับ Cache / Query)
+  static String getYearMonthKey(DateTime date) {
+    return "${date.year}_${date.month.toString().padLeft(2, '0')}";
+  }
+
+  /// แสดง Label เวลาสำหรับหน้า History
+  /// - วันนี้: "ล่าสุด HH:mm"
+  /// - วันอื่น: "บันทึกครั้งสุดท้ายเมื่อ HH:mm"
+  /// - ไม่มีข้อมูล: "-"
+  static String getHistoryTimeLabel(DateTime? date) {
+    if (date == null) return "-";
+
+    final now = DateTime.now();
+    final isToday =
+        date.year == now.year && date.month == now.month && date.day == now.day;
+    final timeStr =
+        "${date.hour.toString().padLeft(2, '0')}:${date.minute.toString().padLeft(2, '0')}";
+
+    if (isToday) {
+      return "ล่าสุด $timeStr";
+    } else {
+      return "บันทึกครั้งสุดท้ายเมื่อ $timeStr";
+    }
+  }
   // ===========================================================================
   // 📅 SECTION 1: Date Formatting
   // ===========================================================================
@@ -14,6 +38,31 @@ class DateTimeUtils {
   /// แปลง DateTime เป็น String รูปแบบ "ว/ด/ป(พ.ศ.)" เช่น 28/12/2568
   static String formatToThaiDate(DateTime date) {
     return "${date.day}/${date.month}/${date.year + 543}";
+  }
+
+  /// แปลง DateTime เป็น String รูปแบบ "d MMM yyyy" เช่น 12 ก.พ. 2569
+  static String formatToThaiDateMedium(DateTime date) {
+    return "${date.day} ${getMonthShort(date.month)} ${date.year + 543}";
+  }
+
+  /// แปลง DateTime เป็น String รูปแบบ "ว/ด/ป(พ.ศ.) HH:mm" เช่น 28/12/2568 14:30
+  static String formatToThaiDateWithTime(DateTime date) {
+    return "${date.day}/${date.month}/${date.year + 543} ${date.hour.toString().padLeft(2, '0')}:${date.minute.toString().padLeft(2, '0')}";
+  }
+
+  /// แปลงเป็น String แบบ มกราคม 2567
+  static String formatMonthYear(DateTime date) {
+    return "${getMonthFull(date.month)} ${date.year + 543}";
+  }
+
+  /// แปลงเป็น String แบบ 1 มกราคม 2567
+  static String formatToThaiDateFull(DateTime date) {
+    return "${date.day} ${getMonthFull(date.month)} ${date.year + 543}";
+  }
+
+  /// แปลงเป็น String แบบ 1 มกราคม 2567 14:30
+  static String formatToThaiDateFullWithTime(DateTime date) {
+    return "${date.day} ${getMonthFull(date.month)} ${date.year + 543} ${date.hour.toString().padLeft(2, '0')}:${date.minute.toString().padLeft(2, '0')}";
   }
 
   /// แปลง DateTime เป็น String รูปแบบเวลา "HH:mm" เช่น 14:30
@@ -167,6 +216,11 @@ class DateTimeUtils {
       "ธันวาคม",
     ];
     return months[month - 1];
+  }
+
+  static String getDayName(int weekday) {
+    const days = ["จ", "อ", "พ", "พฤ", "ศ", "ส", "อา"];
+    return days[weekday - 1];
   }
 }
 

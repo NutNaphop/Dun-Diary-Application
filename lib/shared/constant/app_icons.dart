@@ -38,6 +38,8 @@ class _DuotoneIcons {
   final dangerTriangle = '$_path/danger_triangle.svg';
   final check_circle = '$_path/check_circle.svg';
   final info_circle = '$_path/info_circle.svg';
+  final bin = '$_path/bin.svg';
+  final pen = '$_path/pen.svg';
 }
 
 class _FillIcons {
@@ -56,10 +58,14 @@ class _OutlineIcons {
   static const _path = '${AppIcons._base}/outline';
 
   final leftArrow = '$_path/left_arrow.svg';
+  final rightArrow = '$_path/right_arrow.svg';
   final arrowClockwise = '$_path/arrow_clockwise.svg';
   final x = '$_path/x.svg';
   final calendar = '$_path/calendar.svg';
   final clock = '$_path/clock.svg';
   final camera = '$_path/camera.svg';
   final dotThree = '$_path/dot_three.svg';
+  final fileDownload = '$_path/file_download.svg';
+  final share = '$_path/share.svg';
+  final pen = '$_path/pen.svg';
 }

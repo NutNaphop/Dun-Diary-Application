@@ -8,17 +8,17 @@ class GuageUtils {
   static double getAlignmentForAVGLevel(int level) {
     switch (level) {
       case 0:
-        return -0.9;
+        return -0.83;
       case 1:
-        return -0.555;
+        return -0.5;
       case 2:
-        return -0.185;
+        return -0.18;
       case 3:
         return 0.17;
       case 4:
-        return 0.54;
+        return 0.5;
       case 5:
-        return 0.9;
+        return 0.83;
       default:
         return 0.0;
     }
@@ -28,17 +28,17 @@ class GuageUtils {
   static double getAlignmentForLevel(int level) {
     switch (level) {
       case 0:
-        return -0.9;
+        return -0.89;
       case 1:
-        return -0.555;
+        return -0.54;
       case 2:
-        return -0.185;
+        return -0.19;
       case 3:
-        return 0.17;
+        return 0.18;
       case 4:
-        return 0.54;
+        return 0.53;
       case 5:
-        return 0.9;
+        return 0.88;
       default:
         return 0.0;
     }

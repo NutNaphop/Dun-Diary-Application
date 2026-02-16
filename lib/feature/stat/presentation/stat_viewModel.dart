@@ -1,5 +1,6 @@
 import 'package:dun_diary_app/core/constant/app_routes.dart';
 import 'package:dun_diary_app/core/network/network_info.dart';
+import 'package:dun_diary_app/core/services/app_logger.dart';
 import 'package:dun_diary_app/core/services/navigation_service.dart';
 import 'package:dun_diary_app/data/analyze_record/model/analyze_result_model.dart';
 import 'package:dun_diary_app/data/analyze_record/repository/analyze_repository.dart';
@@ -170,12 +171,13 @@ class StatViewmodel extends ChangeNotifier {
     // Step 4: คำนวณสถิติ
     final StatCalulatedType statMap = StatUtils.calculate(records);
 
-    // Step 5: Map ข้อมูลสำหรับ UI
-    final sys = statMap.avgSys;
-    final dia = statMap.avgDia;
-    _bloodPressureLevel = (sys != null && dia != null)
-        ? BloodPressureUtils.calculateBloodPressureLevel(sys, dia)
+    // 🚨 Safety Logic Applied:
+    // - หน้า Stat (ทุก Tab): ใช้ Average ปกติ (isStrict: false) ตามที่ขอ เพื่อดูแนวโน้มทั่วไป
+    // - หน้า History (รายวัน): ยังคงใช้ Strict Logic (Safety First) เพื่อเตือนภัย
+    _bloodPressureLevel = records.isNotEmpty
+        ? BloodPressureUtils.calculateOverallRiskLevel(records, isStrict: false)
         : null;
+
     _statsData = StatUiMappper.mapToCardData(statMap, _bloodPressureLevel);
     _graphData = GraphDataMapper.mapToGraphData(records, _selectedTabIndex);
 
@@ -250,7 +252,7 @@ class StatViewmodel extends ChangeNotifier {
       _analyzeState = AnalyzeState.success;
       _aiResultContent = result.content;
     } catch (e) {
-      print(e);
+      AppLogger.error("AI Analyze Error", e);
       _analyzeState = AnalyzeState.error;
     }
     notifyListeners();

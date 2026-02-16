@@ -1,3 +1,4 @@
+import 'package:dun_diary_app/core/services/app_logger.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:uuid/uuid.dart';
@@ -6,23 +7,24 @@ class AuthService {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
 
   // ชื่อกล่องเก็บตั้งค่า (ต้องตรงกับที่ openBox ใน main.dart)
-  static const String settingsBoxName = 'settings'; 
+  static const String settingsBoxName = 'settings';
 
   /// 1. ฟังก์ชัน Login (เรียกตอนเปิดแอป)
   Future<User?> signInAnonymously() async {
     try {
       if (_firebaseAuth.currentUser != null) {
-        print("✅ Auth: Already logged in as ${_firebaseAuth.currentUser!.uid}");
+        AppLogger.info(
+          "Auth: Already logged in as ${_firebaseAuth.currentUser!.uid}",
+        );
         return _firebaseAuth.currentUser;
       }
 
-      print("⏳ Auth: Signing in anonymously...");
+      AppLogger.info("Auth: Signing in anonymously...");
       final userCredential = await _firebaseAuth.signInAnonymously();
-      print("✅ Auth: Signed in new user -> ${userCredential.user!.uid}");
+      AppLogger.info("Auth: Signed in new user -> ${userCredential.user!.uid}");
       return userCredential.user;
-      
     } catch (e) {
-      print("❌ Auth Error: $e");
+      AppLogger.error("Auth Error", e);
       return null;
     }
   }
@@ -43,17 +45,17 @@ class AuthService {
     if (localUuid == null) {
       localUuid = const Uuid().v4();
       await box.put('local_uuid', localUuid);
-      print("⚠️ Auth: Generated new Local UUID -> $localUuid");
+      AppLogger.warning("Auth: Generated new Local UUID -> $localUuid");
     } else {
-      print("⚠️ Auth: Using existing Local UUID -> $localUuid");
+      AppLogger.warning("Auth: Using existing Local UUID -> $localUuid");
     }
 
     return localUuid;
   }
-  
+
   Future<void> initializeUserIdentity() async {
     final currentId = await getUserIdForSaving();
-    print("🆔 User Identity Ready: $currentId");
+    AppLogger.info("User Identity Ready: $currentId");
   }
 
   // get firebase token

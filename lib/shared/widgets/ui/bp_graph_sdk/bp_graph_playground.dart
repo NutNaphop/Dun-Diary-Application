@@ -1,3 +1,4 @@
+import 'package:dun_diary_app/core/services/app_logger.dart';
 import 'package:dun_diary_app/shared/style/color.dart';
 import 'package:dun_diary_app/shared/widgets/custom/card/custom_card.dart';
 import 'package:dun_diary_app/shared/widgets/custom/text/text_widget.dart';
@@ -130,7 +131,9 @@ class _BpGraphPlaygroundView extends StatelessWidget {
                     heading: viewModel.selectedFilter.label,
                     data: viewModel.currentData,
                     onPointTap: (select) {
-                      print("${select.xLabel} : ${select.level.label}}");
+                      AppLogger.debug(
+                        "${select.xLabel} : ${select.level.label}}",
+                      );
                     },
                     onButtonPress: viewModel.navigationToRecord,
                   ),
