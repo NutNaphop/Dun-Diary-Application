@@ -49,13 +49,6 @@ class _LoadingDisplay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Image.asset(
-        "assets/images/gif/loading_ai.gif",
-        width: size,
-        height: size,
-        fit: BoxFit.contain,
-      ),
-    );
+    return Center(child: Text("data"));
   }
 }
