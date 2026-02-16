@@ -7,6 +7,7 @@ class AppImage {
   static const noMatchFound = '$_base/no_match_found.svg';
   static const analyze = '$_base/analyze.svg';
   static const analyzeError = '$_base/analyze_error.svg';
+  static const confirmDelete = '$_base/confirm_delete.svg';
 }
 
 class AppConfigImages {
