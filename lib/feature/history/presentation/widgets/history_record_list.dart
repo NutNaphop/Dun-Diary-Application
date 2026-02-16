@@ -43,10 +43,11 @@ class _HistoryRecordListState extends State<HistoryRecordList> {
             itemCount: vm.selectedDateRecords.length,
             itemBuilder: (context, index) {
               final record = vm.selectedDateRecords[index];
-              return Padding(
-                padding: const EdgeInsets.only(bottom: 5),
-                child: GestureDetector(
-                  onTap: () => vm.redirectToBloodPressureDetail(record),
+              return GestureDetector(
+                behavior: HitTestBehavior.opaque,
+                onTap: () => vm.redirectToBloodPressureDetail(record),
+                child: Padding(
+                  padding: const EdgeInsets.only(bottom: 5),
                   child: HistoryCard(
                     record: record,
                     isHaveDivider: index != vm.selectedDateRecords.length - 1,
