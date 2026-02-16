@@ -101,7 +101,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           NoContentCard(
                             title: AppStrings.home.noContent,
                             subtitle: AppStrings.home.recordTodayTogether,
-                            imagePath: AppImage.cuate,
+                            imagePath: AppImages.cuate,
                             imageWidth: 80,
                           ),
                         ],
