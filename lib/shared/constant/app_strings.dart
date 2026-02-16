@@ -23,11 +23,12 @@ class _CommonStrings {
   const _CommonStrings();
 
   final String appName = "Dun Diary";
+
   final String welcomeMessage = "Welcome to Dun Diary";
   final String greeting = "สวัสดี";
 
-  final date = "วันที่";
-  final time = "เวลา";
+  final String date = "วันที่";
+  final String time = "เวลา";
 
   final String error = "เกิดข้อผิดพลาด";
   final String noContentFound = "ไม่พบเนื้อหา";
@@ -38,7 +39,8 @@ class _CommonStrings {
   final String saved = "บันทึกแล้ว";
   final String saving = "กำลังบันทึก...";
   final String save = "บันทึก";
-
+  final String export = "ส่งออก";
+  final String share = "แชร์";
   final String cancel = "ยกเลิก";
   final String edit = "แก้ไข";
 }
@@ -134,9 +136,26 @@ class _RecordStrings {
 class _HistoryStrings {
   const _HistoryStrings();
 
+  String signature(String label) => "สร้างโดย $label";
+  String printSince(String label) => "พิมพ์เมื่อ: $label";
+
   final String pageTitle = "รายการบันทึก";
+  final String healthReport = "รายงานสุขภาพ";
+  final String summarize = "สรุปภาพรวม";
+  final String displayGraph = "กราฟแสดงผล";
   final String exportImage = "ส่งออกเป็นรูปภาพ";
   final String exportCsv = "ส่งออกข้อมูล csv";
+  final String recordToDevice = "บันทึกลงเครื่อง";
+
+  final String recordTitle = "รายการบันทึกความดัน";
+  final String timeRange = "ช่วงเวลา";
+  final String startFrom = "เริ่มจาก";
+  final String endTo = "จนถึง";
+  final String selectMonth = "เลือกเดือน";
+
+  final String saveImageSuccess = "บันทึกรูปภาพสำเร็จ";
+  final String saveImageError = "เกิดข้อผิดพลาดในการบันทึกรูปภาพ";
+  final String shareImageError = "เกิดข้อผิดพลาดในการแชร์รูปภาพ";
 }
 
 class _StatStrings {

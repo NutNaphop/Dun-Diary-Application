@@ -4,6 +4,7 @@ import 'package:dun_diary_app/feature/history/presentation/history_viewmodel.dar
 import 'package:dun_diary_app/feature/history/presentation/widgets/history_graph_card.dart';
 import 'package:dun_diary_app/feature/history/presentation/widgets/history_summary_card.dart';
 import 'package:dun_diary_app/shared/constant/app_icons.dart';
+import 'package:dun_diary_app/shared/constant/app_strings.dart';
 import 'package:dun_diary_app/shared/style/color.dart';
 import 'package:dun_diary_app/shared/style/dimension.dart';
 import 'package:dun_diary_app/shared/utils/date_utils.dart';
@@ -22,10 +23,9 @@ class HistoryPicExportSheet extends StatelessWidget {
   static void show(BuildContext context) {
     final vm = context.read<HistoryViewmodel>();
 
-    // ใช้ showModalBottomSheet แบบปกติ เพื่อให้เราควบคุม UI ได้เต็มที่
     showModalBottomSheet(
       context: context,
-      isScrollControlled: true, // ให้ขยายเต็มจอได้
+      isScrollControlled: true,
       backgroundColor: Colors.transparent,
       builder: (context) => Container(
         height: MediaQuery.of(context).size.height * 0.85, // สูง 85% ของจอ
@@ -58,18 +58,18 @@ class HistoryPicExportSheet extends StatelessWidget {
           ),
         ),
 
-        // 2. Preview Area (โชว์ Report ตัวสวยๆ เลย)
+        // 2. Preview Area
         Expanded(
           child: SingleChildScrollView(
             physics: BouncingScrollPhysics(),
             child: Screenshot(
               controller: _screenshotController,
-              child: _buildPrettyReportLayout(context), // 🎨 เรียก Layout สวยๆ
+              child: _buildPrettyReportLayout(context),
             ),
           ),
         ),
 
-        // 3. Action Buttons Area (อยู่ด้านล่าง ไม่ถูก Screenshot)
+        // 3. Action Buttons Area
         Container(
           padding: EdgeInsets.symmetric(vertical: 20, horizontal: 24),
           decoration: BoxDecoration(
@@ -91,7 +91,7 @@ class HistoryPicExportSheet extends StatelessWidget {
                 iconPath: AppIcons
                     .outline
                     .fileDownload, // หรือใช้ Icons.save_alt ถ้าไม่มี SVG
-                label: "บันทึกลงเครื่อง",
+                label: AppStrings.history.recordToDevice,
                 onTap: () async {
                   final vm = context.read<HistoryViewmodel>();
                   final image = await _screenshotController.capture(
@@ -109,7 +109,7 @@ class HistoryPicExportSheet extends StatelessWidget {
               _buildActionButton(
                 context,
                 iconPath: AppIcons.outline.share,
-                label: "แชร์",
+                label: AppStrings.common.share,
                 onTap: () async {
                   final vm = context.read<HistoryViewmodel>();
                   final image = await _screenshotController.capture(
@@ -125,90 +125,93 @@ class HistoryPicExportSheet extends StatelessWidget {
     );
   }
 
-  // ✨ Layout สวยงามสำหรับ Export
   Widget _buildPrettyReportLayout(BuildContext context) {
     return Container(
-      color: Color(0xFFF8F9FB), // สีพื้นหลัง Off-white
+      color: CustomColor.white,
       padding: const EdgeInsets.all(24.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          // Header
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  CustomText(
-                    text: "รายงานสุขภาพ",
-                    fontSize: 22,
+      child: AbsorbPointer(
+        absorbing: true,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            // Header
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    CustomText(
+                      text: AppStrings.history.healthReport,
+                      fontSize: 22,
+                      fontWeight: FontWeight.bold,
+                      color: CustomColor.gray900,
+                    ),
+                    CustomText(
+                      text: AppStrings.common.appName,
+                      fontSize: 14,
+                      color: CustomColor.gray500,
+                    ),
+                  ],
+                ),
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  decoration: BoxDecoration(
+                    color: CustomColor.gray900.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: CustomText(
+                    text: DateTimeUtils.formatToThaiDate(selectedDate),
+                    fontSize: 16,
                     fontWeight: FontWeight.bold,
                     color: CustomColor.gray900,
                   ),
-                  CustomText(
-                    text: "Dun Diary App",
-                    fontSize: 14,
-                    color: CustomColor.gray500,
+                ),
+              ],
+            ),
+
+            SizedBox(height: 24),
+            Divider(color: Colors.grey.shade300),
+            SizedBox(height: 24),
+
+            // Cards Wrapper
+            _buildCardWrapper(
+              title: AppStrings.history.summarize,
+              child: HistorySummaryCard(), // Reuse Widget เดิม
+            ),
+
+            SizedBox(height: 24),
+
+            _buildCardWrapper(
+              title: AppStrings.history.displayGraph,
+              child: HistoryGraphCard(), // Reuse Widget เดิม
+            ),
+
+            SizedBox(height: 40),
+
+            // Footer
+            Divider(color: Colors.grey.shade300),
+            SizedBox(height: 8),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                CustomText(
+                  text: AppStrings.history.signature(AppStrings.common.appName),
+                  fontSize: 12,
+                  color: CustomColor.gray400,
+                ),
+                CustomText(
+                  text: AppStrings.history.printSince(
+                    DateTimeUtils.formatToThaiDate(DateTime.now()),
                   ),
-                ],
-              ),
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                decoration: BoxDecoration(
-                  color: CustomColor.gray900.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(8),
+                  fontSize: 12,
+                  color: CustomColor.gray400,
                 ),
-                child: CustomText(
-                  text: DateTimeUtils.formatToThaiDate(selectedDate),
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: CustomColor.gray900,
-                ),
-              ),
-            ],
-          ),
-
-          SizedBox(height: 24),
-          Divider(color: Colors.grey.shade300),
-          SizedBox(height: 24),
-
-          // Cards Wrapper
-          _buildCardWrapper(
-            title: "สรุปภาพรวม",
-            child: HistorySummaryCard(), // Reuse Widget เดิม
-          ),
-
-          SizedBox(height: 24),
-
-          _buildCardWrapper(
-            title: "กราฟแสดงผล",
-            child: HistoryGraphCard(), // Reuse Widget เดิม
-          ),
-
-          SizedBox(height: 40),
-
-          // Footer
-          Divider(color: Colors.grey.shade300),
-          SizedBox(height: 8),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              CustomText(
-                text: "สร้างโดย Dun Diary",
-                fontSize: 12,
-                color: CustomColor.gray400,
-              ),
-              CustomText(
-                text:
-                    "พิมพ์เมื่อ: ${DateTimeUtils.formatToThaiDate(DateTime.now())}",
-                fontSize: 12,
-                color: CustomColor.gray400,
-              ),
-            ],
-          ),
-          SizedBox(height: 20), // เผื่อพื้นที่ด้านล่าง
-        ],
+              ],
+            ),
+            SizedBox(height: 20), // เผื่อพื้นที่ด้านล่าง
+          ],
+        ),
       ),
     );
   }

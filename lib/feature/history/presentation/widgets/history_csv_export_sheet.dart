@@ -1,12 +1,14 @@
+import 'package:dun_diary_app/core/services/navigation_service.dart';
 import 'package:dun_diary_app/feature/history/presentation/history_viewmodel.dart';
 import 'package:dun_diary_app/shared/constant/app_icons.dart';
+import 'package:dun_diary_app/shared/constant/app_strings.dart';
 import 'package:dun_diary_app/shared/style/color.dart';
 import 'package:dun_diary_app/shared/style/dimension.dart';
+import 'package:dun_diary_app/shared/utils/date_utils.dart';
 import 'package:dun_diary_app/shared/widgets/custom/button/custom_button.dart';
 import 'package:dun_diary_app/shared/widgets/custom/img/custom_svg_widget.dart';
 import 'package:dun_diary_app/shared/widgets/custom/sheet/custom_bottom_sheet.dart';
 import 'package:dun_diary_app/shared/widgets/custom/text/text_widget.dart';
-import 'package:dun_diary_app/shared/utils/date_utils.dart';
 import 'package:dun_diary_app/shared/widgets/ui/calendar_sdk/calendar_sdk.dart';
 import 'package:dun_diary_app/shared/widgets/ui/calendar_sdk/models/calendar_types.dart';
 import 'package:flutter/material.dart';
@@ -45,12 +47,12 @@ class HistoryCSVExportSheet extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   CustomText(
-                    text: "ส่งออกข้อมูล csv",
+                    text: AppStrings.history.exportCsv,
                     fontSize: Dimension.fontSizes.h1,
                     fontWeight: Dimension.fontWeights.bold,
                   ),
                   CustomText(
-                    text: "ช่วงเวลา",
+                    text: AppStrings.history.timeRange,
                     fontSize: Dimension.fontSizes.md,
                     fontWeight: Dimension.fontWeights.medium,
                   ),
@@ -62,7 +64,7 @@ class HistoryCSVExportSheet extends StatelessWidget {
             // 📅 เลือกวันเริ่ม
             _buildDateSelector(
               context: context,
-              label: "เริ่มจาก",
+              label: AppStrings.history.startFrom,
               dateValue: vm.exportStartDate,
               onTap: () async {
                 final date = await showDialog<DateTime>(
@@ -85,7 +87,7 @@ class HistoryCSVExportSheet extends StatelessWidget {
             // 📅 เลือกวันจบ
             _buildDateSelector(
               context: context,
-              label: "จนถึง",
+              label: AppStrings.history.endTo,
               dateValue: vm.exportEndDate,
               // ถ้ายังไม่เลือกวันเริ่ม ห้ามเลือกวันจบ (กัน User มึน)
               onTap: vm.exportStartDate == null
@@ -97,8 +99,7 @@ class HistoryCSVExportSheet extends StatelessWidget {
                           return CalendarSDK(
                             type: CalendarType.month,
                             initialDate: vm.exportEndDate ?? vm.exportStartDate,
-                            firstDate:
-                                vm.exportStartDate!, // ห้ามย้อนไปก่อนวันเริ่ม
+                            firstDate: vm.exportStartDate!,
                             lastDate: DateTime.now(),
                           );
                         },
@@ -117,14 +118,14 @@ class HistoryCSVExportSheet extends StatelessWidget {
                 children: [
                   Expanded(
                     child: CustomButton(
-                      text: "ยกเลิก",
+                      text: AppStrings.common.cancel,
                       onPressed: () => Navigator.pop(context),
                     ),
                   ),
                   const SizedBox(width: 15),
                   Expanded(
                     child: CustomButton(
-                      text: "ส่งออก",
+                      text: AppStrings.common.export,
                       type: CustomButtonType.fill,
                       backgroundColor: CustomColor.accentColor,
                       onPressed:
@@ -133,7 +134,7 @@ class HistoryCSVExportSheet extends StatelessWidget {
                           ? null
                           : () {
                               onExport();
-                              Navigator.pop(context);
+                              NavigationService.instance.goBack();
                             },
                     ),
                   ),
@@ -175,7 +176,7 @@ class HistoryCSVExportSheet extends StatelessWidget {
                   Text(
                     dateValue != null
                         ? DateTimeUtils.formatMonthYear(dateValue)
-                        : "เลือกเดือน",
+                        : AppStrings.history.selectMonth,
                     style: TextStyle(
                       color: dateValue != null ? Colors.black : Colors.grey,
                     ),

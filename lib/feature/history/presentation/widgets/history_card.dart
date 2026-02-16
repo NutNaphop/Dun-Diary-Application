@@ -1,12 +1,13 @@
 import 'package:dun_diary_app/data/blood_pressure/model/bp_record.dart';
 import 'package:dun_diary_app/shared/constant/app_icons.dart';
+import 'package:dun_diary_app/shared/constant/app_strings.dart';
 import 'package:dun_diary_app/shared/style/color.dart';
 import 'package:dun_diary_app/shared/style/dimension.dart';
 import 'package:dun_diary_app/shared/utils/blood_pressure_utils.dart';
+import 'package:dun_diary_app/shared/utils/date_utils.dart';
 import 'package:dun_diary_app/shared/widgets/custom/img/custom_svg_widget.dart';
 import 'package:dun_diary_app/shared/widgets/custom/text/text_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
 class HistoryCard extends StatelessWidget {
   final BPRecord record;
@@ -74,7 +75,8 @@ class HistoryCard extends StatelessWidget {
                       color: CustomColor.gray900,
                     ),
                     CustomText(
-                      text: "${record.pulse} BPM",
+                      text:
+                          "${record.pulse} ${AppStrings.bloodPressure.pulseUnit}",
                       fontSize: Dimension.fontSizes.rg,
                       fontWeight: Dimension.fontWeights.regular,
                       color: CustomColor.gray900,
@@ -82,9 +84,9 @@ class HistoryCard extends StatelessWidget {
                     Row(
                       children: [
                         CustomText(
-                          text: DateFormat(
-                            "HH:mm dd/MM/yyyy",
-                          ).format(record.createdAt),
+                          text: DateTimeUtils.formatToThaiDate(
+                            record.createdAt,
+                          ),
                         ),
                       ],
                     ),

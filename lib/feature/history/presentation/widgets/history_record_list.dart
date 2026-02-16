@@ -1,5 +1,6 @@
 import 'package:dun_diary_app/feature/history/presentation/history_viewmodel.dart';
 import 'package:dun_diary_app/feature/history/presentation/widgets/history_card.dart'; // Existing widget
+import 'package:dun_diary_app/shared/constant/app_strings.dart';
 import 'package:dun_diary_app/shared/style/color.dart';
 import 'package:dun_diary_app/shared/widgets/custom/card/custom_card.dart';
 import 'package:flutter/material.dart';
@@ -26,7 +27,7 @@ class _HistoryRecordListState extends State<HistoryRecordList> {
     final vm = context.watch<HistoryViewmodel>();
 
     return CustomCard(
-      title: "รายการบันทึกความดัน",
+      title: AppStrings.history.recordTitle,
       contentPadding: const EdgeInsets.all(10),
       content: ConstrainedBox(
         constraints: const BoxConstraints(maxHeight: 250),

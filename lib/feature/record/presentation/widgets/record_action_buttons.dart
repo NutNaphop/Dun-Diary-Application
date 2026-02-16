@@ -80,7 +80,10 @@ class RecordActionButtons extends StatelessWidget {
                             type: CustomButtonType.outline,
                             onPressed: isLoading
                                 ? () {}
-                                : () => vm.cancelEditMode(),
+                                : () => {
+                                    vm.cancelEditMode(),
+                                    vm.setMenuOpen(false),
+                                  },
                           ),
                         ),
                         const SizedBox(width: 12),
@@ -96,7 +99,10 @@ class RecordActionButtons extends StatelessWidget {
                             boxShadow: [DropShadow.drop_thumb],
                             onPressed: isLoading
                                 ? () {}
-                                : () => vm.saveResult(),
+                                : () => {
+                                    vm.saveResult(),
+                                    vm.setMenuOpen(false),
+                                  },
                           ),
                         ),
                       ],

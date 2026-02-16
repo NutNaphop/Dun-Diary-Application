@@ -8,6 +8,7 @@ import 'package:dun_diary_app/core/services/flushbar_service.dart';
 import 'package:dun_diary_app/core/services/navigation_service.dart';
 import 'package:dun_diary_app/data/blood_pressure/model/bp_record.dart';
 import 'package:dun_diary_app/data/blood_pressure/repository/blood_pressure_repository.dart';
+import 'package:dun_diary_app/shared/constant/app_strings.dart';
 import 'package:dun_diary_app/shared/utils/blood_pressure_utils.dart';
 import 'package:dun_diary_app/shared/utils/date_utils.dart';
 import 'package:dun_diary_app/shared/widgets/ui/bp_graph_sdk/models/blood_pressure_graph_models.dart';
@@ -137,9 +138,7 @@ class HistoryViewmodel extends ChangeNotifier {
   void _init() {
     _loadDataWindow(_selectedDate);
 
-    // Listen การเปลี่ยนแปลง (เช่น บันทึกใหม่)
     _subscription = _repository.watchRecords().listen((_) {
-      // ⚠️ ข้อมูลเปลี่ยน: เคลียร์ Cache แล้วโหลดใหม่
       _loadedMonths.clear();
       _monthlyCache.clear();
       _loadDataWindow(_selectedDate);
@@ -205,10 +204,10 @@ class HistoryViewmodel extends ChangeNotifier {
 
     try {
       await ExportService.instance.saveToGallery(imageBytes);
-      FlushbarService.instance.showSuccess("บันทึกรูปภาพสำเร็จ");
+      FlushbarService.instance.showSuccess(AppStrings.history.saveImageSuccess);
       await ExportService.instance.shareImage(imageBytes);
     } catch (e) {
-      FlushbarService.instance.showError("เกิดข้อผิดพลาดในการบันทึกรูปภาพ");
+      FlushbarService.instance.showError(AppStrings.history.saveImageError);
     } finally {
       _isExporting = false;
       notifyListeners();
@@ -223,7 +222,7 @@ class HistoryViewmodel extends ChangeNotifier {
     try {
       await ExportService.instance.shareImage(imageBytes);
     } catch (e) {
-      FlushbarService.instance.showError("เกิดข้อผิดพลาดในการแชร์รูปภาพ");
+      FlushbarService.instance.showError(AppStrings.history.shareImageError);
     } finally {
       _isExporting = false;
       notifyListeners();
