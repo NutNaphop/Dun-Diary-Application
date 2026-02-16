@@ -31,7 +31,7 @@ class HomeHeader extends StatelessWidget {
           right: 0,
           height: 340,
           child: Image.asset(
-            AppImage.homeBackground,
+            AppImages.homeBackground,
             width: double.infinity,
             height: double.infinity,
             fit: BoxFit.cover,

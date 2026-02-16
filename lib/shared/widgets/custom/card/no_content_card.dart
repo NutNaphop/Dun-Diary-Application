@@ -15,7 +15,7 @@ class NoContentCard extends StatelessWidget {
     super.key,
     this.title = "",
     this.subtitle = "",
-    this.imagePath = AppImage.cuate,
+    this.imagePath = AppImages.cuate,
     this.imageWidth = 80,
     this.imageHeight = 80,
   });
