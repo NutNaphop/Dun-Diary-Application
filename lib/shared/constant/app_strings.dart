@@ -94,8 +94,21 @@ class _BloodPressureStrings {
   final String preHigh = "เริ่มสูง";
   @Deprecated('Use highStage1 or highStage2 instead')
   final String high = "สูง";
-  @Deprecated('Use crisis instead')
   final String danger = "อันตราย";
+
+  // Level Descriptions
+  final String lowDesc =
+      "ความดันโลหิตต่ำกว่าเกณฑ์\nควรทานอาหารที่มีประโยชน์และพักผ่อนให้เพียงพอ";
+  final String normalDesc =
+      "ความดันโลหิตปกติ\nสุขภาพแข็งแรงดีมาก รักษาไว้แบบนี้นะครับ";
+  final String elevatedDesc =
+      "ความดันโลหิตเริ่มสูง (Elevated)\nควรคุมอาหารและออกกำลังกายสม่ำเสมอ";
+  final String highStage1Desc =
+      "ความดันโลหิตสูงระดับ 1\nควรพบแพทย์และปรับเปลี่ยนพฤติกรรม";
+  final String highStage2Desc =
+      "ความดันโลหิตสูงระดับ 2\nอันตราย! ควรไปพบแพทย์เพื่อตรวจละเอียด";
+  final String crisisDesc =
+      "วิกฤตความดันโลหิตสูง (Crisis)\nรีบไปโรงพยาบาลทันที! อันตรายมาก";
 }
 
 class _MainStrings {

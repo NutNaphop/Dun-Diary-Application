@@ -115,6 +115,27 @@ class BloodPressureUtils {
     }
   }
 
+  /// แปลง level (0-5) เป็นคำแนะนำสั้นๆ
+  static String mapLevelDescription(int? level) {
+    if (level == null) return '-';
+    switch (level) {
+      case 0:
+        return AppStrings.bloodPressure.lowDesc;
+      case 1:
+        return AppStrings.bloodPressure.normalDesc;
+      case 2:
+        return AppStrings.bloodPressure.elevatedDesc;
+      case 3:
+        return AppStrings.bloodPressure.highStage1Desc;
+      case 4:
+        return AppStrings.bloodPressure.highStage2Desc;
+      case 5:
+        return AppStrings.bloodPressure.crisisDesc;
+      default:
+        return '-';
+    }
+  }
+
   /// แปลง level (0-5) เป็นสี
   static Color mapLevelColor(int? level) {
     if (level == null) return CustomColor.transparent;
