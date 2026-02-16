@@ -1,12 +1,13 @@
 import 'package:dun_diary_app/feature/history/presentation/history_screen.dart';
 import 'package:dun_diary_app/feature/stat/presentation/stat_screen.dart';
+import 'package:dun_diary_app/shared/constant/app_icons.dart';
 import 'package:dun_diary_app/shared/constant/app_strings.dart';
 import 'package:dun_diary_app/shared/style/color.dart';
 import 'package:dun_diary_app/shared/style/dimension.dart';
+import 'package:dun_diary_app/shared/widgets/custom/img/custom_svg_widget.dart';
 import 'package:dun_diary_app/shared/widgets/custom/text/text_widget.dart';
 import 'package:dun_diary_app/shared/widgets/ui/bp_graph_sdk/bp_graph_playground.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 
 import '../../home/presentation/home_screen.dart';
@@ -23,8 +24,8 @@ class MainScreen extends StatelessWidget {
         return HomeScreen.create();
       case 1:
         return HistoryScreen.create();
-      case 2:
-        return Center(child: Text(AppStrings.main.addPage));
+      case 2: // case 2 (Add Page) คือปุ่ม + ตรงกลาง ไม่มีการ render หน้า
+        return const SizedBox.shrink();
       case 3:
         return StatScreen.create();
       case 4:
@@ -45,31 +46,6 @@ class MainScreen extends StatelessWidget {
             // 2. เปลี่ยนมาใช้การ Render เฉพาะหน้าที่เลือก
             body: _buildBody(viewModel.currentIndex),
 
-            // เพิ่ม FloatingActionButton ตรงกลาง
-            floatingActionButton: SizedBox(
-              width: 50,
-              height: 50,
-              child: FittedBox(
-                child: FloatingActionButton(
-                  onPressed: () => {viewModel.redirectToRecord()},
-                  backgroundColor: CustomColor.primaryColor,
-                  shape: const CircleBorder(),
-                  elevation: 4,
-                  child: SvgPicture.asset(
-                    'assets/icons/bottom_navigation/plus.svg',
-                    width: 24,
-                    height: 24,
-                    colorFilter: const ColorFilter.mode(
-                      Colors.white,
-                      BlendMode.srcIn,
-                    ),
-                  ),
-                ),
-              ),
-            ),
-            floatingActionButtonLocation:
-                FloatingActionButtonLocation.centerDocked,
-
             // 3. ตัว Bottom Bar
             bottomNavigationBar: BottomNavigationBar(
               currentIndex: viewModel.currentIndex,
@@ -85,24 +61,20 @@ class MainScreen extends StatelessWidget {
 
               items: [
                 _buildNavItem(
-                  'assets/icons/bottom_navigation/home_smile.svg',
+                  AppIcons.bottomNav.homeSmile,
                   AppStrings.bottomNavigation.home,
                 ),
                 _buildNavItem(
-                  'assets/icons/bottom_navigation/clipboard_list.svg',
+                  AppIcons.bottomNav.clipboardList,
                   AppStrings.bottomNavigation.history,
                 ),
-                // เว้นว่างตรงกลางไว้สำหรับ FAB (Dummy Item)
-                const BottomNavigationBarItem(
-                  icon: SizedBox.shrink(),
-                  label: '',
-                ),
+                _buildNavItem(AppIcons.bottomNav.addSquared, null),
                 _buildNavItem(
-                  'assets/icons/bottom_navigation/chart_square.svg',
+                  AppIcons.bottomNav.chartSquare,
                   AppStrings.bottomNavigation.statistic,
                 ),
                 _buildNavItem(
-                  'assets/icons/bottom_navigation/user_circle.svg',
+                  AppIcons.bottomNav.userCircle,
                   AppStrings.bottomNavigation.profile,
                 ),
               ],
@@ -114,34 +86,54 @@ class MainScreen extends StatelessWidget {
   }
 
   // Helper Function เพื่อเขียน Icon ง่ายๆ (รองรับ SVG)
-  BottomNavigationBarItem _buildNavItem(String iconPath, String label) {
+  BottomNavigationBarItem _buildNavItem(String iconPath, String? label) {
+    if (label == null) {
+      return BottomNavigationBarItem(
+        icon: _buildIconContent(
+          iconPath,
+          isActive: false, // For plus button, we can treat it visually distinct
+          isPlus: true, // Special flag for plus button
+        ),
+        activeIcon: _buildIconContent(iconPath, isActive: true, isPlus: true),
+        label: '', // Empty label for spacing
+      );
+    }
     return BottomNavigationBarItem(
-      icon: _buildIconContent(iconPath, label, isSelected: false),
-      activeIcon: _buildIconContent(iconPath, label, isSelected: true),
+      icon: _buildIconContent(iconPath, label: label, isActive: false),
+      activeIcon: _buildIconContent(iconPath, label: label, isActive: true),
       label: '',
     );
   }
 
   Widget _buildIconContent(
-    String iconPath,
-    String label, {
-    required bool isSelected,
+    String iconPath, {
+    String? label,
+    required bool isActive,
+    bool isPlus = false,
   }) {
-    final color = isSelected ? CustomColor.primaryColor : CustomColor.gray400;
+    if (isPlus) {
+      return SVGImage(
+        path: AppIcons.bottomNav.addSquared,
+        width: 35,
+        height: 35,
+        color: CustomColor.gray400,
+      );
+    }
+
+    final color = isActive ? CustomColor.primaryColor : CustomColor.gray400;
     return Column(
+      mainAxisSize: MainAxisSize.min,
       children: [
-        SvgPicture.asset(
-          iconPath,
-          width: 24,
-          height: 24,
-          colorFilter: ColorFilter.mode(color, BlendMode.srcIn),
-        ),
-        CustomText(
-          text: label,
-          fontSize: Dimension.fontSizes.esm,
-          fontWeight: Dimension.fontWeights.medium,
-          color: color,
-        ),
+        SVGImage(path: iconPath, width: 24, height: 24, color: color),
+        if (label != null) ...[
+          const SizedBox(height: 4),
+          CustomText(
+            text: label,
+            fontSize: Dimension.fontSizes.esm,
+            fontWeight: Dimension.fontWeights.medium,
+            color: color,
+          ),
+        ],
       ],
     );
   }
