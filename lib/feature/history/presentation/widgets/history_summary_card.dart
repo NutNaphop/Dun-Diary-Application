@@ -15,13 +15,6 @@ class HistorySummaryCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Access ViewModel using context.watch or context.select if needed updates
-    // Here we assume it's rebuilding within a Consumer or we use existing context.watch/read
-    // But better to use Consumer or passed data if we want it isolated.
-    // However, the original code used Consumer<HistoryViewmodel> at the top level.
-    // So we can just use context.read/watch if we are sure it's available.
-    // To be safe and cleaner, let's use Consumer inside or just expect Provider.
-
     final vm = context.watch<HistoryViewmodel>();
 
     final label = AppStrings.bloodPressure.bloodPressure(
@@ -30,26 +23,8 @@ class HistorySummaryCard extends StatelessWidget {
       ),
     );
 
-    // Guard against empty records if needed, though previously it seemed safe or handled by logic?
-    // In original code: vm.selectedDateRecords.last.sys
-    // If records are empty, .last will crash.
-    // Let's check how safe it was.
-    // It seems vm.selectedDateRecords usage implies it might not be empty or logic handles it.
-    // But good practice to handle it.
-    // Looking at original code:
-    /*
-      final lastRecordLevel =
-        BloodPressureUtils.calculateBloodPressureLevel(
-          vm.selectedDateRecords.last.sys,
-          vm.selectedDateRecords.last.dia,
-        );
-    */
-    // If selectedDateRecords is empty, this throws.
-    // Assuming ViewModel guarantees data or we should handle it.
-    // For now I will copy logic but add a check if list is empty to avoid crash if not guaranteed.
-
     if (vm.selectedDateRecords.isEmpty) {
-      return const SizedBox.shrink(); // Or some empty state
+      return const SizedBox.shrink();
     }
 
     final lastRecordLevel = BloodPressureUtils.calculateBloodPressureLevel(

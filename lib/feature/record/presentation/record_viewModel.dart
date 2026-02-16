@@ -108,7 +108,6 @@ class RecordViewmodel extends ChangeNotifier {
   }
 
   void cancelEditMode() {
-    // คืนค่าเดิมและกลับไปโหมด read-only
     if (_originalBpValue != null) {
       _bpValue = BloodPressure(
         sys: _originalBpValue!.sys,
@@ -176,6 +175,19 @@ class RecordViewmodel extends ChangeNotifier {
       final userId = await _authService.getUserIdForSaving();
 
       if (isEditMode) {
+        // Check if data is unchanged
+        if (_originalBpValue != null &&
+            _originalBpValue!.sys == _bpValue.sys &&
+            _originalBpValue!.dia == _bpValue.dia &&
+            _originalBpValue!.pul == _bpValue.pul &&
+            _originalRecordDate == _recordDate) {
+          _isReadOnly = true;
+          _isLoading = false;
+          FlushbarService.instance.showSuccess("แก้ไขข้อมูลเรียบร้อย");
+          notifyListeners();
+          return;
+        }
+
         final updatedRecord = BPRecord(
           id: _editingRecordId!,
           ownerId: userId,
