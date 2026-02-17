@@ -5,6 +5,8 @@ import 'package:dun_diary_app/data/blood_pressure/model/bp_record.dart';
 import 'package:dun_diary_app/feature/main/presentation/main_screen.dart';
 import 'package:dun_diary_app/feature/record/presentation/record_screen.dart';
 import 'package:dun_diary_app/feature/record/presentation/resultScreen/result_screen.dart';
+import 'package:dun_diary_app/feature/setting/presentation/profileEditScreen/profile_edit_screen.dart';
+import 'package:dun_diary_app/feature/setting/presentation/profileSettingScreen/profile_setting_screen.dart';
 import 'package:dun_diary_app/feature/splash_screen/presentation/splash_screen.dart';
 import 'package:dun_diary_app/shared/widgets/ui/page/mock_page.dart';
 import 'package:flutter/material.dart';
@@ -13,55 +15,42 @@ import '../constant/app_routes.dart';
 
 class AppRouter {
   static Route<dynamic> generate(RouteSettings settings) {
-    // 1. Debugging: ปริ้นท์ดูหน่อยว่ากำลังจะไปหน้าไหน
     AppLogger.debug('Navigate to: ${settings.name}');
-
-    // 2. Arguments: ดึงค่าที่ส่งมาเตรียมไว้ (เผื่อใช้)
     final args = settings.arguments;
 
-    switch (settings.name) {
-      case AppRoutes.splash:
-        return _buildRoute(const SplashScreen());
-
-      // --- Case 1: หน้าปกติ ไม่รับค่า ---
-      case AppRoutes.main:
-        return _buildRoute(const MainScreen());
-
-      case AppRoutes.record:
-        if (args is BPRecord) {
-          return _buildRoute(RecordScreen.createWithRecord(args));
-        }
-        return _buildRoute(RecordScreen.create());
-
-      case AppRoutes.mock:
-        if (args != null) {
-          AppLogger.debug("args: ${args.toString()}");
-        }
-        return _buildRoute(const MockPage());
-
-      case AppRoutes.result:
-        if (args is File) {
-          return MaterialPageRoute(
-            builder: (_) => ResultScreen.createWithArg(args),
-          );
-        }
-        return _errorRoute("Need image for this page");
-
-      // --- Case 2: หน้าที่ต้องรับค่า (ตัวอย่าง) ---
-      // สมมติหน้า Edit ต้องรับ ID (String) ไปแก้ไข
-      /*
-      case AppRoutes.editRecord:
-        if (args is String) {
-          return MaterialPageRoute(
-            builder: (_) => EditRecordScreen(recordId: args),
-          );
-        }
-        return _errorRoute('Missing or Invalid ID for Edit Record');
-      */
-
-      // --- Case Default: หาไม่เจอ ---
-      default:
-        return _errorRoute('No route defined for ${settings.name}');
+    if (settings.name == AppRoutes.splash) {
+      return _buildRoute(const SplashScreen());
+    } else if (settings.name == AppRoutes.main) {
+      return _buildRoute(const MainScreen());
+    } else if (settings.name == AppRoutes.record) {
+      if (args is BPRecord) {
+        return _buildRoute(RecordScreen.createWithRecord(args));
+      }
+      return _buildRoute(RecordScreen.create());
+    } else if (settings.name == AppRoutes.mock) {
+      if (args != null) {
+        AppLogger.debug("args: ${args.toString()}");
+      }
+      return _buildRoute(const MockPage());
+    } else if (settings.name == AppRoutes.result) {
+      if (args is File) {
+        return MaterialPageRoute(
+          builder: (_) => ResultScreen.createWithArg(args),
+        );
+      }
+      return _errorRoute("Need image for this page");
+    } else if (settings.name == AppRoutes.history) {
+      return _errorRoute('History route not implemented yet');
+    } else if (settings.name == AppRoutes.setting.recovery) {
+      return _errorRoute('Recovery screen coming soon');
+    } else if (settings.name == AppRoutes.setting.tutorial) {
+      return _buildRoute(Center(child: Text("This is Tutorial Screen")));
+    } else if (settings.name == AppRoutes.setting.profile) {
+      return _buildRoute(ProfileSettingScreen.create());
+    } else if (settings.name == AppRoutes.setting.profileEdit) {
+      return _buildRoute(ProfileEditScreen.create());
+    } else {
+      return _errorRoute('No route defined for ${settings.name}');
     }
   }
 

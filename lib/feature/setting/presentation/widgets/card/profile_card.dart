@@ -8,7 +8,8 @@ import 'package:dun_diary_app/shared/widgets/custom/text/text_widget.dart';
 import 'package:flutter/material.dart';
 
 class ProfileCard extends StatelessWidget {
-  const ProfileCard({super.key});
+  final VoidCallback onTap;
+  const ProfileCard({super.key, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -17,10 +18,7 @@ class ProfileCard extends StatelessWidget {
       content: Material(
         color: Colors.transparent,
         child: InkWell(
-          onTap: () {
-            // TODO: Navigate to profile editing
-          },
-          borderRadius: BorderRadius.circular(10), // Default CustomCard radius
+          onTap: onTap,
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 15),
             child: Row(
