@@ -15,7 +15,7 @@ class NoContentCard extends StatelessWidget {
     super.key,
     this.title = "",
     this.subtitle = "",
-    this.imagePath = AppImage.cuate,
+    this.imagePath = AppImages.emptyFolder,
     this.imageWidth = 80,
     this.imageHeight = 80,
   });
@@ -35,7 +35,7 @@ class NoContentCard extends StatelessWidget {
           SizedBox(height: 20),
           CustomText(
             text: title,
-            fontSize: Dimension.fontSizes.md,
+            fontSize: Dimension.fontSizes.h2,
             fontWeight: Dimension.fontWeights.semiBold,
           ),
           Padding(
@@ -43,7 +43,7 @@ class NoContentCard extends StatelessWidget {
             child: CustomText(
               textAlign: TextAlign.center,
               text: subtitle,
-              fontSize: Dimension.fontSizes.rg,
+              fontSize: Dimension.fontSizes.md,
               fontWeight: Dimension.fontWeights.regular,
             ),
           ),

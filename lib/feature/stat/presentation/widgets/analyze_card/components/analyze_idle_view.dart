@@ -39,7 +39,7 @@ class AnalyzeIdleView extends StatelessWidget {
           Column(
             spacing: 8,
             children: [
-              SVGImage(path: AppImage.analyze, width: 105, height: 102),
+              SVGImage(path: AppImages.analyze, width: 105, height: 102),
               CustomText(
                 text: AppStrings.stat.idleTitle,
                 fontSize: Dimension.fontSizes.h1,

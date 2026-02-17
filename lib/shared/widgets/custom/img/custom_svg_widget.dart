@@ -6,6 +6,7 @@ class SVGImage extends StatelessWidget {
   final double? width;
   final double? height;
   final Color? color;
+  final BoxFit fit;
 
   const SVGImage({
     super.key,
@@ -13,6 +14,7 @@ class SVGImage extends StatelessWidget {
     this.width = 24,
     this.height = 24,
     this.color,
+    this.fit = BoxFit.contain,
   });
 
   @override
@@ -21,7 +23,10 @@ class SVGImage extends StatelessWidget {
       path,
       width: width,
       height: height,
-      colorFilter: color != null ? ColorFilter.mode(color!, BlendMode.srcIn) : null,
+      fit: fit,
+      colorFilter: color != null
+          ? ColorFilter.mode(color!, BlendMode.srcIn)
+          : null,
     );
   }
 }
