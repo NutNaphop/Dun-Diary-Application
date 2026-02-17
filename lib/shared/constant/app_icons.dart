@@ -13,11 +13,10 @@ class _BottomNavigationIcons {
 
   static const _path = '${AppIcons._base}/bottom_navigation';
 
-  final addSquared = '$_path/add_squared.svg';
-  final chartSquared = '$_path/chart_squared.svg';
+  final addSquared = '$_path/add_square.svg';
+  final chartSquare = '$_path/chart_square.svg';
   final clipboardList = '$_path/clipboard_list.svg';
   final homeSmile = '$_path/home_smile.svg';
-  final plus = '$_path/plus.svg';
   final userCircle = '$_path/user_circle.svg';
 }
 
@@ -68,4 +67,5 @@ class _OutlineIcons {
   final fileDownload = '$_path/file_download.svg';
   final share = '$_path/share.svg';
   final pen = '$_path/pen.svg';
+  final bell = '$_path/bell.svg';
 }

@@ -94,8 +94,21 @@ class _BloodPressureStrings {
   final String preHigh = "เริ่มสูง";
   @Deprecated('Use highStage1 or highStage2 instead')
   final String high = "สูง";
-  @Deprecated('Use crisis instead')
   final String danger = "อันตราย";
+
+  // Level Descriptions
+  final String lowDesc =
+      "ความดันโลหิตต่ำกว่าเกณฑ์\nควรทานอาหารที่มีประโยชน์และพักผ่อนให้เพียงพอ";
+  final String normalDesc =
+      "ความดันโลหิตปกติ\nสุขภาพแข็งแรงดีมาก รักษาไว้แบบนี้นะครับ";
+  final String elevatedDesc =
+      "ความดันโลหิตเริ่มสูง (Elevated)\nควรคุมอาหารและออกกำลังกายสม่ำเสมอ";
+  final String highStage1Desc =
+      "ความดันโลหิตสูงระดับ 1\nควรพบแพทย์และปรับเปลี่ยนพฤติกรรม";
+  final String highStage2Desc =
+      "ความดันโลหิตสูงระดับ 2\nอันตราย! ควรไปพบแพทย์เพื่อตรวจละเอียด";
+  final String crisisDesc =
+      "วิกฤตความดันโลหิตสูง (Crisis)\nรีบไปโรงพยาบาลทันที! อันตรายมาก";
 }
 
 class _MainStrings {
@@ -109,10 +122,11 @@ class _MainStrings {
 class _HomeStrings {
   const _HomeStrings();
 
-  String greeting(String name) => "สวัสดี, $name";
-  final String startRecord = "เริ่มบันทึกความดันโลหิต";
+  String greeting(String name) => "สวัสดี คุณ$name";
+  final String recordPressure = "บันทึกความดัน";
   final String healthToday = "สุขภาพของคุณวันนี้";
-  final String noContent = "ยังไม่มีข้อมูลความดันโลหิต";
+  final String noContent = "ยังไม่มีการบันทึกวันนี้";
+  final String pressToRecord = "กดปุ่มบันทึกเพื่อเริ่มต้น";
   final String recordTodayTogether =
       "บันทึกความดันของวันนี้ เพื่อให้ข้อมูลสุขภาพสมบูรณ์";
 }

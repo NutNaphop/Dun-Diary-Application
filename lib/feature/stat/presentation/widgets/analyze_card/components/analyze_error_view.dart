@@ -39,7 +39,7 @@ class AnalyzeErrorView extends StatelessWidget {
           Column(
             spacing: 8,
             children: [
-              SVGImage(path: AppImage.analyzeError, width: 150, height: 150),
+              SVGImage(path: AppImages.analyzeError, width: 150, height: 150),
               CustomText(
                 text: AppStrings.stat.errorTitle,
                 fontSize: Dimension.fontSizes.h1,

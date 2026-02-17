@@ -80,7 +80,7 @@ class RecordViewMenu extends StatelessWidget {
         primaryButtonText: AppStrings.record.delete,
         secondaryButtonText: AppStrings.common.cancel,
         content: SVGImage(
-          path: AppImage.confirmDelete,
+          path: AppImages.confirmDelete,
           width: 163,
           height: 120,
         ),

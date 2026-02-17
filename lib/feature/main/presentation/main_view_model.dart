@@ -6,8 +6,12 @@ class MainViewModel extends ChangeNotifier with RecordNavigationMixin {
 
   int get currentIndex => _currentIndex;
 
-  // ฟังก์ชันสลับ Tab
   void setIndex(int index) {
+    if (index == 2) {
+      redirectToRecord();
+      return;
+    }
+
     _currentIndex = index;
     notifyListeners();
   }
