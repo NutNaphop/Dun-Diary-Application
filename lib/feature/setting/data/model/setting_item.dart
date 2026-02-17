@@ -2,14 +2,16 @@ import 'package:flutter/material.dart';
 
 class SettingItem {
   final String title;
-  final Widget? icon;
+  final String? svgPath;
+  final IconData? iconData;
   final String? route;
   final VoidCallback? onTap;
   final String? trailingText;
 
   SettingItem({
     required this.title,
-    this.icon,
+    this.svgPath,
+    this.iconData,
     this.route,
     this.onTap,
     this.trailingText,

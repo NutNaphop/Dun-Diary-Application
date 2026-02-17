@@ -29,7 +29,11 @@ class _SettingScreenState extends State<SettingScreen> {
         child: Column(
           spacing: 10,
           children: [
-            ProfileCard(),
+            ProfileCard(
+              onTap: () {
+                viewModel.redirectToProfile();
+              },
+            ),
             ...viewModel.menuSections.map((section) {
               return SettingMenuSection(section: section);
             }),
