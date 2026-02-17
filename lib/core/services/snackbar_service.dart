@@ -19,7 +19,7 @@ class SnackBarService {
         borderColor: CustomColor.green2,
         textColor: CustomColor.green3,
         leadingIcon: SVGImage(
-          path: AppIcons.duotone.check_circle,
+          path: AppIcons.duotone.checkCircle,
           width: 28,
           height: 28,
           color: CustomColor.green3,
@@ -88,7 +88,7 @@ class SnackBarService {
         borderColor: CustomColor.blue2,
         textColor: CustomColor.blue3,
         leadingIcon: SVGImage(
-          path: AppIcons.duotone.check_circle,
+          path: AppIcons.duotone.checkCircle,
           width: 28,
           height: 28,
           color: CustomColor.blue3,

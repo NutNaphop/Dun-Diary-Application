@@ -16,6 +16,7 @@ class CustomCard extends StatelessWidget {
   final TextAlign descriptionTextAlign;
   final Widget content;
   final EdgeInsets? contentPadding;
+  final double borderRadius;
 
   const CustomCard({
     super.key,
@@ -31,6 +32,7 @@ class CustomCard extends StatelessWidget {
     this.descriptionTextAlign = TextAlign.start,
     required this.content,
     this.contentPadding = const EdgeInsets.all(0),
+    this.borderRadius = 10,
   });
 
   @override
@@ -40,7 +42,7 @@ class CustomCard extends StatelessWidget {
       width: double.infinity,
       decoration: BoxDecoration(
         color: CustomColor.white,
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: BorderRadius.circular(borderRadius),
         boxShadow: [DropShadow.drop_card],
       ),
       child: Column(

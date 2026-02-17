@@ -13,11 +13,11 @@ class _BottomNavigationIcons {
 
   static const _path = '${AppIcons._base}/bottom_navigation';
 
-  final addSquared = '$_path/add_square.svg';
-  final chartSquare = '$_path/chart_square.svg';
-  final clipboardList = '$_path/clipboard_list.svg';
-  final homeSmile = '$_path/home_smile.svg';
-  final userCircle = '$_path/user_circle.svg';
+  final String addSquared = '$_path/add_square.svg';
+  final String chartSquare = '$_path/chart_square.svg';
+  final String clipboardList = '$_path/clipboard_list.svg';
+  final String homeSmile = '$_path/home_smile.svg';
+  final String userCircle = '$_path/user_circle.svg';
 }
 
 class _DuotoneIcons {
@@ -25,20 +25,21 @@ class _DuotoneIcons {
 
   static const _path = '${AppIcons._base}/duotone';
 
-  final addCircle = '$_path/add_circle.svg';
-  final graphUp = '$_path/graph_up.svg';
-  final graphDown = '$_path/graph_down.svg';
-  final pulse = '$_path/pulse.svg';
-  final heartPulse = '$_path/heart_pulse.svg';
-  final starCircle = '$_path/star_circle.svg';
-  final camera = '$_path/camera.svg';
-  final image = '$_path/image.svg';
-  final danger = '$_path/danger.svg';
-  final dangerTriangle = '$_path/danger_triangle.svg';
-  final check_circle = '$_path/check_circle.svg';
-  final info_circle = '$_path/info_circle.svg';
-  final bin = '$_path/bin.svg';
-  final pen = '$_path/pen.svg';
+  final String addCircle = '$_path/add_circle.svg';
+  final String graphUp = '$_path/graph_up.svg';
+  final String graphDown = '$_path/graph_down.svg';
+  final String pulse = '$_path/pulse.svg';
+  final String heartPulse = '$_path/heart_pulse.svg';
+  final String starCircle = '$_path/star_circle.svg';
+  final String camera = '$_path/camera.svg';
+  final String image = '$_path/image.svg';
+  final String danger = '$_path/danger.svg';
+  final String dangerTriangle = '$_path/danger_triangle.svg';
+  final String checkCircle = '$_path/check_circle.svg';
+  final String infoCircle = '$_path/info_circle.svg';
+  final String bin = '$_path/bin.svg';
+  final String pen = '$_path/pen.svg';
+  final String note = '$_path/note.svg';
 }
 
 class _FillIcons {
@@ -46,9 +47,9 @@ class _FillIcons {
 
   static const _path = '${AppIcons._base}/fill';
 
-  final image = '$_path/image.svg';
-  final notification = '$_path/notification.svg';
-  final sparkle = '$_path/sparkle.svg';
+  final String image = '$_path/image.svg';
+  final String notification = '$_path/notification.svg';
+  final String sparkle = '$_path/sparkle.svg';
 }
 
 class _OutlineIcons {
@@ -56,16 +57,17 @@ class _OutlineIcons {
 
   static const _path = '${AppIcons._base}/outline';
 
-  final leftArrow = '$_path/left_arrow.svg';
-  final rightArrow = '$_path/right_arrow.svg';
-  final arrowClockwise = '$_path/arrow_clockwise.svg';
-  final x = '$_path/x.svg';
-  final calendar = '$_path/calendar.svg';
-  final clock = '$_path/clock.svg';
-  final camera = '$_path/camera.svg';
-  final dotThree = '$_path/dot_three.svg';
-  final fileDownload = '$_path/file_download.svg';
-  final share = '$_path/share.svg';
-  final pen = '$_path/pen.svg';
-  final bell = '$_path/bell.svg';
+  final String leftArrow = '$_path/left_arrow.svg';
+  final String rightArrow = '$_path/right_arrow.svg';
+  final String arrowClockwise = '$_path/arrow_clockwise.svg';
+  final String x = '$_path/x.svg';
+  final String calendar = '$_path/calendar.svg';
+  final String clock = '$_path/clock.svg';
+  final String camera = '$_path/camera.svg';
+  final String dotThree = '$_path/dot_three.svg';
+  final String fileDownload = '$_path/file_download.svg';
+  final String share = '$_path/share.svg';
+  final String pen = '$_path/pen.svg';
+  final String bell = '$_path/bell.svg';
+  final String infoCircle = '$_path/info_circle.svg';
 }
