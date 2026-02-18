@@ -7,6 +7,7 @@ import 'package:dun_diary_app/core/services/snackbar_service.dart';
 import 'package:dun_diary_app/data/analyze_record/model/analyze_cache_model.dart';
 import 'package:dun_diary_app/data/analyze_record/model/analyze_result_model.dart';
 import 'package:dun_diary_app/data/blood_pressure/model/bp_record.dart';
+import 'package:dun_diary_app/data/user/model/user_profile.dart';
 import 'package:dun_diary_app/feature/main/router/main_router.dart';
 import 'package:dun_diary_app/feature/record/router/record_router.dart';
 import 'package:dun_diary_app/feature/setting/router/setting_router.dart';
@@ -61,6 +62,7 @@ initService() async {
 initHive() async {
   await Hive.initFlutter();
   Hive.registerAdapter(BPRecordAdapter());
+  Hive.registerAdapter(UserProfileAdapter());
   Hive.registerAdapter(AnalysisCacheAdapter());
   Hive.registerAdapter(AnalyzeResultModelAdapter());
   await Hive.openBox<BPRecord>(HiveBoxName.bpRecord);
@@ -70,6 +72,7 @@ initHive() async {
   await Hive.openBox(HiveBoxName.metaBox);
   await Hive.openBox<AnalysisCache>(HiveBoxName.analysisCacheBox);
   await Hive.openBox<List<String>>(HiveBoxName.indexBox);
+  await Hive.openBox<UserProfile>(HiveBoxName.userBox);
 }
 
 // init firebase

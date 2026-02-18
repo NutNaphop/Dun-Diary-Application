@@ -9,46 +9,54 @@ class FlushbarService {
   // --- Public Methods ---
 
   void showSuccess(String message, {BuildContext? context}) {
-    final ctx = context ?? NavigationService.instance.globalContext;
-    if (ctx != null) {
-      CustomFlushbar.create(
-        ctx,
-        message: message,
-        type: FlushbarType.success,
-      ).show(ctx);
-    }
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final ctx = context ?? NavigationService.instance.globalContext;
+      if (ctx != null) {
+        CustomFlushbar.create(
+          ctx,
+          message: message,
+          type: FlushbarType.success,
+        ).show(ctx);
+      }
+    });
   }
 
   void showError(String message, {BuildContext? context}) {
-    final ctx = context ?? NavigationService.instance.globalContext;
-    if (ctx != null) {
-      CustomFlushbar.create(
-        ctx,
-        message: message,
-        type: FlushbarType.error,
-      ).show(ctx);
-    }
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final ctx = context ?? NavigationService.instance.globalContext;
+      if (ctx != null) {
+        CustomFlushbar.create(
+          ctx,
+          message: message,
+          type: FlushbarType.error,
+        ).show(ctx);
+      }
+    });
   }
 
   void showWarning(String message, {BuildContext? context}) {
-    final ctx = context ?? NavigationService.instance.globalContext;
-    if (ctx != null) {
-      CustomFlushbar.create(
-        ctx,
-        message: message,
-        type: FlushbarType.warning,
-      ).show(ctx);
-    }
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final ctx = context ?? NavigationService.instance.globalContext;
+      if (ctx != null) {
+        CustomFlushbar.create(
+          ctx,
+          message: message,
+          type: FlushbarType.warning,
+        ).show(ctx);
+      }
+    });
   }
 
   void showInfo(String message, {BuildContext? context}) {
-    final ctx = context ?? NavigationService.instance.globalContext;
-    if (ctx != null) {
-      CustomFlushbar.create(
-        ctx,
-        message: message,
-        type: FlushbarType.info,
-      ).show(ctx);
-    }
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final ctx = context ?? NavigationService.instance.globalContext;
+      if (ctx != null) {
+        CustomFlushbar.create(
+          ctx,
+          message: message,
+          type: FlushbarType.info,
+        ).show(ctx);
+      }
+    });
   }
 }
