@@ -1,5 +1,6 @@
 class HiveBoxName {
   static const String settingsBox = 'settings';
+  static const String userBox = 'userBox';
   static const String bpRecord = "bpRecord";
   static const String QueueBox = "queueBox";
   static const String queueUpsertBox = "queue_upsert";

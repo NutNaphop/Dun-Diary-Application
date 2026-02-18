@@ -1,4 +1,7 @@
+import 'package:dun_diary_app/core/auth/auth_service.dart';
+import 'package:dun_diary_app/core/network/network_info.dart';
 import 'package:dun_diary_app/core/services/navigation_service.dart';
+import 'package:dun_diary_app/data/user/repository/user_repository.dart';
 import 'package:dun_diary_app/feature/setting/presentation/profileEditScreen/profile_edit_viewModel.dart';
 import 'package:dun_diary_app/shared/constant/app_icons.dart';
 import 'package:dun_diary_app/shared/constant/app_image.dart';
@@ -17,7 +20,11 @@ class ProfileEditScreen extends StatefulWidget {
 
   static Widget create() {
     return ChangeNotifierProvider(
-      create: (_) => ProfileEditViewModel(),
+      create: (context) => ProfileEditViewModel(
+        userRepository: context.read<UserRepository>(),
+        authService: context.read<AuthService>(),
+        networkInfo: context.read<NetworkInfo>(),
+      ),
       child: const ProfileEditScreen(),
     );
   }
