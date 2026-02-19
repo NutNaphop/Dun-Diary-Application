@@ -45,11 +45,13 @@ class SyncService {
 
         // 1. ยืนยัน identity (signIn ถ้ายังไม่มี user)
         await _authService.initializeUserIdentity();
-        await _authService.signInAnonymously();
+        final user = await _authService.signInAnonymously();
 
-        // 2. Sync ข้อมูลที่ค้าง
-        await _repository.syncAllPending();
-        await _userRepository.syncPendingProfile();
+        if (user != null) {
+          // 2. Sync ข้อมูลที่ค้าง
+          await _repository.syncAllPending();
+          await _userRepository.syncPendingProfile(user.uid);
+        }
       }
     });
     AppLogger.info("SyncService: Listening for connectivity changes.");
