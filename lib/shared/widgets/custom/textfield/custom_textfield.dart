@@ -27,10 +27,17 @@ class CustomTextField extends StatelessWidget {
       initialValue: initialValue,
       onChanged: onChanged,
       keyboardType: keyboardType,
-      style: const TextStyle(fontSize: 16, color: CustomColor.gray900),
+      style: const TextStyle(
+        fontSize: 16,
+        color: CustomColor.gray900,
+        fontFamily: "NotoSanThai",
+      ),
       decoration: InputDecoration(
         labelText: label,
-        labelStyle: const TextStyle(color: CustomColor.gray500),
+        labelStyle: const TextStyle(
+          fontFamily: "NotoSanThai",
+          color: CustomColor.gray500,
+        ),
         floatingLabelBehavior: FloatingLabelBehavior.always,
         contentPadding: const EdgeInsets.symmetric(
           horizontal: 20,

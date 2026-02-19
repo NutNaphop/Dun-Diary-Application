@@ -21,14 +21,19 @@ class UserRepository {
     try {
       // 1. Fetch from server first
       final remoteUser = await _remoteDataSource.getUserProfile(uid);
+      final localUser = _localDataSource.getUser();
 
       if (remoteUser != null) {
+        // if local data is pending to sync , it's still new data use it
+        if (localUser != null && !localUser.isSynced) {
+          return localUser;
+        }
         // 2. If found in server -> save to local and return
         await _localDataSource.saveUser(remoteUser);
         return remoteUser;
       } else {
         // 3. If not found in server (new user) -> try to get from local
-        return _localDataSource.getUser();
+        return localUser;
       }
     } catch (e) {
       // 4. If no internet/Error -> get from local to show
@@ -46,10 +51,38 @@ class UserRepository {
 
     // 2. If online -> send to Firebase
     if (isOnline) {
-      await _remoteDataSource.saveUserProfile(user);
+      try {
+        await _remoteDataSource.saveUserProfile(user);
+        user.isSynced = true;
+        await _localDataSource.saveUser(user);
+        AppLogger.debug("✅ Profile saved successfully.");
+      } catch (e) {
+        user.isSynced = false;
+        await _localDataSource.saveUser(user);
+        AppLogger.error("❌ Profile save failed: $e");
+      }
     } else {
-      // TODO: ถ้าจะ Advance อาจต้องมี Queue สำหรับ Profile แต่งานนี้เอาแค่นี้ก่อนก็ได้ครับ
+      user.isSynced = false;
+      await _localDataSource.saveUser(user);
       AppLogger.debug("⚠️ Offline: Profile saved locally only.");
+    }
+  }
+
+  Future<void> syncPendingProfile() async {
+    final user = _localDataSource.getUser();
+
+    if (user != null && !user.isSynced) {
+      AppLogger.debug("☁️ Found unsynced profile. Syncing to Firebase...");
+      try {
+        await _remoteDataSource.saveUserProfile(user);
+        user.isSynced = true;
+        await _localDataSource.saveUser(user);
+        AppLogger.debug("✅ Synced pending user profile successfully!");
+      } catch (e) {
+        AppLogger.error("❌ Failed to sync profile: $e");
+      }
+    } else {
+      AppLogger.debug("✅ Profile is already up to date.");
     }
   }
 

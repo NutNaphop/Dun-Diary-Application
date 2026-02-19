@@ -99,9 +99,9 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
                       child: CustomButton(
                         text: AppStrings.common.save,
                         type: CustomButtonType.fill,
-                        onPressed: () {
-                          viewModel.saveProfile();
-                        },
+                        onPressed: !viewModel.hasChanges
+                            ? null
+                            : viewModel.saveProfile,
                       ),
                     ),
                   ],
