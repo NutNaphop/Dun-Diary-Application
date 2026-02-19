@@ -13,6 +13,11 @@ class UserLocalDataSource {
     return _box.getAt(0);
   }
 
+  /// Watch for changes in the box
+  Stream<BoxEvent> watchUser() {
+    return _box.watch();
+  }
+
   Future<void> saveUser(UserProfile user) async {
     await _box.clear();
     await _box.add(user);

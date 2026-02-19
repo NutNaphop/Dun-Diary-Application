@@ -112,6 +112,7 @@ flutter:
     - assets/images/profile/
     - assets/appIcon/
     - assets/animations/
+    - assets/texts/
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
 

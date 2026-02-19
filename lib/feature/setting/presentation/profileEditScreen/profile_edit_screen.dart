@@ -9,6 +9,7 @@ import 'package:dun_diary_app/shared/constant/app_strings.dart';
 import 'package:dun_diary_app/shared/style/color.dart';
 import 'package:dun_diary_app/shared/style/drop_shadow.dart';
 import 'package:dun_diary_app/shared/widgets/custom/button/custom_button.dart';
+import 'package:dun_diary_app/shared/widgets/custom/img/custom_svg_widget.dart';
 import 'package:dun_diary_app/shared/widgets/custom/scaffold/custom_scaffold.dart';
 import 'package:dun_diary_app/shared/widgets/custom/scaffold/main_appbar.dart';
 import 'package:dun_diary_app/shared/widgets/custom/textfield/custom_textfield.dart';
@@ -75,13 +76,28 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
                       const SizedBox(height: 20),
                       CustomTextField(
                         label: "ชื่อ",
+                        maxLength: 20,
+                        restrictSpecialChars: true,
                         controller: viewModel.nameController,
                         validator: _nameValidator,
+                        suffixIcon: IconButton(
+                          onPressed: () {
+                            viewModel.randomName();
+                          },
+                          icon: SVGImage(
+                            path: AppIcons.outline.arrowClockwise,
+                            width: 24,
+                            height: 24,
+                            color: CustomColor.primaryColor,
+                          ),
+                          tooltip: "สุ่มชื่อใหม่",
+                        ),
                       ),
                     ],
                   ),
                 ),
                 Spacer(),
+                const SizedBox(height: 10),
                 Row(
                   spacing: 10,
                   mainAxisAlignment: MainAxisAlignment.center,

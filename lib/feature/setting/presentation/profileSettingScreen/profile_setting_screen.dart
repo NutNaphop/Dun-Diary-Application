@@ -1,3 +1,4 @@
+import 'package:dun_diary_app/core/auth/provider/global_user_provider.dart';
 import 'package:dun_diary_app/core/services/navigation_service.dart';
 import 'package:dun_diary_app/feature/setting/data/model/setting_section.dart';
 import 'package:dun_diary_app/feature/setting/presentation/profileSettingScreen/profile_setting_viewModel.dart';
@@ -29,6 +30,7 @@ class _ProfileSettingScreenState extends State<ProfileSettingScreen> {
   @override
   Widget build(BuildContext context) {
     final viewModel = context.read<ProfileSettingViewmodel>();
+    final userName = context.select((GlobalUserProvider p) => p.displayName);
 
     return CustomScaffold(
       usePadding: false,
@@ -50,7 +52,7 @@ class _ProfileSettingScreenState extends State<ProfileSettingScreen> {
               backgroundImage: AssetImage(AppImages.profile.avatar1),
             ),
             CustomText(
-              text: "ราชาปีศาจ",
+              text: userName,
               fontSize: Dimension.fontSizes.h1,
               fontWeight: Dimension.fontWeights.bold,
             ),

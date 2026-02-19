@@ -119,4 +119,7 @@ class UserRepository {
 
   // Get local user (for showing in Home quickly)
   UserProfile? getLocalUser() => _localDataSource.getUser();
+
+  // Watch user changes
+  Stream<void> watchUser() => _localDataSource.watchUser();
 }

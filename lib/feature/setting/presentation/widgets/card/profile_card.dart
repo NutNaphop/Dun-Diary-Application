@@ -8,8 +8,9 @@ import 'package:dun_diary_app/shared/widgets/custom/text/text_widget.dart';
 import 'package:flutter/material.dart';
 
 class ProfileCard extends StatelessWidget {
+  final String userName;
   final VoidCallback onTap;
-  const ProfileCard({super.key, required this.onTap});
+  const ProfileCard({super.key, required this.onTap, required this.userName});
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +32,7 @@ class ProfileCard extends StatelessWidget {
                 Column(
                   children: [
                     CustomText(
-                      text: "คุณราชาปีศาจ",
+                      text: userName,
                       fontSize: Dimension.fontSizes.h2,
                       fontWeight: Dimension.fontWeights.semiBold,
                     ),
