@@ -1,4 +1,5 @@
 import 'package:dun_diary_app/core/auth/auth_service.dart';
+import 'package:dun_diary_app/core/auth/provider/global_user_provider.dart';
 import 'package:dun_diary_app/core/core_providers.dart';
 import 'package:dun_diary_app/core/network/network_info.dart';
 import 'package:dun_diary_app/core/services/sync_service.dart';
@@ -17,6 +18,11 @@ List<SingleChildWidget> get appProviders {
     ...sharedRepositoryProviders,
 
     // 3. Global Services (depends on repos + core)
+    ChangeNotifierProvider<GlobalUserProvider>(
+      create: (context) =>
+          GlobalUserProvider(userRepository: context.read<UserRepository>()),
+    ),
+
     ProxyProvider4<
       NetworkInfo,
       AuthService,

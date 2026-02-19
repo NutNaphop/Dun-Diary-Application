@@ -1,3 +1,4 @@
+import 'package:dun_diary_app/core/services/thai_name_generator_service.dart';
 import 'package:flutter/material.dart';
 
 import 'package:dun_diary_app/core/auth/auth_service.dart';
@@ -28,7 +29,7 @@ class SplashViewModel extends ChangeNotifier {
 
         final defaultProfile = UserProfile(
           uid: uid,
-          displayName: "ผู้ตรวจการ 101",
+          displayName: await ThaiNameGenerator.generate(),
           photoUrl: AppImages.profile.extractFileName(
             AppImages.profile.avatar1,
           ),

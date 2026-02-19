@@ -44,7 +44,6 @@ class SyncService {
         AppLogger.info("SyncService: Connected → starting sync flow...");
 
         // 1. ยืนยัน identity (signIn ถ้ายังไม่มี user)
-        await _authService.initializeUserIdentity();
         final user = await _authService.signInAnonymously();
 
         if (user != null) {

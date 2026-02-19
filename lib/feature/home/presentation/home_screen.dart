@@ -1,3 +1,4 @@
+import 'package:dun_diary_app/core/auth/provider/global_user_provider.dart';
 import 'package:dun_diary_app/data/blood_pressure/repository/blood_pressure_repository.dart';
 import 'package:dun_diary_app/feature/home/presentation/home_viewModel.dart';
 import 'package:dun_diary_app/feature/home/presentation/widgets/card/home_bp_card.dart';
@@ -40,13 +41,15 @@ class _HomeScreenState extends State<HomeScreen> {
     final hasRecords = context.select((HomeViewmodel vm) => vm.hasRecords);
     final latestRecord = context.select((HomeViewmodel vm) => vm.latestRecord);
 
+    final userName = context.select((GlobalUserProvider p) => p.displayName);
+
     return CustomScaffold(
       useSafeArea: false,
       usePadding: false,
       body: SingleChildScrollView(
         child: Column(
           children: [
-            HomeHeader(userName: "ราชาปีศาจ"),
+            HomeHeader(userName: userName),
             SizedBox(height: 15),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 15),

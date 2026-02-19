@@ -3,6 +3,7 @@ import 'package:dun_diary_app/core/network/network_info.dart';
 import 'package:dun_diary_app/core/services/app_logger.dart';
 import 'package:dun_diary_app/core/services/flushbar_service.dart';
 import 'package:dun_diary_app/core/services/navigation_service.dart';
+import 'package:dun_diary_app/core/services/thai_name_generator_service.dart';
 import 'package:dun_diary_app/data/user/model/user_profile.dart';
 import 'package:dun_diary_app/data/user/repository/user_repository.dart';
 import 'package:flutter/material.dart';
@@ -80,6 +81,11 @@ class ProfileEditViewModel extends ChangeNotifier {
       _isLoading = false;
       _safeNotifyListeners();
     }
+  }
+
+  void randomName() async {
+    nameController.text = await ThaiNameGenerator.generate();
+    _safeNotifyListeners();
   }
 
   void updateAvatar(String newAvatarFileName) {

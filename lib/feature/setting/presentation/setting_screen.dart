@@ -1,3 +1,4 @@
+import 'package:dun_diary_app/core/auth/provider/global_user_provider.dart';
 import 'package:dun_diary_app/feature/setting/presentation/setting_viewModel.dart';
 import 'package:dun_diary_app/feature/setting/presentation/widgets/section/setting_menu_section.dart';
 import 'package:dun_diary_app/feature/setting/presentation/widgets/card/profile_card.dart';
@@ -22,6 +23,8 @@ class SettingScreen extends StatefulWidget {
 class _SettingScreenState extends State<SettingScreen> {
   @override
   Widget build(BuildContext context) {
+    final userName = context.select((GlobalUserProvider p) => p.displayName);
+
     final viewModel = context.watch<SettingViewmodel>();
     return CustomScaffold(
       body: Padding(
@@ -30,6 +33,7 @@ class _SettingScreenState extends State<SettingScreen> {
           spacing: 10,
           children: [
             ProfileCard(
+              userName: userName,
               onTap: () {
                 viewModel.redirectToProfile();
               },
