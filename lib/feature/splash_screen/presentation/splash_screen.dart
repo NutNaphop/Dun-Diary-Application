@@ -1,12 +1,26 @@
+import 'package:dun_diary_app/core/auth/auth_service.dart';
 import 'package:dun_diary_app/core/constant/app_routes.dart';
 import 'package:dun_diary_app/core/services/navigation_service.dart';
+import 'package:dun_diary_app/data/user/repository/user_repository.dart';
+import 'package:dun_diary_app/feature/splash_screen/presentation/splash_viewModel.dart';
 import 'package:dun_diary_app/shared/constant/app_image.dart';
 import 'package:dun_diary_app/shared/style/color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
+import 'package:provider/provider.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
+
+  static Widget create() {
+    return ChangeNotifierProvider(
+      create: (context) => SplashViewModel(
+        authService: context.read<AuthService>(),
+        userRepository: context.read<UserRepository>(),
+      ),
+      child: const SplashScreen(),
+    );
+  }
 
   @override
   State<SplashScreen> createState() => _SplashScreenState();
@@ -28,6 +42,11 @@ class _SplashScreenState extends State<SplashScreen> {
       });
     });
     FlutterNativeSplash.remove();
+
+    if (mounted) {
+      await context.read<SplashViewModel>().initializeAppData();
+    }
+
     await Future.delayed(const Duration(seconds: 2));
 
     if (mounted) {

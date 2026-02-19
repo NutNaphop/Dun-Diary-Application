@@ -9,7 +9,7 @@ import 'package:flutter/material.dart';
 class MainRouter extends BaseFeatureRouter {
   @override
   Map<String, Widget Function(dynamic args)> get routes => {
-    AppRoutes.splash: (_) => const SplashScreen(),
+    AppRoutes.splash: (_) => SplashScreen.create(),
     AppRoutes.main: (_) => const MainScreen(),
     AppRoutes.mock: (args) {
       if (args != null) {

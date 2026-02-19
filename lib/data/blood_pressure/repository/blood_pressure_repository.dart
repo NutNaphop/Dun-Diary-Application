@@ -179,6 +179,16 @@ class BloodPressureRepository {
             continue;
           }
 
+          // ตรวจสอบ Owner ID ว่าตรงกับ User ปัจจุบันไหม (เผื่อกรณี migrate)
+          if (record.ownerId != user.uid) {
+            AppLogger.info(
+              "🔧 Fixing ownerId for record ${record.id}: ${record.ownerId} -> ${user.uid}",
+            );
+            record.ownerId = user.uid;
+            // Save local updated ownerId
+            await _localDataSource.updateRecord(record);
+          }
+
           // ส่งขึ้น Firebase (ใช้ .set ทับได้เลยทั้ง Add/Edit)
           await _remoteDataSource.saveRecordToFirebase(record, user.uid);
 

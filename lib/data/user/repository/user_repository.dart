@@ -68,21 +68,52 @@ class UserRepository {
     }
   }
 
-  Future<void> syncPendingProfile() async {
+  Future<void> syncPendingProfile(String remoteUid) async {
     final user = _localDataSource.getUser();
 
-    if (user != null && !user.isSynced) {
-      AppLogger.debug("☁️ Found unsynced profile. Syncing to Firebase...");
-      try {
-        await _remoteDataSource.saveUserProfile(user);
-        user.isSynced = true;
-        await _localDataSource.saveUser(user);
-        AppLogger.debug("✅ Synced pending user profile successfully!");
-      } catch (e) {
-        AppLogger.error("❌ Failed to sync profile: $e");
+    if (user != null) {
+      // กรณี 1: UID ไม่ตรงกัน (เช่น Local=UUID, Remote=FirebaseUID)
+      // ต้อง Migrate ข้อมูลไปใช้ UID จริง
+      if (user.uid != remoteUid) {
+        AppLogger.info(
+          "🔀 Migrating user profile from ${user.uid} -> $remoteUid",
+        );
+
+        // สร้าง Profile ใหม่ด้วย ID จริง (Copy ข้อมูลเดิมมา)
+        final migratedUser = UserProfile(
+          uid: remoteUid,
+          displayName: user.displayName,
+          photoUrl: user.photoUrl,
+          createdAt: user.createdAt,
+          isSynced: true, // เดี๋ยวจะ save ลง Remote ต่อไป
+        );
+
+        try {
+          // 1. Save to Remote first
+          await _remoteDataSource.saveUserProfile(migratedUser);
+          // 2. Save to Local
+          await _localDataSource.saveUser(migratedUser);
+          AppLogger.debug("✅ Migrated & Synced profile successfully!");
+        } catch (e) {
+          AppLogger.error("❌ Failed to migrate profile: $e");
+        }
+        return;
       }
-    } else {
-      AppLogger.debug("✅ Profile is already up to date.");
+
+      // กรณี 2: UID ตรงกันแต่ status = not synced
+      if (!user.isSynced) {
+        AppLogger.debug("☁️ Found unsynced profile. Syncing to Firebase...");
+        try {
+          await _remoteDataSource.saveUserProfile(user);
+          user.isSynced = true;
+          await _localDataSource.saveUser(user);
+          AppLogger.debug("✅ Synced pending user profile successfully!");
+        } catch (e) {
+          AppLogger.error("❌ Failed to sync profile: $e");
+        }
+      } else {
+        AppLogger.debug("✅ Profile is already up to date.");
+      }
     }
   }
 
