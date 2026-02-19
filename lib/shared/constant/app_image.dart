@@ -17,6 +17,14 @@ class _ProfileImages {
   final String avatar1 = '$_base/avatar1.png';
 
   List<String> get all => [avatar1];
+
+  String extractFileName(String fullPath) {
+    return fullPath.split('/').last;
+  }
+
+  String getFullPath(String fileName) {
+    return '$_base/$fileName';
+  }
 }
 
 class AppConfigImages {

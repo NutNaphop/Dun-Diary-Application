@@ -21,13 +21,14 @@ class UserProfileAdapter extends TypeAdapter<UserProfile> {
       displayName: fields[1] as String,
       photoUrl: fields[2] as String?,
       createdAt: fields[3] as DateTime,
+      isSynced: fields[4] as bool,
     );
   }
 
   @override
   void write(BinaryWriter writer, UserProfile obj) {
     writer
-      ..writeByte(4)
+      ..writeByte(5)
       ..writeByte(0)
       ..write(obj.uid)
       ..writeByte(1)
@@ -35,7 +36,9 @@ class UserProfileAdapter extends TypeAdapter<UserProfile> {
       ..writeByte(2)
       ..write(obj.photoUrl)
       ..writeByte(3)
-      ..write(obj.createdAt);
+      ..write(obj.createdAt)
+      ..writeByte(4)
+      ..write(obj.isSynced);
   }
 
   @override

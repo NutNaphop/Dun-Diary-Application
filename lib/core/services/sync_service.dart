@@ -4,6 +4,7 @@ import 'package:dun_diary_app/core/auth/auth_service.dart';
 import 'package:dun_diary_app/core/network/network_info.dart';
 import 'package:dun_diary_app/core/services/app_logger.dart';
 import 'package:dun_diary_app/data/blood_pressure/repository/blood_pressure_repository.dart';
+import 'package:dun_diary_app/data/user/repository/user_repository.dart';
 
 /// Global Sync Service
 ///
@@ -18,6 +19,7 @@ class SyncService {
   final NetworkInfo _networkInfo;
   final AuthService _authService;
   final BloodPressureRepository _repository;
+  final UserRepository _userRepository;
 
   StreamSubscription? _connectivitySubscription;
 
@@ -25,9 +27,11 @@ class SyncService {
     required NetworkInfo networkInfo,
     required AuthService authService,
     required BloodPressureRepository repository,
+    required UserRepository userRepository,
   }) : _networkInfo = networkInfo,
        _authService = authService,
-       _repository = repository {
+       _repository = repository,
+       _userRepository = userRepository {
     _startListening();
   }
 
@@ -45,6 +49,7 @@ class SyncService {
 
         // 2. Sync ข้อมูลที่ค้าง
         await _repository.syncAllPending();
+        await _userRepository.syncPendingProfile();
       }
     });
     AppLogger.info("SyncService: Listening for connectivity changes.");

@@ -18,7 +18,9 @@ class ProfileEditViewModel extends ChangeNotifier {
   bool get isLoading => _isLoading;
 
   String? _currentUid;
-  DateTime _createdAt = DateTime.now();
+  UserProfile? _originalProfile;
+  String? _selectedAvatarFileName;
+
   bool _isDisposed = false;
 
   ProfileEditViewModel({
@@ -28,12 +30,14 @@ class ProfileEditViewModel extends ChangeNotifier {
   }) : _userRepository = userRepository,
        _authService = authService,
        _networkInfo = networkInfo {
+    nameController.addListener(_safeNotifyListeners);
     _initData();
   }
 
   @override
   void dispose() {
     _isDisposed = true;
+    nameController.removeListener(_safeNotifyListeners);
     nameController.dispose();
     super.dispose();
   }
@@ -50,12 +54,23 @@ class ProfileEditViewModel extends ChangeNotifier {
 
     try {
       _currentUid = await _authService.getUserIdForSaving();
-      final userProfile = await _userRepository.fetchUserProfile(_currentUid!);
+      final localProfile = _userRepository.getLocalUser();
 
-      if (userProfile != null) {
-        nameController.text = userProfile.displayName;
-        _createdAt = userProfile.createdAt;
-      } else {
+      if (localProfile != null) {
+        _originalProfile = localProfile;
+        nameController.text = localProfile.displayName;
+        _isLoading = false;
+        _safeNotifyListeners();
+      }
+
+      final remoteProfile = await _userRepository.fetchUserProfile(
+        _currentUid!,
+      );
+
+      if (remoteProfile != null) {
+        _originalProfile = remoteProfile;
+        nameController.text = remoteProfile.displayName;
+      } else if (localProfile == null) {
         nameController.text = "ผู้ใช้งานทั่วไป";
       }
     } catch (e, stackTrace) {
@@ -67,10 +82,21 @@ class ProfileEditViewModel extends ChangeNotifier {
     }
   }
 
+  void updateAvatar(String newAvatarFileName) {
+    _selectedAvatarFileName = newAvatarFileName;
+    _safeNotifyListeners();
+  }
+
   Future<void> saveProfile() async {
     final newName = nameController.text.trim();
     if (newName.isEmpty) {
       FlushbarService.instance.showWarning("กรุณากรอกชื่อ");
+      return;
+    }
+
+    if (!hasChanges) {
+      FlushbarService.instance.showSuccess("บันทึกข้อมูลเรียบร้อย");
+      NavigationService.instance.goBack();
       return;
     }
 
@@ -83,8 +109,8 @@ class ProfileEditViewModel extends ChangeNotifier {
       final updatedProfile = UserProfile(
         uid: _currentUid!,
         displayName: newName,
-        createdAt: _createdAt,
-        photoUrl: null, // เดี๋ยวค่อยมาทำเรื่องอัปรูป
+        createdAt: _originalProfile?.createdAt ?? DateTime.now(),
+        photoUrl: _selectedAvatarFileName ?? _originalProfile!.photoUrl,
       );
 
       await _userRepository.updateUserProfile(updatedProfile, isOnline);
@@ -101,5 +127,19 @@ class ProfileEditViewModel extends ChangeNotifier {
         _safeNotifyListeners();
       }
     }
+  }
+
+  bool get hasChanges {
+    if (_originalProfile == null) return true;
+    if (nameController.text.trim() != _originalProfile!.displayName)
+      return true;
+
+    if (_selectedAvatarFileName != null &&
+        _selectedAvatarFileName != _originalProfile!.photoUrl) {
+      return true;
+    }
+    // IF MORE Field to edit just add here in this function
+
+    return false;
   }
 }

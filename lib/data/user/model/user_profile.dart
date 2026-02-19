@@ -17,11 +17,15 @@ class UserProfile extends HiveObject {
   @HiveField(3)
   final DateTime createdAt;
 
+  @HiveField(4)
+  bool isSynced;
+
   UserProfile({
     required this.uid,
     required this.displayName,
     this.photoUrl,
     required this.createdAt,
+    this.isSynced = true,
   });
 
   // แปลงจาก Firestore (JSON) -> Object
@@ -31,6 +35,7 @@ class UserProfile extends HiveObject {
       displayName: json['displayName'] ?? 'ผู้ใช้งาน',
       photoUrl: json['photoUrl'],
       createdAt: (json['createdAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
+      isSynced: true,
     );
   }
 
