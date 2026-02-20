@@ -50,7 +50,7 @@ class RecoveryMenuData {
         SettingItem(
           title: 'กู้คืนข้อมูลของฉัน',
           svgPath: AppIcons.bottomNav.userCircle,
-          route: AppRoutes.setting.tutorial,
+          route: AppRoutes.setting.recoveryMyData,
           onTap: () => AppLogger.debug('Usage Guide tapped'),
         ),
       ],
