@@ -40,6 +40,7 @@ class _DuotoneIcons {
   final String bin = '$_path/bin.svg';
   final String pen = '$_path/pen.svg';
   final String note = '$_path/note.svg';
+  final String qrcode = '$_path/qrcode.svg';
 }
 
 class _FillIcons {

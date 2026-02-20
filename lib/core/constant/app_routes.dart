@@ -25,5 +25,8 @@ class _SettingRoutes {
   String get profileEdit => '$profile/edit';
 
   String get recovery => '$root/recovery';
+  String get myQrcode => '$recovery/myqrcode';
+  String get recoveryMyData => '$recovery/recoveryMyData';
+
   String get tutorial => '$root/tutorial';
 }

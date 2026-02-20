@@ -11,7 +11,7 @@ class SettingMenuData {
         SettingItem(
           title: 'การสำรองข้อมูลและกู้ข้อมูล',
           svgPath: AppIcons.duotone.note,
-          route: AppRoutes.setting.profile,
+          route: AppRoutes.setting.recovery,
           onTap: () => AppLogger.debug('Backup tapped'),
         ),
         SettingItem(
@@ -31,6 +31,27 @@ class SettingMenuData {
           title: 'แก้ไขโปรไฟล์',
           svgPath: AppIcons.duotone.note,
           route: AppRoutes.setting.profileEdit,
+        ),
+      ],
+    ),
+  ];
+}
+
+class RecoveryMenuData {
+  static List<SettingSection> get recoverySettings => [
+    SettingSection(
+      items: [
+        SettingItem(
+          title: 'QR Code ของฉัน',
+          svgPath: AppIcons.duotone.qrcode,
+          route: AppRoutes.setting.myQrcode,
+          onTap: () => AppLogger.debug('Backup tapped'),
+        ),
+        SettingItem(
+          title: 'กู้คืนข้อมูลของฉัน',
+          svgPath: AppIcons.bottomNav.userCircle,
+          route: AppRoutes.setting.tutorial,
+          onTap: () => AppLogger.debug('Usage Guide tapped'),
         ),
       ],
     ),
