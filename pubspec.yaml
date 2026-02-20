@@ -60,6 +60,8 @@ dependencies:
   screenshot: ^3.0.0
   gal: ^2.3.2
   logger: ^2.6.2
+  encrypt: ^5.0.3
+  qr_flutter: ^4.1.0
 
 dev_dependencies:
   flutter_test:
