@@ -8,6 +8,7 @@ class AppImages {
   static const analyzeError = '$_base/analyze_error.svg';
   static const confirmDelete = '$_base/confirm_delete.svg';
   static const homeBackground = '$_base/home_background.png';
+  static const faq = '$_base/faq.svg';
 }
 
 class _ProfileImages {

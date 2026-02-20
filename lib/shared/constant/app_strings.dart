@@ -17,6 +17,7 @@ class AppStrings {
   static const record = _RecordStrings();
   static const result = _ResultStrings();
   static const stat = _StatStrings();
+  static const setting = _SettingStrings();
 }
 
 class _CommonStrings {
@@ -220,6 +221,18 @@ class _StatStrings {
   final String noDataTitle = "ยังไม่มีข้อมูลในช่วงเวลานี้";
   final String noDataDesc =
       "เพิ่มข้อมูลความดันโลหิตก่อน เพื่อให้ AI ช่วยวิเคราะห์ผลและสรุปให้คุณ";
+}
+
+class _SettingStrings {
+  const _SettingStrings();
+
+  // Recovery My Data
+  final String recoveryTitle = "กู้คืนข้อมูลของฉัน";
+  final String uploadQRTitle = "อัปโหลด QR Code ของคุณ";
+  final String uploadQRDescription =
+      "กรุณาเลือกรูปภาพ QR Code\nที่คุณบันทึกไว้\nเพื่อกู้คืนข้อมูลบัญชีของคุณ";
+  final String selectFromAlbum = "เลือกรูปภาพจากอัลบั้ม";
+  final String openCameraScanner = "เปิดกล้องสแกน QR Code";
 }
 
 class _ResultStrings {

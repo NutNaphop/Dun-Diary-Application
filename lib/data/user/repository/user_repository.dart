@@ -42,6 +42,15 @@ class UserRepository {
     }
   }
 
+  Future<UserProfile?> getRemoteProfileOnly(String uid) async {
+    try {
+      return await _remoteDataSource.getUserProfile(uid);
+    } catch (e) {
+      AppLogger.error("❌ Failed to fetch preview profile: $e");
+      return null;
+    }
+  }
+
   // --------------------------------------------------------
   // 🔵 Save/Update Logic
   // --------------------------------------------------------
