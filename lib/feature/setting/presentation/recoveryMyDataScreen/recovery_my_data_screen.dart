@@ -71,28 +71,62 @@ class _RecoveryMyDataScreenState extends State<RecoveryMyDataScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final viewModel = context.watch<RecoveryMyDataViewModel>();
-    final blockBack = viewModel.isRecovering || viewModel.isResumeError;
-
-    return PopScope(
-      canPop: !blockBack,
-      child: CustomScaffold(
-        appBar: MainAppBar(
-          title: AppStrings.setting.recoveryTitle,
-          showBack: !blockBack,
-          onBackPressed: blockBack
-              ? null
-              : () => NavigationService.instance.goBack(),
-        ),
-        body: viewModel.isResumeError
-            ? RecoveryErrorSection(
-                viewModel: viewModel,
-                onRetry: _checkAndResumeRecovery,
-              )
-            : (viewModel.recoveredUser == null
-                  ? RecoveryScannerSection(viewModel: viewModel)
-                  : RecoveryPreviewSection(viewModel: viewModel)),
+    return Selector<RecoveryMyDataViewModel, _RecoveryScreenState>(
+      selector: (context, viewModel) => _RecoveryScreenState(
+        isRecovering: viewModel.isRecovering,
+        isResumeError: viewModel.isResumeError,
+        hasRecoveredUser: viewModel.recoveredUser != null,
       ),
+      builder: (context, state, child) {
+        final viewModel = context.read<RecoveryMyDataViewModel>();
+        final blockBack = state.isRecovering || state.isResumeError;
+
+        return PopScope(
+          canPop: !blockBack,
+          child: CustomScaffold(
+            appBar: MainAppBar(
+              title: AppStrings.setting.recoveryTitle,
+              showBack: !blockBack,
+              onBackPressed: blockBack
+                  ? null
+                  : () => NavigationService.instance.goBack(),
+            ),
+            body: state.isResumeError
+                ? RecoveryErrorSection(
+                    viewModel: viewModel,
+                    onRetry: _checkAndResumeRecovery,
+                  )
+                : (!state.hasRecoveredUser
+                      ? RecoveryScannerSection(viewModel: viewModel)
+                      : RecoveryPreviewSection(viewModel: viewModel)),
+          ),
+        );
+      },
     );
   }
+}
+
+class _RecoveryScreenState {
+  final bool isRecovering;
+  final bool isResumeError;
+  final bool hasRecoveredUser;
+
+  _RecoveryScreenState({
+    required this.isRecovering,
+    required this.isResumeError,
+    required this.hasRecoveredUser,
+  });
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is _RecoveryScreenState &&
+          runtimeType == other.runtimeType &&
+          isRecovering == other.isRecovering &&
+          isResumeError == other.isResumeError &&
+          hasRecoveredUser == other.hasRecoveredUser;
+
+  @override
+  int get hashCode =>
+      Object.hash(isRecovering, isResumeError, hasRecoveredUser);
 }
