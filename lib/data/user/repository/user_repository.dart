@@ -126,6 +126,27 @@ class UserRepository {
     }
   }
 
+  Future<void> saveRecoveredProfileToLocal(UserProfile user) async {
+    try {
+      user.isSynced = true;
+      await _localDataSource.saveUser(user);
+      AppLogger.info("✅ Recovered profile saved to local successfully.");
+    } catch (e) {
+      AppLogger.error("❌ Failed to save recovered profile: $e");
+      rethrow;
+    }
+  }
+
+  /// ลบ remote user data (ใช้ตอน Recovery cleanup)
+  Future<void> deleteRemoteUserData(String uid) async {
+    try {
+      await _remoteDataSource.deleteUserData(uid);
+      AppLogger.info("🗑️ Deleted remote user data for $uid");
+    } catch (e) {
+      AppLogger.error("❌ Failed to delete remote user data: $e");
+    }
+  }
+
   // Get local user (for showing in Home quickly)
   UserProfile? getLocalUser() => _localDataSource.getUser();
 

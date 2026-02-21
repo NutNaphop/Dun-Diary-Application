@@ -30,14 +30,16 @@ List<SingleChildWidget> get sharedRepositoryProviders {
     ),
 
     // 2. Repository
-    ProxyProvider2<
+    ProxyProvider3<
       BloodPressureLocalDataSource,
       BloodPressureRemoteDataSource,
+      AuthService,
       BloodPressureRepository
     >(
-      update: (_, local, remote, __) => BloodPressureRepository(
+      update: (_, local, remote, auth, __) => BloodPressureRepository(
         localDataSource: local,
         remoteDataSource: remote,
+        authService: auth,
       ),
     ),
 

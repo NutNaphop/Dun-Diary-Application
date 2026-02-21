@@ -1,4 +1,5 @@
 import 'package:dun_diary_app/core/services/thai_name_generator_service.dart';
+import 'package:dun_diary_app/core/recovery/recovery_flag_service.dart';
 import 'package:flutter/material.dart';
 
 import 'package:dun_diary_app/core/auth/auth_service.dart';
@@ -16,6 +17,9 @@ class SplashViewModel extends ChangeNotifier {
     required UserRepository userRepository,
   }) : _authService = authService,
        _userRepository = userRepository;
+
+  bool _isRecoveryPending = false;
+  bool get isRecoveryPending => _isRecoveryPending;
 
   Future<void> initializeAppData() async {
     try {
@@ -43,6 +47,12 @@ class SplashViewModel extends ChangeNotifier {
       }
     } catch (e, stackTrace) {
       AppLogger.error("❌ Init App Data Error: $e", stackTrace);
+    }
+
+    // เช็คว่ามี recovery ค้างอยู่หรือไม่
+    _isRecoveryPending = RecoveryFlagService.isRecoveryPending();
+    if (_isRecoveryPending) {
+      AppLogger.warning("⚠️ Detected interrupted recovery!");
     }
   }
 }

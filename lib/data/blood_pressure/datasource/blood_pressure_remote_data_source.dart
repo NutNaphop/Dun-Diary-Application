@@ -44,7 +44,22 @@ class BloodPressureRemoteDataSource {
     }
   }
 
-  /// 🔧 Debug Mode : Delete All Data
+  /// ดึง records ทั้งหมดจาก Firebase (ใช้ตอน Recovery)
+  Future<List<BPRecord>> fetchAllRecords(String uid) async {
+    try {
+      final snapshot = await _firestore
+          .collection('users')
+          .doc(uid)
+          .collection('records')
+          .get();
+      return snapshot.docs.map((doc) => BPRecord.fromJson(doc.data())).toList();
+    } catch (e) {
+      AppLogger.error("Firebase: Failed to fetch all records", e);
+      rethrow;
+    }
+  }
+
+  /// ลบ records ทั้งหมดของ user (ใช้ Batch เพื่อความเร็ว, สูงสุด 500 docs/batch)
   Future<void> deleteAllRecords(String uid) async {
     try {
       final collection = _firestore
@@ -54,13 +69,22 @@ class BloodPressureRemoteDataSource {
 
       final snapshots = await collection.get();
 
-      for (var doc in snapshots.docs) {
-        await doc.reference.delete();
+      // Firestore batch limit = 500 operations
+      const batchSize = 500;
+      for (var i = 0; i < snapshots.docs.length; i += batchSize) {
+        final batch = _firestore.batch();
+        final chunk = snapshots.docs.skip(i).take(batchSize);
+        for (var doc in chunk) {
+          batch.delete(doc.reference);
+        }
+        await batch.commit();
       }
 
-      print("🔥 Firebase: All records deleted for user $uid");
+      AppLogger.info(
+        "🔥 Firebase: Batch deleted ${snapshots.docs.length} records for $uid",
+      );
     } catch (e) {
-      print("❌ Firebase Clear Error: $e");
+      AppLogger.error("❌ Firebase Batch Delete Error: $e");
       rethrow;
     }
   }

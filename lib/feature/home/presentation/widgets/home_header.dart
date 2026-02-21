@@ -77,7 +77,7 @@ class HomeHeader extends StatelessWidget {
                         // Bell Icon
                         GestureDetector(
                           onTap: () {
-                            viewModel.deleteLocalData();
+                            viewModel.seedData();
                           },
                           child: Container(
                             padding: const EdgeInsets.all(4),

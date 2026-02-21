@@ -1,5 +1,6 @@
 import 'package:dun_diary_app/core/auth/auth_service.dart';
 import 'package:dun_diary_app/core/constant/app_routes.dart';
+import 'package:dun_diary_app/core/services/app_logger.dart';
 import 'package:dun_diary_app/core/services/navigation_service.dart';
 import 'package:dun_diary_app/data/user/repository/user_repository.dart';
 import 'package:dun_diary_app/feature/splash_screen/presentation/splash_viewModel.dart';
@@ -50,7 +51,17 @@ class _SplashScreenState extends State<SplashScreen> {
     await Future.delayed(const Duration(seconds: 2));
 
     if (mounted) {
-      NavigationService.instance.pushReplacementNamed(AppRoutes.main);
+      final viewModel = context.read<SplashViewModel>();
+
+      if (viewModel.isRecoveryPending) {
+        // Recovery ค้างอยู่ → ไปหน้า recovery เพื่อกู้ต่อ
+        AppLogger.warning("⚠️ Redirecting to recovery screen...");
+        NavigationService.instance.pushReplacementNamed(
+          AppRoutes.setting.recoveryMyData,
+        );
+      } else {
+        NavigationService.instance.pushReplacementNamed(AppRoutes.main);
+      }
     }
   }
 
