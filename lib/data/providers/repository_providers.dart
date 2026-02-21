@@ -7,6 +7,9 @@ import 'package:dun_diary_app/data/analyze_record/repository/analyze_repository.
 import 'package:dun_diary_app/data/blood_pressure/datasource/blood_pressure_local_data_source.dart';
 import 'package:dun_diary_app/data/blood_pressure/datasource/blood_pressure_remote_data_source.dart';
 import 'package:dun_diary_app/data/blood_pressure/repository/blood_pressure_repository.dart';
+import 'package:dun_diary_app/data/user/datasource/user_local_data_source.dart';
+import 'package:dun_diary_app/data/user/datasource/user_remote_data_source.dart';
+import 'package:dun_diary_app/data/user/repository/user_repository.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
 
@@ -27,14 +30,16 @@ List<SingleChildWidget> get sharedRepositoryProviders {
     ),
 
     // 2. Repository
-    ProxyProvider2<
+    ProxyProvider3<
       BloodPressureLocalDataSource,
       BloodPressureRemoteDataSource,
+      AuthService,
       BloodPressureRepository
     >(
-      update: (_, local, remote, __) => BloodPressureRepository(
+      update: (_, local, remote, auth, __) => BloodPressureRepository(
         localDataSource: local,
         remoteDataSource: remote,
+        authService: auth,
       ),
     ),
 
@@ -55,5 +60,19 @@ List<SingleChildWidget> get sharedRepositoryProviders {
       AnalyzeRemoteDataSource,
       AnalyzeRepository
     >(update: (_, local, remote, __) => AnalyzeRepository(local, remote)),
+
+    // =========================================================================
+    // User Feature (Shared)
+    // =========================================================================
+
+    // 1. Data Sources
+    Provider<UserLocalDataSource>(create: (_) => UserLocalDataSource()),
+    Provider(create: (c) => UserRemoteDataSource(FirebaseFirestore.instance)),
+
+    // 2. Repository
+    ProxyProvider2<UserLocalDataSource, UserRemoteDataSource, UserRepository>(
+      update: (_, local, remote, __) =>
+          UserRepository(localDataSource: local, remoteDataSource: remote),
+    ),
   ];
 }

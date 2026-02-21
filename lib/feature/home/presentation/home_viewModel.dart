@@ -7,6 +7,7 @@ import 'package:dun_diary_app/core/services/flushbar_service.dart';
 import 'package:dun_diary_app/core/services/snackbar_service.dart';
 import 'package:dun_diary_app/data/blood_pressure/model/bp_record.dart';
 import 'package:dun_diary_app/data/blood_pressure/repository/blood_pressure_repository.dart';
+import 'package:dun_diary_app/shared/utils/mock_data_seeder.dart';
 import 'package:flutter/material.dart';
 
 class HomeViewmodel extends ChangeNotifier with RecordNavigationMixin {
@@ -65,6 +66,10 @@ class HomeViewmodel extends ChangeNotifier with RecordNavigationMixin {
 
   // Debug function delete local storage data
   void deleteLocalData() async {
-    await _recordRepo.debugClearAllData();
+    await _recordRepo.debugClearAllData(null);
+  }
+
+  Future<void> seedData() async {
+    await MockDataSeeder(_recordRepo).generateBigData();
   }
 }

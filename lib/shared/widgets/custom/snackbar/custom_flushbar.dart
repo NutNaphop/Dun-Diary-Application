@@ -27,7 +27,7 @@ class CustomFlushbar {
         bgColor = CustomColor.green1;
         borderColor = CustomColor.green2;
         textColor = CustomColor.green3;
-        iconPath = AppIcons.duotone.check_circle;
+        iconPath = AppIcons.duotone.checkCircle;
         break;
       case FlushbarType.error:
         bgColor = CustomColor.red1;
@@ -45,7 +45,7 @@ class CustomFlushbar {
         bgColor = CustomColor.blue1;
         borderColor = CustomColor.blue2;
         textColor = CustomColor.blue3;
-        iconPath = AppIcons.duotone.check_circle;
+        iconPath = AppIcons.duotone.checkCircle;
         break;
     }
 

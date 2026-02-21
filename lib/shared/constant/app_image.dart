@@ -8,6 +8,7 @@ class AppImages {
   static const analyzeError = '$_base/analyze_error.svg';
   static const confirmDelete = '$_base/confirm_delete.svg';
   static const homeBackground = '$_base/home_background.png';
+  static const faq = '$_base/faq.svg';
 }
 
 class _ProfileImages {
@@ -17,6 +18,14 @@ class _ProfileImages {
   final String avatar1 = '$_base/avatar1.png';
 
   List<String> get all => [avatar1];
+
+  String extractFileName(String fullPath) {
+    return fullPath.split('/').last;
+  }
+
+  String getFullPath(String fileName) {
+    return '$_base/$fileName';
+  }
 }
 
 class AppConfigImages {

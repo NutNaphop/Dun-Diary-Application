@@ -17,6 +17,7 @@ class AppStrings {
   static const record = _RecordStrings();
   static const result = _ResultStrings();
   static const stat = _StatStrings();
+  static const setting = _SettingStrings();
 }
 
 class _CommonStrings {
@@ -220,6 +221,65 @@ class _StatStrings {
   final String noDataTitle = "ยังไม่มีข้อมูลในช่วงเวลานี้";
   final String noDataDesc =
       "เพิ่มข้อมูลความดันโลหิตก่อน เพื่อให้ AI ช่วยวิเคราะห์ผลและสรุปให้คุณ";
+}
+
+class _SettingStrings {
+  const _SettingStrings();
+
+  // Recovery My Data - Scanner
+  final String recoveryTitle = "กู้คืนข้อมูลของฉัน";
+  final String uploadQRTitle = "อัปโหลด QR Code ของคุณ";
+  final String uploadQRDescription =
+      "กรุณาเลือกรูปภาพ QR Code\nที่คุณบันทึกไว้\nเพื่อกู้คืนข้อมูลบัญชีของคุณ";
+  final String selectFromAlbum = "เลือกรูปภาพจากอัลบั้ม";
+  final String openCameraScanner = "เปิดกล้องสแกน QR Code";
+
+  // Recovery My Data - Errors
+  final String qrNotFoundInImage = "ไม่พบ QR code ในรูปภาพนี้";
+  final String decryptionFailed =
+      "❌ ถอดรหัสล้มเหลว (อาจสแกน QR อื่นที่ไม่ใช่ของแอปเรา)";
+  final String invalidQrData = "ไม่พบข้อมูล หรือ QR Code ไม่ถูกต้อง";
+  final String imageProcessError = "เกิดข้อผิดพลาดในการประมวลผลรูปภาพ";
+  final String qrProcessError = "เกิดข้อผิดพลาดในการประมวลผล QR Code";
+  final String selfRecoveryError =
+      "นี่คือข้อมูลของบัญชีปัจจุบันที่คุณกำลังใช้งานอยู่แล้ว";
+  final String noInternetCannotFetch =
+      "ไม่มีการเชื่อมต่ออินเทอร์เน็ต ไม่สามารถดึงข้อมูลบัญชีได้";
+  final String accountNotFound = "ไม่พบข้อมูลบัญชีนี้ในระบบ";
+  final String noInternetTryAgain =
+      "ไม่มีการเชื่อมต่ออินเทอร์เน็ต กรุณาเชื่อมต่อแล้วลองใหม่";
+  final String recoveryFailed = "กู้ข้อมูลล้มเหลว กรุณาลองใหม่อีกครั้ง";
+  final String cannotResumeRecovery = "ไม่สามารถกู้ข้อมูลต่อได้";
+
+  // Recovery My Data - Resume Error UI
+  final String resumePausedTitle = "การกู้คืนข้อมูลหยุดชะงัก";
+  final String resumePausedDesc =
+      "กรุณาเชื่อมต่ออินเทอร์เน็ตแล้วกดลองใหม่เพื่อกู้ข้อมูลต่อ";
+  final String retryResumeBtn = "ลองใหม่อีกครั้ง";
+
+  // Recovery My Data - Progress / status
+  final String fetchingFromServer = "กำลังดึงข้อมูลจากเซิร์ฟเวอร์...";
+  String fetchSuccess(int length) => "ดึงข้อมูลสำเร็จ ($length รายการ)";
+  final String preparingSpace = "กำลังเตรียมพื้นที่...";
+  final String settingUpAccount = "กำลังตั้งค่าบัญชี...";
+  final String savingProfile = "กำลังบันทึกโปรไฟล์...";
+  String savingDataProgress(int saved, int total) =>
+      "กำลังบันทึกข้อมูล ($saved/$total)...";
+  final String clearingOldData = "กำลังล้างข้อมูลเก่า...";
+  final String recoveryCompleted = "กู้ข้อมูลเรียบร้อยแล้ว! ✅";
+  final String recoverySuccess = "กู้ข้อมูลเรียบร้อยแล้ว";
+
+  // Recovery My Data - Preview UI
+  final String accountFound = "พบข้อมูลบัญชีแล้ว !";
+  final String readyToRecoverDesc =
+      "ข้อมูลของคุณพร้อมกู้คืนแล้ว\nกรุณาตรวจสอบว่าอุปกรณ์เชื่อมต่ออินเทอร์เน็ต";
+  final String confirmRecoveryBtn = "ยืนยันกู้ข้อมูล";
+
+  // Recovery My Data - Dialog
+  final String confirmRecoveryTitle = "ยืนยันการกู้ข้อมูล";
+  final String confirmRecoveryWarning =
+      "⚠️ กรุณาอ่านก่อนกดยืนยัน:\n\n• ต้องเชื่อมต่ออินเทอร์เน็ตตลอดการกู้ข้อมูล\n• ห้ามออกจากหน้านี้หรือปิดแอประหว่างกู้ข้อมูล\n• ข้อมูลเดิมในเครื่องนี้จะถูกแทนที่ด้วยข้อมูลที่กู้คืน";
+  final String understandAndConfirm = "เข้าใจแล้ว ยืนยัน";
 }
 
 class _ResultStrings {

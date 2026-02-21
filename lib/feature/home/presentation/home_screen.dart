@@ -1,3 +1,4 @@
+import 'package:dun_diary_app/core/auth/provider/global_user_provider.dart';
 import 'package:dun_diary_app/data/blood_pressure/repository/blood_pressure_repository.dart';
 import 'package:dun_diary_app/feature/home/presentation/home_viewModel.dart';
 import 'package:dun_diary_app/feature/home/presentation/widgets/card/home_bp_card.dart';
@@ -40,81 +41,87 @@ class _HomeScreenState extends State<HomeScreen> {
     final hasRecords = context.select((HomeViewmodel vm) => vm.hasRecords);
     final latestRecord = context.select((HomeViewmodel vm) => vm.latestRecord);
 
+    final userName = context.select((GlobalUserProvider p) => p.displayName);
+
     return CustomScaffold(
       useSafeArea: false,
       usePadding: false,
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            HomeHeader(userName: "ราชาปีศาจ"),
-            SizedBox(height: 15),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 15),
-              child: Column(
-                mainAxisSize: MainAxisSize.max,
-                spacing: 25,
-                children: [
-                  // --- ส่วนการ์ดแสดงผลสุขภาพ (Health Status Card) ---
-                  CustomCard(
-                    title: AppStrings.home.healthToday,
-                    contentPadding: const EdgeInsets.all(20),
-                    content: Column(
-                      mainAxisSize: MainAxisSize.max,
-                      children: [
-                        if (hasRecords) ...[
-                          StatRow(
-                            leading: SVGImage(
-                              path: AppIcons.duotone.graphUp,
-                              width: 34,
-                              height: 34,
-                              color: CustomColor.purple1,
+      body: Column(
+        children: [
+          HomeHeader(userName: userName),
+          const SizedBox(height: 15),
+          Expanded(
+            child: SingleChildScrollView(
+              physics: const AlwaysScrollableScrollPhysics(),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 15),
+                child: Column(
+                  mainAxisSize: MainAxisSize.max,
+                  spacing: 25,
+                  children: [
+                    // --- ส่วนการ์ดแสดงผลสุขภาพ (Health Status Card) ---
+                    CustomCard(
+                      title: AppStrings.home.healthToday,
+                      contentPadding: const EdgeInsets.all(20),
+                      content: Column(
+                        mainAxisSize: MainAxisSize.max,
+                        children: [
+                          if (hasRecords) ...[
+                            StatRow(
+                              leading: SVGImage(
+                                path: AppIcons.duotone.graphUp,
+                                width: 34,
+                                height: 34,
+                                color: CustomColor.purple1,
+                              ),
+                              label: AppStrings.bloodPressure.sysShortLabel,
+                              description: AppStrings.bloodPressure.sysDesc,
+                              value: latestRecord?.sys.toString() ?? '-',
                             ),
-                            label: AppStrings.bloodPressure.sysShortLabel,
-                            description: AppStrings.bloodPressure.sysDesc,
-                            value: latestRecord?.sys.toString() ?? '-',
-                          ),
-                          StatRow(
-                            leading: SVGImage(
-                              path: AppIcons.duotone.graphDown,
-                              width: 34,
-                              height: 34,
-                              color: CustomColor.blue4,
+                            StatRow(
+                              leading: SVGImage(
+                                path: AppIcons.duotone.graphDown,
+                                width: 34,
+                                height: 34,
+                                color: CustomColor.blue4,
+                              ),
+                              label: AppStrings.bloodPressure.diaShortLabel,
+                              description: AppStrings.bloodPressure.diaDesc,
+                              value: latestRecord?.dia.toString() ?? '-',
                             ),
-                            label: AppStrings.bloodPressure.diaShortLabel,
-                            description: AppStrings.bloodPressure.diaDesc,
-                            value: latestRecord?.dia.toString() ?? '-',
-                          ),
-                          StatRow(
-                            leading: SVGImage(
-                              path: AppIcons.duotone.heartPulse,
-                              width: 34,
-                              height: 34,
-                              color: CustomColor.pink3,
+                            StatRow(
+                              leading: SVGImage(
+                                path: AppIcons.duotone.heartPulse,
+                                width: 34,
+                                height: 34,
+                                color: CustomColor.pink3,
+                              ),
+                              label: AppStrings.bloodPressure.pulseShortLabel,
+                              description: AppStrings.bloodPressure.pulseDesc,
+                              value: latestRecord?.pulse.toString() ?? '-',
                             ),
-                            label: AppStrings.bloodPressure.pulseShortLabel,
-                            description: AppStrings.bloodPressure.pulseDesc,
-                            value: latestRecord?.pulse.toString() ?? '-',
-                          ),
-                        ] else ...[
-                          NoContentCard(
-                            title: AppStrings.home.noContent,
-                            subtitle: AppStrings.home.pressToRecord,
-                            imagePath: AppImages.emptyFolder,
-                            imageWidth: 106,
-                            imageHeight: 117,
-                          ),
+                          ] else ...[
+                            NoContentCard(
+                              title: AppStrings.home.noContent,
+                              subtitle: AppStrings.home.pressToRecord,
+                              imagePath: AppImages.emptyFolder,
+                              imageWidth: 106,
+                              imageHeight: 117,
+                            ),
+                          ],
                         ],
-                      ],
+                      ),
                     ),
-                  ),
 
-                  // Blood Pressure Card
-                  HomeBpCard(),
-                ],
+                    // Blood Pressure Card
+                    HomeBpCard(),
+                    const SizedBox(height: 35),
+                  ],
+                ),
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
