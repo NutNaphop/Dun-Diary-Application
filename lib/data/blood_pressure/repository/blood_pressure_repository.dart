@@ -50,9 +50,14 @@ class BloodPressureRepository {
       await _localDataSource.enqueueUpsert(record.id);
       AppLogger.info("Repo: Saved & Enqueued ${record.id}");
 
-      // 3. ถ้า Online -> ยิง Sync เลย
-      if (isOnline)
-        await syncAllPending(await _authService.getUserIdForSaving());
+      // 3. ถ้า Online -> ยิง Sync เลย (แบบ Fire & Forget ไม่บล็อค UI)
+      if (isOnline) {
+        _authService.getUserIdForSaving().then((uid) {
+          syncAllPending(
+            uid,
+          ).catchError((e) => AppLogger.error("Background Sync Error", e));
+        });
+      }
     } catch (e) {
       AppLogger.error("Save Error", e);
       rethrow;
@@ -89,9 +94,14 @@ class BloodPressureRepository {
       await _localDataSource.enqueueUpsert(record.id);
       AppLogger.info("Repo: Updated & Enqueued ${record.id}");
 
-      // 3. ถ้า Online -> ยิง Sync เลย
-      if (isOnline)
-        await syncAllPending(await _authService.getUserIdForSaving());
+      // 3. ถ้า Online -> ยิง Sync เลย (แบบ Fire & Forget ไม่บล็อค UI)
+      if (isOnline) {
+        _authService.getUserIdForSaving().then((uid) {
+          syncAllPending(
+            uid,
+          ).catchError((e) => AppLogger.error("Background Sync Error", e));
+        });
+      }
     } catch (e) {
       AppLogger.error("Update Error", e);
       rethrow;
@@ -108,9 +118,14 @@ class BloodPressureRepository {
       await _localDataSource.enqueueDelete(id);
       AppLogger.info("Repo: Deleted & Processed Queue logic for $id");
 
-      // 3. ถ้า Online -> ยิง Sync เลย
-      if (isOnline)
-        await syncAllPending(await _authService.getUserIdForSaving());
+      // 3. ถ้า Online -> ยิง Sync เลย (แบบ Fire & Forget ไม่บล็อค UI)
+      if (isOnline) {
+        _authService.getUserIdForSaving().then((uid) {
+          syncAllPending(
+            uid,
+          ).catchError((e) => AppLogger.error("Background Sync Error", e));
+        });
+      }
     } catch (e) {
       AppLogger.error("Delete Error", e);
       rethrow;

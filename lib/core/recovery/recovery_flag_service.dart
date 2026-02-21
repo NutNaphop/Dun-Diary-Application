@@ -5,6 +5,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 class RecoveryFlagService {
   static const String _recoveryInProgressKey = 'recovery_in_progress';
   static const String _recoveryTargetUidKey = 'recovery_target_uid';
+  static const String _pendingDeleteUidKey = 'pending_delete_uid';
 
   /// เช็คว่ามี recovery ค้างอยู่หรือไม่
   static bool isRecoveryPending() {
@@ -32,5 +33,24 @@ class RecoveryFlagService {
     await box.delete(_recoveryInProgressKey);
     await box.delete(_recoveryTargetUidKey);
     AppLogger.info("🏁 Recovery flag cleared");
+  }
+
+  /// บันทึก UID ของบัญชีเก่าที่จะลบทิ้งหลังจากกู้คืนเสร็จ
+  static Future<void> setPendingDeleteUid(String uid) async {
+    final box = Hive.box(AuthService.settingsBoxName);
+    await box.put(_pendingDeleteUidKey, uid);
+    AppLogger.info("🗑️ Marked $uid for deletion after recovery");
+  }
+
+  /// ดึง UID ของบัญชีเก่าที่กู้คืนเสร็จแล้วค่อยลบ
+  static String? getPendingDeleteUid() {
+    final box = Hive.box(AuthService.settingsBoxName);
+    return box.get(_pendingDeleteUidKey);
+  }
+
+  /// ลบข้อมูลคิวลบบัญชีทิ้ง (ใช้เมื่อลบเสร็จแล้ว)
+  static Future<void> clearPendingDeleteUid() async {
+    final box = Hive.box(AuthService.settingsBoxName);
+    await box.delete(_pendingDeleteUidKey);
   }
 }

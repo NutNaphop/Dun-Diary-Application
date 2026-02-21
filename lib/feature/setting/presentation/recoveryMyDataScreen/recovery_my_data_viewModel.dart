@@ -220,6 +220,11 @@ class RecoveryMyDataViewModel extends ChangeNotifier {
         _updateProgress(AppStrings.setting.preparingSpace, 0.3);
         await _bpRepository.clearAllLocalData();
 
+        // mark the old UID for deletion later
+        if (currentUid != null) {
+          await RecoveryFlagService.setPendingDeleteUid(currentUid);
+        }
+
         // ====== STEP 3: set active UID ======
         _updateProgress(AppStrings.setting.settingUpAccount, 0.4);
         await _authService.setActiveUid(decryptedUid!);
@@ -263,10 +268,12 @@ class RecoveryMyDataViewModel extends ChangeNotifier {
       }
 
       // ====== STEP 6: delete remote data of old UID (after recovery completed) ======
-      if (currentUid != null && currentUid != decryptedUid) {
+      final uidToDelete = RecoveryFlagService.getPendingDeleteUid();
+      if (uidToDelete != null && uidToDelete != decryptedUid) {
         _updateProgress(AppStrings.setting.clearingOldData, 0.9);
-        await _bpRepository.deleteAllRemoteRecords(currentUid);
-        await _userRepository.deleteRemoteUserData(currentUid);
+        await _bpRepository.deleteAllRemoteRecords(uidToDelete);
+        await _userRepository.deleteRemoteUserData(uidToDelete);
+        await RecoveryFlagService.clearPendingDeleteUid();
       }
 
       // delete recovery flag
