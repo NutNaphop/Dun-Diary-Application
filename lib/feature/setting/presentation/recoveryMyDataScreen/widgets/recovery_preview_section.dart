@@ -13,6 +13,7 @@ import 'package:dun_diary_app/shared/widgets/custom/img/custom_svg_widget.dart';
 import 'package:dun_diary_app/shared/widgets/custom/text/text_widget.dart';
 import 'package:dun_diary_app/shared/constant/app_strings.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class RecoveryPreviewSection extends StatelessWidget {
   final RecoveryMyDataViewModel viewModel;
@@ -61,51 +62,81 @@ class RecoveryPreviewSection extends StatelessWidget {
                 ),
 
                 // === Recovery Progress UI ===
-                if (viewModel.isRecovering) ...[
-                  const SizedBox(height: 40),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 32),
-                    child: Column(
-                      children: [
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(8),
-                          child: LinearProgressIndicator(
-                            value: viewModel.recoveryProgress,
-                            minHeight: 8,
-                            backgroundColor: CustomColor.gray200,
-                            valueColor: const AlwaysStoppedAnimation<Color>(
-                              CustomColor.primaryColor,
-                            ),
-                          ),
+                const SizedBox(height: 40),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 32),
+                  child: Column(
+                    children: [
+                      const SizedBox(height: 24),
+
+                      // ====== ONLY THIS PART REBUILDS ON PROGRESS ======
+                      Selector<RecoveryMyDataViewModel, _ProgressState>(
+                        selector: (context, vm) => _ProgressState(
+                          isRecovering: vm.isRecovering,
+                          progress: vm.recoveryProgress,
+                          status: vm.recoveryStatus,
                         ),
-                        const SizedBox(height: 12),
-                        CustomText(
-                          text: viewModel.recoveryStatus,
-                          fontSize: Dimension.fontSizes.rg,
-                          color: CustomColor.gray600,
-                          textAlign: TextAlign.center,
-                        ),
-                      ],
-                    ),
+                        builder: (context, state, child) {
+                          if (!state.isRecovering)
+                            return const SizedBox.shrink();
+
+                          return Column(
+                            children: [
+                              LinearProgressIndicator(
+                                value: state.progress,
+                                minHeight: 12,
+                                borderRadius: BorderRadius.circular(6),
+                                backgroundColor: CustomColor.blue6,
+                                color: CustomColor.blue3,
+                              ),
+                              const SizedBox(height: 8),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  CustomText(
+                                    text: state.status,
+                                    fontSize: Dimension.fontSizes.sm,
+                                    color: CustomColor.gray600,
+                                  ),
+                                  CustomText(
+                                    text: "${(state.progress * 100).toInt()}%",
+                                    fontSize: Dimension.fontSizes.sm,
+                                    fontWeight: Dimension.fontWeights.bold,
+                                    color: CustomColor.blue3,
+                                  ),
+                                ],
+                              ),
+                            ],
+                          );
+                        },
+                      ),
+                    ],
                   ),
-                ],
+                ),
               ],
             ),
           ),
         ),
 
-        // ปุ่มยืนยันการกู้ข้อมูล (ซ่อนตอน recovering)
-        if (!viewModel.isRecovering)
-          Padding(
-            padding: const EdgeInsets.only(bottom: 24),
-            child: CustomButton(
-              text: AppStrings.setting.confirmRecoveryBtn,
-              type: CustomButtonType.fill,
-              onPressed: () {
-                _showRecoveryConfirmDialog(context);
-              },
-            ),
-          ),
+        // ====== ONLY HIDE THE BUTTON IF RECOVERING ======
+        Selector<RecoveryMyDataViewModel, bool>(
+          selector: (context, vm) => vm.isRecovering,
+          builder: (context, isRecovering, child) {
+            if (isRecovering) return const SizedBox.shrink();
+
+            return Padding(
+              padding: const EdgeInsets.only(bottom: 24),
+              child: CustomButton(
+                text: AppStrings.setting.confirmRecoveryBtn,
+                type: CustomButtonType.fill,
+                onPressed: () {
+                  _showRecoveryConfirmDialog(context);
+                },
+              ),
+            );
+          },
+        ),
       ],
     );
   }
@@ -132,4 +163,28 @@ class RecoveryPreviewSection extends StatelessWidget {
       }
     }
   }
+}
+
+class _ProgressState {
+  final bool isRecovering;
+  final double progress;
+  final String status;
+
+  _ProgressState({
+    required this.isRecovering,
+    required this.progress,
+    required this.status,
+  });
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is _ProgressState &&
+          runtimeType == other.runtimeType &&
+          isRecovering == other.isRecovering &&
+          progress == other.progress &&
+          status == other.status;
+
+  @override
+  int get hashCode => Object.hash(isRecovering, progress, status);
 }

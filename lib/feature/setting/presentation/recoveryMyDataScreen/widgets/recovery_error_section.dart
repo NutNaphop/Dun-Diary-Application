@@ -5,6 +5,7 @@ import 'package:dun_diary_app/shared/style/dimension.dart';
 import 'package:dun_diary_app/shared/widgets/custom/button/custom_button.dart';
 import 'package:dun_diary_app/shared/widgets/custom/text/text_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class RecoveryErrorSection extends StatelessWidget {
   final RecoveryMyDataViewModel viewModel;
@@ -41,10 +42,15 @@ class RecoveryErrorSection extends StatelessWidget {
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 32),
-          CustomButton(
-            text: AppStrings.setting.retryResumeBtn,
-            type: CustomButtonType.fill,
-            onPressed: viewModel.isLoading ? null : onRetry,
+          Selector<RecoveryMyDataViewModel, bool>(
+            selector: (context, vm) => vm.isLoading,
+            builder: (context, isLoading, child) {
+              return CustomButton(
+                text: AppStrings.setting.retryResumeBtn,
+                type: CustomButtonType.fill,
+                onPressed: isLoading ? null : onRetry,
+              );
+            },
           ),
         ],
       ),

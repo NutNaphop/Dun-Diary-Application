@@ -9,6 +9,7 @@ import 'package:dun_diary_app/shared/widgets/custom/button/custom_button.dart';
 import 'package:dun_diary_app/shared/widgets/custom/img/custom_svg_widget.dart';
 import 'package:dun_diary_app/shared/widgets/custom/text/text_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class RecoveryScannerSection extends StatelessWidget {
   final RecoveryMyDataViewModel viewModel;
@@ -65,46 +66,51 @@ class RecoveryScannerSection extends StatelessWidget {
         ),
         Padding(
           padding: const EdgeInsets.only(bottom: 24),
-          child: Column(
-            children: [
-              // Primary: Pick from Album
-              CustomButton(
-                text: AppStrings.setting.selectFromAlbum,
-                type: CustomButtonType.fill,
-                onPressed: viewModel.isLoading
-                    ? null
-                    : () async {
-                        await viewModel.pickImageAndDecodeQR();
-                      },
-              ),
-              const SizedBox(height: 12),
+          child: Selector<RecoveryMyDataViewModel, bool>(
+            selector: (context, vm) => vm.isLoading,
+            builder: (context, isLoading, child) {
+              return Column(
+                children: [
+                  // Primary: Pick from Album
+                  CustomButton(
+                    text: AppStrings.setting.selectFromAlbum,
+                    type: CustomButtonType.fill,
+                    onPressed: isLoading
+                        ? null
+                        : () async {
+                            await viewModel.pickImageAndDecodeQR();
+                          },
+                  ),
+                  const SizedBox(height: 12),
 
-              // Secondary: Open Camera Scanner
-              CustomButton(
-                text: AppStrings.setting.openCameraScanner,
-                type: CustomButtonType.outline,
-                borderColor: CustomColor.primaryColor,
-                textStyle: TextStyle(
-                  color: CustomColor.primaryColor,
-                  fontSize: Dimension.fontSizes.h2,
-                  fontWeight: Dimension.fontWeights.bold,
-                ),
-                leadingIcon: SVGImage(
-                  path: AppIcons.outline.camera,
-                  width: 20,
-                  height: 20,
-                ),
-                onPressed: viewModel.isLoading
-                    ? null
-                    : () async {
-                        final scannedData = await NavigationService.instance
-                            .pushNamed(AppRoutes.setting.qrScanner);
-                        if (scannedData != null && scannedData is String) {
-                          await viewModel.processScannedQR(scannedData);
-                        }
-                      },
-              ),
-            ],
+                  // Secondary: Open Camera Scanner
+                  CustomButton(
+                    text: AppStrings.setting.openCameraScanner,
+                    type: CustomButtonType.outline,
+                    borderColor: CustomColor.primaryColor,
+                    textStyle: TextStyle(
+                      color: CustomColor.primaryColor,
+                      fontSize: Dimension.fontSizes.h2,
+                      fontWeight: Dimension.fontWeights.bold,
+                    ),
+                    leadingIcon: SVGImage(
+                      path: AppIcons.outline.camera,
+                      width: 20,
+                      height: 20,
+                    ),
+                    onPressed: isLoading
+                        ? null
+                        : () async {
+                            final scannedData = await NavigationService.instance
+                                .pushNamed(AppRoutes.setting.qrScanner);
+                            if (scannedData != null && scannedData is String) {
+                              await viewModel.processScannedQR(scannedData);
+                            }
+                          },
+                  ),
+                ],
+              );
+            },
           ),
         ),
       ],
