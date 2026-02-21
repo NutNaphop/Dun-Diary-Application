@@ -76,9 +76,7 @@ class HomeHeader extends StatelessWidget {
                         ),
                         // Bell Icon
                         GestureDetector(
-                          onTap: () {
-                            viewModel.seedData();
-                          },
+                          onTap: () {},
                           child: Container(
                             padding: const EdgeInsets.all(4),
                             decoration: BoxDecoration(
