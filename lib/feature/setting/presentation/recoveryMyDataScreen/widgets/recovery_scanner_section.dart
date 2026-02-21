@@ -9,7 +9,6 @@ import 'package:dun_diary_app/shared/widgets/custom/button/custom_button.dart';
 import 'package:dun_diary_app/shared/widgets/custom/img/custom_svg_widget.dart';
 import 'package:dun_diary_app/shared/widgets/custom/text/text_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 class RecoveryScannerSection extends StatelessWidget {
   final RecoveryMyDataViewModel viewModel;
@@ -75,9 +74,7 @@ class RecoveryScannerSection extends StatelessWidget {
                 onPressed: viewModel.isLoading
                     ? null
                     : () async {
-                        await context
-                            .read<RecoveryMyDataViewModel>()
-                            .pickImageAndDecodeQR();
+                        await viewModel.pickImageAndDecodeQR();
                       },
               ),
               const SizedBox(height: 12),
@@ -102,12 +99,8 @@ class RecoveryScannerSection extends StatelessWidget {
                     : () async {
                         final scannedData = await NavigationService.instance
                             .pushNamed(AppRoutes.setting.qrScanner);
-                        if (scannedData != null &&
-                            scannedData is String &&
-                            context.mounted) {
-                          await context
-                              .read<RecoveryMyDataViewModel>()
-                              .processScannedQR(scannedData);
+                        if (scannedData != null && scannedData is String) {
+                          await viewModel.processScannedQR(scannedData);
                         }
                       },
               ),

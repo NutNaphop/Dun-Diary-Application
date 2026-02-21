@@ -29,28 +29,42 @@ class AuthService {
     }
   }
 
-  /// 2. ฟังก์ชันขอ ID สำหรับบันทึก (พระเอกของเรา)
+  /// 2. ฟังก์ชันขอ ID สำหรับบันทึก (ใช้ UUID เป็น primary key เสมอ)
+  ///
+  /// ลำดับการเช็ค:
+  /// 1. active_uid (ถ้าเคย recovery มา)
+  /// 2. local_uuid (UUID ที่สร้างเองตอนเปิดแอปครั้งแรก)
   Future<String> getUserIdForSaving() async {
-    // กรณีที่ 1: ถ้า Login Firebase อยู่ -> ใช้ UID จริงเลย
-    final firebaseUser = _firebaseAuth.currentUser;
-    if (firebaseUser != null) {
-      return firebaseUser.uid;
-    }
-
-    // กรณีที่ 2: ถ้าไม่มีเน็ต/ยังไม่ Login -> ใช้ Local UUID
     final box = Hive.box(settingsBoxName);
+
+    // กรณี Recovery: ถ้ามี active_uid → ใช้ตัวนั้น
+    String? activeUid = box.get('active_uid');
+    if (activeUid != null) return activeUid;
+
+    // กรณีปกติ: ใช้ local_uuid
     String? localUuid = box.get('local_uuid');
 
     // ถ้ายังไม่เคยมี Local UUID มาก่อน -> สร้างใหม่แล้วจำไว้
     if (localUuid == null) {
       localUuid = const Uuid().v4();
       await box.put('local_uuid', localUuid);
-      AppLogger.warning("Auth: Generated new Local UUID -> $localUuid");
-    } else {
-      AppLogger.warning("Auth: Using existing Local UUID -> $localUuid");
+      AppLogger.info("Auth: Generated new Local UUID -> $localUuid");
     }
 
     return localUuid;
+  }
+
+  /// เซ็ต Active UID ใหม่ (ใช้ตอน Recovery เพื่อเปลี่ยนไปใช้ UID จากเครื่องเก่า)
+  Future<void> setActiveUid(String uid) async {
+    final box = Hive.box(settingsBoxName);
+    await box.put('active_uid', uid);
+    AppLogger.info("Auth: Set active UID -> $uid");
+  }
+
+  /// ดึง Active UID ปัจจุบัน (ใช้ตอน cleanup ก่อน recovery)
+  String? getCurrentActiveUid() {
+    final box = Hive.box(settingsBoxName);
+    return box.get('active_uid') ?? box.get('local_uuid');
   }
 
   Future<void> initializeUserIdentity() async {

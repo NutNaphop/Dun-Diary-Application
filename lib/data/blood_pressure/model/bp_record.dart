@@ -38,7 +38,7 @@ class BPRecord extends HiveObject {
     this.isSynced = false,
     this.note,
   });
-  
+
   // แปลงเป็น Map สำหรับส่งให้ Firebase
   Map<String, dynamic> toJson() {
     return {
@@ -50,5 +50,19 @@ class BPRecord extends HiveObject {
       'createdAt': createdAt.toIso8601String(),
       'note': note,
     };
+  }
+
+  // สร้างจาก Map ที่ดึงมาจาก Firebase (ใช้ตอน Recovery)
+  factory BPRecord.fromJson(Map<String, dynamic> json) {
+    return BPRecord(
+      id: json['id'] as String,
+      ownerId: json['ownerId'] as String,
+      sys: json['sys'] as int,
+      dia: json['dia'] as int,
+      pulse: json['pulse'] as int,
+      createdAt: DateTime.parse(json['createdAt'] as String),
+      isSynced: true,
+      note: json['note'] as String?,
+    );
   }
 }

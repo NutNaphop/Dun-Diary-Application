@@ -47,9 +47,10 @@ class SyncService {
         final user = await _authService.signInAnonymously();
 
         if (user != null) {
-          // 2. Sync ข้อมูลที่ค้าง
-          await _repository.syncAllPending();
-          await _userRepository.syncPendingProfile(user.uid);
+          // 2. Sync ข้อมูลที่ค้าง (ใช้ active UUID ไม่ใช่ Firebase UID)
+          final activeUid = await _authService.getUserIdForSaving();
+          await _repository.syncAllPending(activeUid);
+          await _userRepository.syncPendingProfile(activeUid);
         }
       }
     });

@@ -32,4 +32,15 @@ class UserRemoteDataSource {
       rethrow;
     }
   }
+
+  /// ลบ user data ทั้งหมดจาก Firestore (ใช้ตอน Recovery cleanup)
+  Future<void> deleteUserData(String uid) async {
+    try {
+      await _firestore.collection('users').doc(uid).delete();
+      AppLogger.debug("✅ Deleted user data for $uid");
+    } catch (e) {
+      AppLogger.error("❌ Failed to delete user data: $e");
+      rethrow;
+    }
+  }
 }

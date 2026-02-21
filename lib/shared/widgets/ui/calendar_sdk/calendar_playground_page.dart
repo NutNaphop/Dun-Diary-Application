@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dun_diary_app/core/auth/auth_service.dart';
 import 'package:dun_diary_app/data/blood_pressure/datasource/blood_pressure_local_data_source.dart';
 import 'package:dun_diary_app/data/blood_pressure/datasource/blood_pressure_remote_data_source.dart';
 import 'package:dun_diary_app/data/blood_pressure/repository/blood_pressure_repository.dart';
@@ -28,6 +29,7 @@ class _CalendarPlaygroundPageState extends State<CalendarPlaygroundPage> {
     remoteDataSource: BloodPressureRemoteDataSource(
       firestore: FirebaseFirestore.instance,
     ),
+    authService: AuthService(),
   );
 
   @override
