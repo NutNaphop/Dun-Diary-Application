@@ -1,3 +1,4 @@
+import 'package:dun_diary_app/shared/constant/app_bp_level.dart';
 import 'package:dun_diary_app/core/network/network_info.dart';
 import 'package:dun_diary_app/data/analyze_record/model/analyze_result_model.dart';
 import 'package:dun_diary_app/data/analyze_record/repository/analyze_repository.dart';
@@ -120,7 +121,7 @@ class _StatSummaryData {
   final String dateLabel;
   final AnalyzeState analyzeState;
   final AnalyzeResultModel? resultFromAi;
-  final int? bloodPressureLevel;
+  final BPLevel? bloodPressureLevel;
   final List<StatCardData> statsData;
   final List<BloodPressureGraphData> graphData;
   final bool isInternetConnected;

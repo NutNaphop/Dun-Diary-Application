@@ -1,3 +1,4 @@
+import 'package:dun_diary_app/shared/constant/app_bp_level.dart';
 import 'package:dun_diary_app/feature/record/presentation/record_viewModel.dart';
 import 'package:dun_diary_app/shared/constant/app_strings.dart';
 import 'package:dun_diary_app/shared/utils/blood_pressure_utils.dart';
@@ -11,12 +12,10 @@ class RecordGaugeCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Selector<RecordViewmodel, int>(
+    return Selector<RecordViewmodel, BPLevel>(
       selector: (_, viewModel) => viewModel.level,
       builder: (context, level, child) => CustomCard(
-        title: AppStrings.bloodPressure.bloodPressure(
-          BloodPressureUtils.mapLevelLabel(level),
-        ),
+        title: AppStrings.bloodPressure.bloodPressure(level.label),
         titleFontSize: 21,
         titleTextAlign: TextAlign.center,
         contentPadding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),

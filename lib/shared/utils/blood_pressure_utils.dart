@@ -1,8 +1,6 @@
 import 'package:dun_diary_app/data/blood_pressure/model/record_model.dart';
-import 'package:dun_diary_app/shared/constant/app_animations.dart';
-import 'package:dun_diary_app/shared/constant/app_strings.dart';
-import 'package:dun_diary_app/shared/style/color.dart';
-import 'package:flutter/painting.dart';
+import 'package:dun_diary_app/shared/constant/app_bp_level.dart';
+export 'package:dun_diary_app/shared/constant/app_bp_level.dart';
 
 /// Utility class สำหรับจัดการข้อมูลความดันโลหิต
 ///
@@ -20,8 +18,7 @@ class BloodPressureUtils {
   /// แปลง List<BPRecord> เป็น List<BloodPressureGraphData> สำหรับกราฟ
   static List<BloodPressureGraphData> mapToGraphData(List<BPRecord> records) {
     return records.map((record) {
-      final levelIndex = calculateBloodPressureLevel(record.sys, record.dia);
-      final level = BloodPressureLevel.values[levelIndex];
+      final level = calculateBloodPressureLevel(record.sys, record.dia);
       final timeLabel =
           "${record.createdAt.hour.toString().padLeft(2, '0')}:${record.createdAt.minute.toString().padLeft(2, '0')}";
 
@@ -63,12 +60,13 @@ class BloodPressureUtils {
   /// 2. ใช้ค่าที่สูงกว่าเป็นผลลัพธ์ (worst-case)
   ///
   /// Returns: 0-5 (low, normal, elevated, highStage1, highStage2, crisis)
-  static int calculateBloodPressureLevel(int sys, int dia) {
+  static BPLevel calculateBloodPressureLevel(int sys, int dia) {
     final sysLevel = _calculateSysLevel(sys);
     final diaLevel = _calculateDiaLevel(dia);
 
     // ใช้ค่าที่สูงกว่า (worst-case scenario)
-    return sysLevel > diaLevel ? sysLevel : diaLevel;
+    final level = sysLevel > diaLevel ? sysLevel : diaLevel;
+    return BPLevel.fromIndex(level);
   }
 
   /// คำนวณระดับจาก SYS
@@ -93,90 +91,8 @@ class BloodPressureUtils {
   // ===========================================================================
   // 🏷️ SECTION 3: Label, Color & Animation Mapping
   // ===========================================================================
-
-  /// แปลง level (0-5) เป็น label ภาษาไทย
-  static String mapLevelLabel(int? level) {
-    if (level == null) return '-';
-    switch (level) {
-      case 0:
-        return AppStrings.bloodPressure.low;
-      case 1:
-        return AppStrings.bloodPressure.normal;
-      case 2:
-        return AppStrings.bloodPressure.elevated;
-      case 3:
-        return AppStrings.bloodPressure.highStage1;
-      case 4:
-        return AppStrings.bloodPressure.highStage2;
-      case 5:
-        return AppStrings.bloodPressure.crisis;
-      default:
-        return '-';
-    }
-  }
-
-  /// แปลง level (0-5) เป็นคำแนะนำสั้นๆ
-  static String mapLevelDescription(int? level) {
-    if (level == null) return '-';
-    switch (level) {
-      case 0:
-        return AppStrings.bloodPressure.lowDesc;
-      case 1:
-        return AppStrings.bloodPressure.normalDesc;
-      case 2:
-        return AppStrings.bloodPressure.elevatedDesc;
-      case 3:
-        return AppStrings.bloodPressure.highStage1Desc;
-      case 4:
-        return AppStrings.bloodPressure.highStage2Desc;
-      case 5:
-        return AppStrings.bloodPressure.crisisDesc;
-      default:
-        return '-';
-    }
-  }
-
-  /// แปลง level (0-5) เป็นสี
-  static Color mapLevelColor(int? level) {
-    if (level == null) return CustomColor.transparent;
-    switch (level) {
-      case 0:
-        return CustomColor.lowColor; // น้ำเงิน - ต่ำ
-      case 1:
-        return CustomColor.normalColor; // เขียว - ปกติ
-      case 2:
-        return CustomColor.elevatedColor; // เหลือง - สูง
-      case 3:
-        return CustomColor.highLevel1Color; // ส้ม - สูงระดับ 1
-      case 4:
-        return CustomColor.highLevel2Color; // แดงอ่อน - สูงระดับ 2
-      case 5:
-        return CustomColor.highLevel3CrisisColor; // แดงเข้ม - วิกฤต
-      default:
-        return CustomColor.lowColor;
-    }
-  }
-
-  /// แปลง level (0-5) เป็น animation
-  static String mapLevelAnimation(int? level) {
-    if (level == null) return AppAnimations.empty;
-    switch (level) {
-      case 0:
-        return AppAnimations.dizzyFace; // ต่ำ - ห่วงใย
-      case 1:
-        return AppAnimations.blushing; // ปกติ - ยิ้ม
-      case 2:
-        return AppAnimations.calm; // สูง - สงบ
-      case 3:
-        return AppAnimations.grieved; // สูงระดับ 1 - สงบ
-      case 4:
-        return AppAnimations.sadTear; // สูงระดับ 2 - ห่วงใย
-      case 5:
-        return AppAnimations.error; // วิกฤต - ห่วงใย
-      default:
-        return AppAnimations.calm;
-    }
-  }
+  // ✅ ย้ายไปอยู่ใน BPLevel enum แล้ว
+  // ใช้ level.label, level.description, level.color, level.animation แทน
 
   // ===========================================================================
   // 📈 SECTION 4: Average Calculations
@@ -200,16 +116,16 @@ class BloodPressureUtils {
     return sumPul / pulList.length;
   }
 
-  static int calculateAVGLevel(List<int> levelList) {
-    if (levelList.isEmpty) return 1; // default to normal
+  static BPLevel calculateAVGLevel(List<BPLevel> levelList) {
+    if (levelList.isEmpty) return BPLevel.normal; // default to normal
 
     // 🚨 Safety First: ถ้ามีค่าวิกฤต หรือ สูงมาก ให้ยึดค่านั้นทันที (ไม่เฉลี่ย)
-    if (levelList.contains(5)) return 5; // Crisis
-    if (levelList.contains(4)) return 4; // High Stage 2
+    if (levelList.contains(BPLevel.crisis)) return BPLevel.crisis;
+    if (levelList.contains(BPLevel.highStage2)) return BPLevel.highStage2;
 
     // ถ้าไม่มีอันตรายร้ายแรง ค่อยใช้ค่าเฉลี่ยตามปกติ
-    int sumLevel = levelList.fold(0, (prev, element) => prev + element);
-    return (sumLevel / levelList.length).round();
+    int sumLevel = levelList.fold(0, (prev, element) => prev + element.index);
+    return BPLevel.fromIndex((sumLevel / levelList.length).round());
   }
 
   /// คำนวณความเสี่ยงรวม (Safety First Strategy)
@@ -221,11 +137,11 @@ class BloodPressureUtils {
   ///
   /// [isStrict] - ถ้า true (default) จะใช้ Safety First (Crisis -> Crisis)
   ///              ถ้า false จะใช้ค่าเฉลี่ยปกติ (สำหรับ Monthly/Yearly Stats)
-  static int calculateOverallRiskLevel(
+  static BPLevel calculateOverallRiskLevel(
     List<BPRecord> records, {
     bool isStrict = true,
   }) {
-    if (records.isEmpty) return 1;
+    if (records.isEmpty) return BPLevel.normal;
 
     // 🚨 Strict Mode (Safety First): สำหรับรายวัน หรือต้องการความเข้มงวด
     if (isStrict) {
@@ -234,12 +150,12 @@ class BloodPressureUtils {
 
       for (var r in records) {
         final level = calculateBloodPressureLevel(r.sys, r.dia);
-        if (level == 5) hasCrisis = true;
-        if (level == 4) hasHighStage2 = true;
+        if (level == BPLevel.crisis) hasCrisis = true;
+        if (level == BPLevel.highStage2) hasHighStage2 = true;
       }
 
-      if (hasCrisis) return 5; // Crisis
-      if (hasHighStage2) return 4; // High Stage 2
+      if (hasCrisis) return BPLevel.crisis;
+      if (hasHighStage2) return BPLevel.highStage2;
     }
 
     // Default / Long Period: ใช้ค่าเฉลี่ยตามปกติ

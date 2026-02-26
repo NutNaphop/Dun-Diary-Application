@@ -62,9 +62,9 @@ class StatViewmodel extends ChangeNotifier {
   List<StatCardData> _statsData = [];
   List<StatCardData> get statsData => _statsData;
 
-  /// ระดับความดันโลหิตจากค่าเฉลี่ย (0-5, null = ไม่มีข้อมูล)
-  int? _bloodPressureLevel;
-  int? get bloodPressureLevel => _bloodPressureLevel;
+  /// ระดับความดันโลหิตจากค่าเฉลี่ย (null = ไม่มีข้อมูล)
+  BPLevel? _bloodPressureLevel;
+  BPLevel? get bloodPressureLevel => _bloodPressureLevel;
 
   /// ข้อมูลสำหรับแสดงกราฟ
   List<BloodPressureGraphData> _graphData = [];

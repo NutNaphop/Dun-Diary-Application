@@ -1,4 +1,5 @@
 import 'package:dun_diary_app/data/analyze_record/model/analyze_result_model.dart';
+import 'package:dun_diary_app/shared/constant/app_animations.dart';
 import 'package:dun_diary_app/feature/stat/presentation/widgets/analyze_card/analyze_card.dart';
 import 'package:dun_diary_app/feature/stat/presentation/widgets/card/blood_pressure_card.dart';
 import 'package:dun_diary_app/feature/stat/presentation/widgets/stat_card/components/stat_icon.dart';
@@ -19,7 +20,7 @@ class StatSummaryView extends StatelessWidget {
   final AnalyzeState analyzeState;
   final AnalyzeResultModel? resultFromAi;
   final List<StatCardData> data;
-  final int? bloodPressureLevel;
+  final BPLevel? bloodPressureLevel;
   final List<BloodPressureGraphData> graphData;
   final bool isInternetConnected;
   final VoidCallback? onAnalyzePressed;
@@ -75,7 +76,7 @@ class StatSummaryView extends StatelessWidget {
               bloodPressureLevel: bloodPressureLevel,
               date: dateLabel,
               leadingIcon: LottieAnimation(
-                path: BloodPressureUtils.mapLevelAnimation(bloodPressureLevel),
+                path: bloodPressureLevel?.animation ?? AppAnimations.empty,
                 width: 90,
                 height: 90,
               ),

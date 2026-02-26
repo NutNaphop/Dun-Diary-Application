@@ -31,25 +31,21 @@ class HomeBpCard extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          LottieAnimation(
-            path: BloodPressureUtils.mapLevelAnimation(level),
-            width: 62,
-            height: 62,
-          ),
+          LottieAnimation(path: level.animation, width: 62, height: 62),
           SizedBox(width: 20),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 CustomText(
-                  text: BloodPressureUtils.mapLevelLabel(level),
+                  text: level.label,
                   fontSize: Dimension.fontSizes.xl,
                   fontWeight: Dimension.fontWeights.bold,
-                  color: BloodPressureUtils.mapLevelColor(level),
+                  color: level.color,
                 ),
                 SizedBox(height: 10),
                 CustomText(
-                  text: BloodPressureUtils.mapLevelDescription(level),
+                  text: level.description,
                   fontSize: Dimension.fontSizes.md,
                   fontWeight: Dimension.fontWeights.medium,
                   maxLines: 3,

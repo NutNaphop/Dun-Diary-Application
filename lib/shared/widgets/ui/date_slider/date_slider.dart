@@ -7,6 +7,7 @@ class DateSlider extends StatefulWidget {
   final Function(DateTime) onDateSelected;
   final Color Function(DateTime)? dateColorBuilder;
   final DateTime? enableScrollFutureUntil;
+  final bool Function(DateTime)? warningDotBuilder;
 
   const DateSlider({
     super.key,
@@ -14,6 +15,7 @@ class DateSlider extends StatefulWidget {
     required this.onDateSelected,
     this.dateColorBuilder,
     this.enableScrollFutureUntil,
+    this.warningDotBuilder,
   });
 
   @override
@@ -160,6 +162,7 @@ class _DateSliderState extends State<DateSlider> {
     return DateSliderItem(
       date: date,
       isSelected: isSelected,
+      showWarningDot: widget.warningDotBuilder?.call(date) ?? false,
       backgroundColor: backgroundColor,
       onTap: () {
         widget.onDateSelected(date);

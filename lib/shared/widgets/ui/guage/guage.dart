@@ -4,13 +4,14 @@ import 'package:dun_diary_app/shared/style/color.dart';
 import 'package:dun_diary_app/shared/style/dimension.dart';
 import 'package:dun_diary_app/shared/widgets/custom/img/custom_svg_widget.dart';
 import 'package:dun_diary_app/shared/widgets/custom/text/text_widget.dart';
+import 'package:dun_diary_app/shared/constant/app_bp_level.dart';
 import 'package:dun_diary_app/shared/widgets/ui/guage/guage_indicator.dart';
 import 'package:dun_diary_app/shared/widgets/ui/guage/utils/guage_utils.dart';
 import 'package:flutter/material.dart';
 
 class BloodPressureGauge extends StatelessWidget {
-  final int level;
-  final int? avgLevel;
+  final BPLevel level;
+  final BPLevel? avgLevel;
 
   const BloodPressureGauge({super.key, required this.level, this.avgLevel});
 
@@ -20,9 +21,9 @@ class BloodPressureGauge extends StatelessWidget {
     const double gaugeHeight = 30.0;
     const double borderRadius = gaugeHeight / 2;
     double alignmentAVGValue = avgLevel != null
-        ? GuageUtils.getAlignmentForAVGLevel(avgLevel!)
+        ? GuageUtils.getAlignmentForAVGLevel(avgLevel!.index)
         : 0.0;
-    double alignmentValue = GuageUtils.getAlignmentForLevel(level);
+    double alignmentValue = GuageUtils.getAlignmentForLevel(level.index);
 
     return Column(
       children: [

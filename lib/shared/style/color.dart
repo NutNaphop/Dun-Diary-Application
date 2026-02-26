@@ -57,6 +57,7 @@ class CustomColor {
   static const red3 = Color(0xFFC5321E);
   static const red4 = Color(0xFFF94333);
   static const red5 = Color(0xFFFFE5D4);
+  static const red6 = Color(0xFFE40505);
 
   // Orange
   static const orange1 = Color(0xFFFFE5D4);
