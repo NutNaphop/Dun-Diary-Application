@@ -28,8 +28,8 @@ class HistorySummaryCard extends StatelessWidget {
     }
 
     final lastRecordLevel = BloodPressureUtils.calculateBloodPressureLevel(
-      vm.selectedDateRecords.last.sys,
-      vm.selectedDateRecords.last.dia,
+      vm.selectedDateRecords.first.sys,
+      vm.selectedDateRecords.first.dia,
     );
 
     final avgLevel = vm.getAverageLevelForDate(vm.selectedDate);

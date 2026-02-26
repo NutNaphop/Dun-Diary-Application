@@ -80,12 +80,12 @@ class _HistoryScreenState extends State<HistoryScreen> {
           ),
         ],
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 22),
-          child: Consumer<HistoryViewmodel>(
-            builder: (context, vm, child) {
-              return Column(
+      body: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 22),
+        child: Consumer<HistoryViewmodel>(
+          builder: (context, vm, child) {
+            return SingleChildScrollView(
+              child: Column(
                 spacing: 15,
                 children: [
                   SizedBox(
@@ -104,9 +104,9 @@ class _HistoryScreenState extends State<HistoryScreen> {
                   const HistoryGraphCard(),
                   const HistoryRecordList(),
                 ],
-              );
-            },
-          ),
+              ),
+            );
+          },
         ),
       ),
     );

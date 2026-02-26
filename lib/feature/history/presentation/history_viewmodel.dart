@@ -97,13 +97,10 @@ class HistoryViewmodel extends ChangeNotifier {
         .toList();
     if (dailyRecs.isEmpty) return null;
 
-    final levels = dailyRecs
-        .map(
-          (r) => BloodPressureUtils.calculateBloodPressureLevel(r.sys, r.dia),
-        )
-        .toList();
-
-    return BloodPressureUtils.calculateAVGLevel(levels);
+    return BloodPressureUtils.calculateOverallRiskLevel(
+      dailyRecs,
+      isStrict: false,
+    );
   }
 
   DateTime get latestDataDate {
