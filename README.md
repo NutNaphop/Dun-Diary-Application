@@ -25,6 +25,10 @@
 - Calendar view showing days with recorded data
 - Easy browsing of past records
 
+### ⚙️ Settings & Recovery
+- User profile management
+- QR code-based data backup & recovery (encrypted with AES)
+
 ### 🔄 Offline-First & Cloud Sync
 - Works fully **offline** — data is stored locally using Hive
 - Syncs with **Cloud Firestore** when internet is available
@@ -57,20 +61,25 @@ lib/
 ├── core/                  # Infrastructure
 │   ├── auth/              # Firebase Anonymous Auth
 │   ├── constant/          # Routes, Hive box names
+│   ├── error/             # Error mapping & handling
+│   ├── media/             # Image/media utilities
 │   ├── network/           # Network client, API state, connectivity check
+│   ├── recovery/          # QR code encryption & generation
 │   ├── router/            # App navigation router
-│   ├── services/          # Navigation & SnackBar services
+│   ├── services/          # Navigation, SnackBar, Sync services
 │   └── mixins/            # Reusable mixins
 │
 ├── data/                  # Data Layer
 │   ├── blood_pressure/    # BP records (model, datasource, repository)
-│   └── analyze_record/    # AI analysis results & cache
+│   ├── analyze_record/    # AI analysis results & cache
+│   └── user/              # User profile data
 │
 ├── feature/               # Feature Modules
 │   ├── home/              # Home — today's health overview
 │   ├── record/            # Record BP (photo / manual input)
 │   ├── history/           # Record history + calendar
 │   ├── stat/              # Statistics + graphs + AI analysis
+│   ├── setting/           # Settings, profile, data recovery
 │   ├── main/              # Bottom navigation shell
 │   └── splash_screen/     # Splash screen
 │
@@ -82,7 +91,7 @@ lib/
 │
 ├── main.dart              # Entry point
 ├── register_provider.dart # Provider registration
-└── firebase_options.dart  # Firebase config (auto-generated)
+└── firebase_options.dart  # Firebase config (auto-generated, git-ignored)
 ```
 
 Each **Feature Module** is organized into:
@@ -123,10 +132,31 @@ fvm flutter pub get
 
 # 5. Generate Hive adapters
 fvm flutter pub run build_runner build --delete-conflicting-outputs
-
-# 6. Run the app
-fvm flutter run
 ```
+
+### Environment Setup
+
+This project uses `--dart-define-from-file` for managing secrets.
+
+1. Copy the example env file:
+   ```bash
+   cp env.example.json env.json
+   ```
+
+2. Fill in your values in `env.json`:
+   ```json
+   {
+     "QR_ENCRYPTION_KEY": "<your-32-char-encryption-key>",
+     "QR_ENCRYPTION_IV": "<your-16-char-iv>"
+   }
+   ```
+
+3. Run the app:
+   ```bash
+   fvm flutter run --dart-define-from-file=env.json
+   ```
+
+   Or press **F5** in VS Code (pre-configured via `.vscode/launch.json`).
 
 ### Firebase Setup
 
@@ -145,9 +175,10 @@ fvm flutter run
 | **📝 Record** | Capture photo or manually enter SYS / DIA / PUL |
 | **📋 History** | Calendar and past records list |
 | **📊 Statistics** | Trend graphs, averages, and AI health analysis |
+| **⚙️ Settings** | Profile, data backup & recovery via QR code |
 
 ---
 
 ## 📄 License
 
-This project is private and not published to pub.dev.
+This project is for educational and personal use.
