@@ -4,8 +4,12 @@ import 'package:dun_diary_app/core/services/app_logger.dart';
 class QrEncryptorService {
   QrEncryptorService._();
 
-  static final _key = encrypt.Key.fromUtf8('DunDiarySecretKey2026_SecureData');
-  static final _iv = encrypt.IV.fromUtf8('DunDiaryInitVect');
+  static final _key = encrypt.Key.fromUtf8(
+    const String.fromEnvironment('QR_ENCRYPTION_KEY'),
+  );
+  static final _iv = encrypt.IV.fromUtf8(
+    const String.fromEnvironment('QR_ENCRYPTION_IV'),
+  );
   static final _encrypter = encrypt.Encrypter(
     encrypt.AES(_key, mode: encrypt.AESMode.cbc),
   );

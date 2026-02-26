@@ -80,3 +80,7 @@ app.*.map.json
 # FVM Version Cache
 .fvm/flutter_sdk
 .fvm/versions
+
+# Secrets / Environment
+env.json
+lib/firebase_options.dart
