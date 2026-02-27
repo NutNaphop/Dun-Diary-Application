@@ -26,7 +26,9 @@ class StatUiMappper {
         iconPath: AppIcons.duotone.pulse,
         title: AppStrings.stat.fluctuation,
         value: stats.sd,
-        description: AppStrings.stat.fluctuationRange,
+        description: stats.isStable
+            ? AppStrings.stat.fluctuationLow
+            : AppStrings.stat.fluctuationHigh,
         background: CustomColor.blue1,
         foreground: CustomColor.blue5,
       ),

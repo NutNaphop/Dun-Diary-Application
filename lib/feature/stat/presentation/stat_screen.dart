@@ -53,42 +53,50 @@ class _StatScreenState extends State<StatScreen> {
           IconButtonSVG(path: AppIcons.outline.dotThree, onPressed: () {}),
         ],
       ),
-      body: AppTabBar(
-        onTap: (index) => viewModel.setTabIndex(index),
-        titles: [
-          AppStrings.calendar.week,
-          AppStrings.calendar.month,
-          AppStrings.calendar.year,
-        ],
-        // ใช้ StatSummaryView เดียว เพราะ ViewModel จัดการข้อมูลตาม tab อยู่แล้ว
-        // ไม่ใช้ TabBarView เพราะทุก tab แสดง data เดียวกัน (ลด widget tree 3x → 1x)
-        child: Selector<StatViewmodel, _StatSummaryData>(
-          selector: (_, vm) => _StatSummaryData(
-            dateLabel: vm.currentRangeLabel,
-            analyzeState: vm.analyzeState,
-            resultFromAi: vm.aiResultContent,
-            bloodPressureLevel: vm.bloodPressureLevel,
-            statsData: vm.statsData,
-            graphData: vm.graphData,
-            isInternetConnected: vm.isInternetConnected,
-            isLoading: vm.isLoading,
+      body: SingleChildScrollView(
+        child: AppTabBar(
+          shrinkWrap: true,
+          onTap: (index) => viewModel.setTabIndex(index),
+          titles: [
+            AppStrings.calendar.week,
+            AppStrings.calendar.month,
+            AppStrings.calendar.year,
+          ],
+          // ใช้ StatSummaryView เดียว เพราะ ViewModel จัดการข้อมูลตาม tab อยู่แล้ว
+          // ไม่ใช้ TabBarView เพราะทุก tab แสดง data เดียวกัน (ลด widget tree 3x → 1x)
+          child: Selector<StatViewmodel, _StatSummaryData>(
+            selector: (_, vm) => _StatSummaryData(
+              dateLabel: vm.currentRangeLabel,
+              analyzeState: vm.analyzeState,
+              resultFromAi: vm.aiResultContent,
+              bloodPressureLevel: vm.bloodPressureLevel,
+              statsData: vm.statsData,
+              graphData: vm.graphData,
+              isInternetConnected: vm.isInternetConnected,
+              isLoading: vm.isLoading,
+            ),
+            builder: (context, data, _) {
+              if (data.isLoading) {
+                return const Center(child: CircularProgressIndicator());
+              }
+              return Column(
+                children: [
+                  SizedBox(height: 20),
+                  StatSummaryView(
+                    dateLabel: data.dateLabel,
+                    analyzeState: data.analyzeState,
+                    resultFromAi: data.resultFromAi,
+                    bloodPressureLevel: data.bloodPressureLevel,
+                    data: data.statsData,
+                    graphData: data.graphData,
+                    isInternetConnected: data.isInternetConnected,
+                    onAnalyzePressed: viewModel.triggerAnalyze,
+                    onRecordPressed: viewModel.redirectToRecord,
+                  ),
+                ],
+              );
+            },
           ),
-          builder: (context, data, _) {
-            if (data.isLoading) {
-              return const Center(child: CircularProgressIndicator());
-            }
-            return StatSummaryView(
-              dateLabel: data.dateLabel,
-              analyzeState: data.analyzeState,
-              resultFromAi: data.resultFromAi,
-              bloodPressureLevel: data.bloodPressureLevel,
-              data: data.statsData,
-              graphData: data.graphData,
-              isInternetConnected: data.isInternetConnected,
-              onAnalyzePressed: viewModel.triggerAnalyze,
-              onRecordPressed: viewModel.redirectToRecord,
-            );
-          },
         ),
       ),
     );

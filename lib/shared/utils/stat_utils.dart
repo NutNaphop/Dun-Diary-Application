@@ -32,19 +32,22 @@ class StatUtils {
 
     // คำนวณค่าพื้นฐาน
     final summary = computeBaseMetrics(records);
-    final sd = calculateStandardDeviation(records, summary.avgSys);
+    final sd = calculateStandardDeviationError(records, summary.avgSys);
 
     return StatCalulatedType(
       avgBP: "${summary.avgSys} / ${summary.avgDia}",
       avgSys: summary.avgSys,
       avgDia: summary.avgDia,
       sd: "± ${sd.toStringAsFixed(1)}",
+      isStable: isStandardDeviationStable(sd),
       maxBP: "${summary.max.sys} / ${summary.max.dia}",
       minBP: "${summary.min.sys} / ${summary.min.dia}",
       maxBPDate: summary.max.createdAt,
       minBPDate: summary.min.createdAt,
     );
   }
+
+  static bool isStandardDeviationStable(double sd) => sd > 10;
 
   /// คำนวณค่าพื้นฐาน (avg, min, max) ด้วย single loop
   ///
@@ -72,17 +75,22 @@ class StatUtils {
 
   /// คำนวณ Standard Deviation (Population SD)
   ///
-  /// Formula: σ = √(Σ(x - μ)² / N)
+  /// Formula: σ = √(Σ(x - μ)² / N) / √N
   ///
   /// ใช้ SYS เป็นตัวแทนในการคำนวณ
-  static double calculateStandardDeviation(List<BPRecord> records, int avgSys) {
+  static double calculateStandardDeviationError(
+    List<BPRecord> records,
+    int avgSys,
+  ) {
     if (records.length <= 1) return 0.0;
 
     double sumSquaredDiff = 0;
     for (final r in records) {
       sumSquaredDiff += pow(r.sys - avgSys, 2);
     }
-    return sqrt(sumSquaredDiff / records.length);
+
+    final sd = sqrt(sumSquaredDiff / records.length);
+    return sd / sqrt(records.length);
   }
 
   // ===========================================================================

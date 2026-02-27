@@ -183,8 +183,9 @@ class _StatStrings {
 
   // Stat Cards
   final String avgBP = "ค่าเฉลี่ยความดัน";
-  final String fluctuation = "การแกว่งตัว";
-  final String fluctuationRange = "ระยะการแกว่งตัว";
+  final String fluctuation = "ความผันผวน";
+  final String fluctuationLow = "ความดันไม่คงที่";
+  final String fluctuationHigh = "ความดันมีความเสถียร";
   final String maxBP = "ค่าสูงสุด";
   final String minBP = "ค่าต่ำสุด";
   final String noData = "ไม่มีข้อมูล";

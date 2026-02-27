@@ -41,90 +41,88 @@ class StatSummaryView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Padding(
-        padding: const EdgeInsets.only(bottom: 39),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Graph Section
-            CustomCard(
-              title: dateLabel,
-              titleFontSize: Dimension.fontSizes.h2,
-              contentPadding: const EdgeInsets.all(20),
-              content: Container(
-                height: 350,
-                width: double.infinity,
-                margin: const EdgeInsets.only(top: 10),
-                child: BpGraphSdk(
-                  key: ValueKey("graph_$dateLabel"),
-                  data: graphData,
-                  onButtonPress: onRecordPressed,
-                ),
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 39),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Graph Section
+          CustomCard(
+            title: dateLabel,
+            titleFontSize: Dimension.fontSizes.h2,
+            contentPadding: const EdgeInsets.all(20),
+            content: Container(
+              height: 350,
+              width: double.infinity,
+              margin: const EdgeInsets.only(top: 10),
+              child: BpGraphSdk(
+                key: ValueKey("graph_$dateLabel"),
+                data: graphData,
+                onButtonPress: onRecordPressed,
               ),
             ),
-            const SizedBox(height: 30),
+          ),
+          const SizedBox(height: 30),
 
-            // Summary Section
-            CustomText(
-              text: AppStrings.stat.healthSummary,
-              fontSize: Dimension.fontSizes.h1,
-              fontWeight: Dimension.fontWeights.bold,
+          // Summary Section
+          CustomText(
+            text: AppStrings.stat.healthSummary,
+            fontSize: Dimension.fontSizes.h1,
+            fontWeight: Dimension.fontWeights.bold,
+          ),
+          const SizedBox(height: 15),
+          BloodPressureCard(
+            bloodPressureLevel: bloodPressureLevel,
+            date: dateLabel,
+            leadingIcon: LottieAnimation(
+              path: bloodPressureLevel?.animation ?? AppAnimations.empty,
+              width: 90,
+              height: 90,
             ),
-            const SizedBox(height: 15),
-            BloodPressureCard(
-              bloodPressureLevel: bloodPressureLevel,
-              date: dateLabel,
-              leadingIcon: LottieAnimation(
-                path: bloodPressureLevel?.animation ?? AppAnimations.empty,
-                width: 90,
-                height: 90,
-              ),
-            ),
-            const SizedBox(height: 20),
+          ),
+          const SizedBox(height: 20),
 
-            // Stat Section
-            GridView.builder(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              itemCount: data.length, // กำหนดจำนวน Item ที่ต้องการแสดง
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                crossAxisSpacing: 10,
-                mainAxisSpacing: 10,
-                mainAxisExtent: 120,
-              ),
-              itemBuilder: (context, index) {
-                final item = data[index];
-                return StatCard(
-                  leadingIcon: StatIcon(
-                    width: 25,
-                    height: 25,
-                    backgroundColor: item.background,
-                    icon: SVGImage(
-                      path: item.iconPath,
-                      width: 15,
-                      height: 15,
-                      color: item.foreground,
-                    ),
+          // Stat Section
+          GridView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            itemCount: data.length, // กำหนดจำนวน Item ที่ต้องการแสดง
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+              crossAxisSpacing: 10,
+              mainAxisSpacing: 10,
+              mainAxisExtent: 120,
+            ),
+            itemBuilder: (context, index) {
+              final item = data[index];
+              return StatCard(
+                leadingIcon: StatIcon(
+                  width: 25,
+                  height: 25,
+                  backgroundColor: item.background,
+                  icon: SVGImage(
+                    path: item.iconPath,
+                    width: 15,
+                    height: 15,
+                    color: item.foreground,
                   ),
-                  title: item.title,
-                  value: item.value,
-                  description: item.description,
-                );
-              },
-            ),
+                ),
+                title: item.title,
+                value: item.value,
+                description: item.description,
+              );
+            },
+          ),
 
-            // Analyze Section
-            SizedBox(height: 15),
-            AnalyzeCard(
-              state: analyzeState,
-              resultFromAi: resultFromAi,
-              isInternetConnect: isInternetConnected,
-              onPressed: onAnalyzePressed,
-            ),
-          ],
-        ),
+          // Analyze Section
+          SizedBox(height: 15),
+          AnalyzeCard(
+            state: analyzeState,
+            resultFromAi: resultFromAi,
+            isInternetConnect: isInternetConnected,
+            onPressed: onAnalyzePressed,
+          ),
+        ],
       ),
     );
   }
