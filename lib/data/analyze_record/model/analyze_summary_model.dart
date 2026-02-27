@@ -72,18 +72,21 @@ class AnalyzeSummary {
   final String rangeLabel;
   final List<AnalyzeSummaryItem> items;
   final int totalRecords;
+  final double sd;
 
   AnalyzeSummary({
     required this.periodType,
     required this.rangeLabel,
     required this.items,
     required this.totalRecords,
+    this.sd = 0.0,
   });
 
   Map<String, dynamic> toJson() => {
     'periodType': periodType.value,
     'rangeLabel': rangeLabel,
     'totalRecords': totalRecords,
+    'sd': sd,
     'items': items.map((e) => e.toJson()).toList(),
   };
 }

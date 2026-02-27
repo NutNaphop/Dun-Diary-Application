@@ -97,10 +97,12 @@ class AnalyzeSuccessView extends StatelessWidget {
           ),
         ),
         Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           spacing: 10,
           children: [
+            SizedBox(height: 5),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 76),
+              padding: const EdgeInsets.symmetric(horizontal: 40),
               child: CustomButton(
                 text: AppStrings.stat.reAnalyze,
                 leadingIcon: SVGImage(
@@ -120,11 +122,13 @@ class AnalyzeSuccessView extends StatelessWidget {
                 onPressed: onPressed,
               ),
             ),
+            SizedBox(height: 5),
             CustomText(
               text: AppStrings.stat.sourceFrom(result?.reference ?? ''),
               textAlign: TextAlign.center,
               fontSize: Dimension.fontSizes.rg,
               fontWeight: Dimension.fontWeights.regular,
+              color: CustomColor.gray600,
             ),
           ],
         ),

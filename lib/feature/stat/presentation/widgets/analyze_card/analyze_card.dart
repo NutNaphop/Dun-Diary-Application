@@ -4,7 +4,12 @@ import 'package:dun_diary_app/feature/stat/presentation/widgets/analyze_card/com
 import 'package:dun_diary_app/feature/stat/presentation/widgets/analyze_card/components/analyze_no_data_view.dart';
 import 'package:dun_diary_app/feature/stat/presentation/widgets/analyze_card/components/analyze_process_view.dart';
 import 'package:dun_diary_app/feature/stat/presentation/widgets/analyze_card/components/analyze_success_view.dart';
+import 'package:dun_diary_app/shared/constant/app_icons.dart';
+import 'package:dun_diary_app/shared/style/color.dart';
+import 'package:dun_diary_app/shared/style/dimension.dart';
 import 'package:dun_diary_app/shared/widgets/custom/card/custom_card.dart';
+import 'package:dun_diary_app/shared/widgets/custom/img/custom_svg_widget.dart';
+import 'package:dun_diary_app/shared/widgets/custom/text/text_widget.dart';
 import 'package:flutter/material.dart';
 
 enum AnalyzeState { idle, processing, error, success, noData }
@@ -25,9 +30,35 @@ class AnalyzeCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CustomCard(
-      contentPadding: EdgeInsets.symmetric(vertical: 20, horizontal: 15),
-      content: _buildContent(),
+    return Column(
+      children: [
+        CustomCard(
+          contentPadding: EdgeInsets.symmetric(vertical: 20, horizontal: 15),
+          content: _buildContent(),
+        ),
+        SizedBox(height: resultFromAi != null ? 15 : 0),
+        resultFromAi != null
+            ? Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SVGImage(
+                    path: AppIcons.duotone.dangerTriangle,
+                    width: 15,
+                    height: 15,
+                    color: CustomColor.gray900,
+                  ),
+                  SizedBox(width: 5),
+                  CustomText(
+                    text:
+                        "AI วิเคราะห์เบื้องต้น ไม่สามารถแทนการวินิจฉัยของแพทย์ได้",
+                    fontSize: Dimension.fontSizes.rg,
+                    fontWeight: Dimension.fontWeights.regular,
+                    color: CustomColor.gray500,
+                  ),
+                ],
+              )
+            : SizedBox.shrink(),
+      ],
     );
   }
 
