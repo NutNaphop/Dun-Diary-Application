@@ -4,7 +4,9 @@ import 'package:dun_diary_app/feature/stat/presentation/widgets/analyze_card/ana
 import 'package:dun_diary_app/feature/stat/presentation/widgets/card/blood_pressure_card.dart';
 import 'package:dun_diary_app/feature/stat/presentation/widgets/stat_card/components/stat_icon.dart';
 import 'package:dun_diary_app/feature/stat/presentation/widgets/stat_card/stat_card.dart';
+import 'package:dun_diary_app/shared/constant/app_icons.dart';
 import 'package:dun_diary_app/shared/constant/app_strings.dart';
+import 'package:dun_diary_app/shared/style/color.dart';
 import 'package:dun_diary_app/shared/style/dimension.dart';
 import 'package:dun_diary_app/shared/utils/blood_pressure_utils.dart';
 import 'package:dun_diary_app/shared/widgets/custom/card/custom_card.dart';
@@ -64,64 +66,98 @@ class StatSummaryView extends StatelessWidget {
           ),
           const SizedBox(height: 30),
 
-          // Summary Section
-          CustomText(
-            text: AppStrings.stat.healthSummary,
-            fontSize: Dimension.fontSizes.h1,
-            fontWeight: Dimension.fontWeights.bold,
-          ),
-          const SizedBox(height: 15),
-          BloodPressureCard(
-            bloodPressureLevel: bloodPressureLevel,
-            date: dateLabel,
-            leadingIcon: LottieAnimation(
-              path: bloodPressureLevel?.animation ?? AppAnimations.empty,
-              width: 90,
-              height: 90,
+          // Summary Section ( Need to hide when data is empty )
+          if (graphData.isNotEmpty) ...[
+            CustomText(
+              text: AppStrings.stat.healthSummary,
+              fontSize: Dimension.fontSizes.h1,
+              fontWeight: Dimension.fontWeights.bold,
             ),
-          ),
-          const SizedBox(height: 20),
+            const SizedBox(height: 15),
+            BloodPressureCard(
+              bloodPressureLevel: bloodPressureLevel,
+              date: dateLabel,
+              leadingIcon: LottieAnimation(
+                path: bloodPressureLevel?.animation ?? AppAnimations.empty,
+                width: 90,
+                height: 90,
+              ),
+            ),
+            const SizedBox(height: 20),
 
-          // Stat Section
-          GridView.builder(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            itemCount: data.length, // กำหนดจำนวน Item ที่ต้องการแสดง
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              crossAxisSpacing: 10,
-              mainAxisSpacing: 10,
-              mainAxisExtent: 120,
-            ),
-            itemBuilder: (context, index) {
-              final item = data[index];
-              return StatCard(
-                leadingIcon: StatIcon(
-                  width: 25,
-                  height: 25,
-                  backgroundColor: item.background,
-                  icon: SVGImage(
-                    path: item.iconPath,
-                    width: 15,
-                    height: 15,
-                    color: item.foreground,
+            // Stat Section
+            GridView.builder(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemCount: data.length, // กำหนดจำนวน Item ที่ต้องการแสดง
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                crossAxisSpacing: 10,
+                mainAxisSpacing: 10,
+                mainAxisExtent: 120,
+              ),
+              itemBuilder: (context, index) {
+                final item = data[index];
+                return StatCard(
+                  leadingIcon: StatIcon(
+                    width: 25,
+                    height: 25,
+                    backgroundColor: item.background,
+                    icon: SVGImage(
+                      path: item.iconPath,
+                      width: 15,
+                      height: 15,
+                      color: item.foreground,
+                    ),
                   ),
-                ),
-                title: item.title,
-                value: item.value,
-                description: item.description,
-              );
-            },
-          ),
+                  title: item.title,
+                  value: item.value,
+                  description: item.description,
+                );
+              },
+            ),
 
-          // Analyze Section
-          SizedBox(height: 15),
-          AnalyzeCard(
-            state: analyzeState,
-            resultFromAi: resultFromAi,
-            isInternetConnect: isInternetConnected,
-            onPressed: onAnalyzePressed,
-          ),
+            // Analyze Section
+            SizedBox(height: 15),
+            AnalyzeCard(
+              state: analyzeState,
+              resultFromAi: resultFromAi,
+              isInternetConnect: isInternetConnected,
+              onPressed: onAnalyzePressed,
+            ),
+          ] else ...[
+            CustomCard(
+              contentPadding: EdgeInsets.all(10),
+              content: Row(
+                spacing: 23,
+                children: [
+                  SVGImage(
+                    path: AppIcons.duotone.lightbulb,
+                    width: 44,
+                    height: 44,
+                    color: CustomColor.yellow4,
+                  ),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    spacing: 4,
+                    children: [
+                      CustomText(
+                        text: AppStrings.stat.didYouKnow,
+                        fontSize: Dimension.fontSizes.h2,
+                        fontWeight: Dimension.fontWeights.medium,
+                      ),
+                      CustomText(
+                        text: AppStrings.stat.didYouKnowDesc,
+                        fontSize: Dimension.fontSizes.md,
+                        fontWeight: Dimension.fontWeights.regular,
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ],
         ],
       ),
     );

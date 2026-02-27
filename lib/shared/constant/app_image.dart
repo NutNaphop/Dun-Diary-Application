@@ -9,6 +9,7 @@ class AppImages {
   static const confirmDelete = '$_base/confirm_delete.svg';
   static const homeBackground = '$_base/home_background.png';
   static const faq = '$_base/faq.svg';
+  static const warning = '$_base/warning.svg';
 }
 
 class _ProfileImages {
