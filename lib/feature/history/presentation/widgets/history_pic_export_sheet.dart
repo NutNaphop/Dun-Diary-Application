@@ -142,37 +142,25 @@ class HistoryPicExportSheet extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     CustomText(
-                      text: AppStrings.history.healthReport,
-                      fontSize: 22,
-                      fontWeight: FontWeight.bold,
-                      color: CustomColor.gray900,
-                    ),
-                    CustomText(
                       text: AppStrings.common.appName,
-                      fontSize: 14,
-                      color: CustomColor.gray500,
+                      fontSize: Dimension.fontSizes.lg,
+                      fontWeight: Dimension.fontWeights.bold,
+                      color: CustomColor.gray900,
                     ),
                   ],
                 ),
                 Container(
                   padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                  decoration: BoxDecoration(
-                    color: CustomColor.gray900.withOpacity(0.1),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
                   child: CustomText(
                     text: DateTimeUtils.formatToThaiDate(selectedDate),
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
+                    fontSize: Dimension.fontSizes.rg,
                     color: CustomColor.gray900,
                   ),
                 ),
               ],
             ),
 
-            SizedBox(height: 24),
-            Divider(color: Colors.grey.shade300),
-            SizedBox(height: 24),
+            SizedBox(height: 30),
 
             // Cards Wrapper
             _buildCardWrapper(
@@ -180,18 +168,14 @@ class HistoryPicExportSheet extends StatelessWidget {
               child: HistorySummaryCard(), // Reuse Widget เดิม
             ),
 
-            SizedBox(height: 24),
+            SizedBox(height: 15),
 
             _buildCardWrapper(
               title: AppStrings.history.displayGraph,
               child: HistoryGraphCard(), // Reuse Widget เดิม
             ),
 
-            SizedBox(height: 40),
-
-            // Footer
-            Divider(color: Colors.grey.shade300),
-            SizedBox(height: 8),
+            SizedBox(height: 30),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -221,15 +205,15 @@ class HistoryPicExportSheet extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Padding(
-          padding: const EdgeInsets.only(left: 4, bottom: 10),
-          child: CustomText(
-            text: title,
-            fontSize: 16,
-            fontWeight: FontWeight.bold,
-            color: CustomColor.gray900,
-          ),
-        ),
+        // Padding(
+        //   padding: const EdgeInsets.only(left: 4, bottom: 10),
+        //   child: CustomText(
+        //     text: title,
+        //     fontSize: Dimension.fontSizes.h1,
+        //     fontWeight: FontWeight.bold,
+        //     color: CustomColor.gray900,
+        //   ),
+        // ),
         Container(
           width: double.infinity,
           decoration: BoxDecoration(

@@ -2,7 +2,6 @@
 
 import 'package:dun_diary_app/shared/style/color.dart';
 import 'package:dun_diary_app/shared/style/dimension.dart';
-import 'package:dun_diary_app/shared/style/drop_shadow.dart';
 import 'package:dun_diary_app/shared/utils/date_utils.dart';
 import 'package:dun_diary_app/shared/widgets/custom/text/text_widget.dart';
 import 'package:flutter/material.dart';
@@ -48,36 +47,42 @@ class DateSliderItem extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 10),
-          Container(
-            padding: const EdgeInsets.only(
-              top: 8,
-              bottom: 12,
-              left: 6,
-              right: 6,
-            ),
-            decoration: BoxDecoration(
-              color: isSelected ? CustomColor.white : Colors.transparent,
-              border: isSelected
-                  ? Border.all(color: CustomColor.gray200, width: 1)
-                  : null,
-              borderRadius: BorderRadius.circular(100),
-              boxShadow: isSelected ? [DropShadow.drop_card] : null,
-            ),
-            child: Column(
-              children: [
-                _buildBubble(text),
-                const SizedBox(height: 7),
-                Container(
-                  width: 5,
-                  height: 5,
-                  decoration: BoxDecoration(
-                    color: showWarningDot
-                        ? CustomColor.red6
-                        : Colors.transparent,
-                    shape: BoxShape.circle,
+          PhysicalModel(
+            color: isSelected ? CustomColor.white : Colors.transparent,
+            elevation: isSelected ? 3 : 0,
+            shadowColor: const Color.fromRGBO(0, 0, 0, 0.15),
+            borderRadius: BorderRadius.circular(100),
+            clipBehavior: Clip.antiAlias,
+            child: Container(
+              padding: const EdgeInsets.only(
+                top: 8,
+                bottom: 12,
+                left: 6,
+                right: 6,
+              ),
+              decoration: BoxDecoration(
+                color: isSelected ? CustomColor.white : Colors.transparent,
+                border: isSelected
+                    ? Border.all(color: CustomColor.gray200, width: 1)
+                    : null,
+                borderRadius: BorderRadius.circular(100),
+              ),
+              child: Column(
+                children: [
+                  _buildBubble(text),
+                  const SizedBox(height: 7),
+                  Container(
+                    width: 5,
+                    height: 5,
+                    decoration: BoxDecoration(
+                      color: showWarningDot
+                          ? CustomColor.red6
+                          : Colors.transparent,
+                      shape: BoxShape.circle,
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ],

@@ -27,6 +27,7 @@ class RecordActionButtons extends StatelessWidget {
                 selector: (_, viewModel) => viewModel.isMenuOpen,
                 builder: (context, isMenuOpen, child) =>
                     CustomPopupMenuButton<ImageSource>(
+                      menuMinWidth: 205,
                       openAbove: true,
                       icon: CustomBoxIcon(
                         iconPath: AppIcons.outline.camera,
