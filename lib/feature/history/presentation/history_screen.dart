@@ -8,7 +8,7 @@ import 'package:dun_diary_app/feature/history/presentation/widgets/history_summa
 import 'package:dun_diary_app/shared/constant/app_strings.dart';
 import 'package:dun_diary_app/shared/constant/app_icons.dart';
 import 'package:dun_diary_app/shared/style/dimension.dart';
-import 'package:dun_diary_app/shared/utils/blood_pressure_utils.dart';
+import 'package:flutter/material.dart';
 import 'package:dun_diary_app/shared/widgets/custom/button/custom_popup_menu.dart';
 import 'package:dun_diary_app/shared/widgets/ui/date_slider/date_slider.dart';
 import 'package:dun_diary_app/shared/widgets/custom/img/custom_svg_widget.dart';
@@ -17,7 +17,6 @@ import 'package:dun_diary_app/shared/widgets/custom/scaffold/main_appbar.dart';
 import 'package:dun_diary_app/shared/widgets/custom/text/text_widget.dart';
 import 'package:dun_diary_app/shared/widgets/ui/calendar_sdk/calendar_sdk.dart';
 import 'package:dun_diary_app/shared/widgets/ui/calendar_sdk/models/calendar_types.dart';
-import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class HistoryScreen extends StatefulWidget {
@@ -80,12 +79,12 @@ class _HistoryScreenState extends State<HistoryScreen> {
           ),
         ],
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 22),
-          child: Consumer<HistoryViewmodel>(
-            builder: (context, vm, child) {
-              return Column(
+      body: Consumer<HistoryViewmodel>(
+        builder: (context, vm, child) {
+          return SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 22),
+              child: Column(
                 spacing: 15,
                 children: [
                   SizedBox(
@@ -96,7 +95,10 @@ class _HistoryScreenState extends State<HistoryScreen> {
                       enableScrollFutureUntil: vm.latestDataDate,
                       dateColorBuilder: (date) {
                         final level = vm.getAverageLevelForDate(date);
-                        return BloodPressureUtils.mapLevelColor(level);
+                        return level?.color ?? Colors.transparent;
+                      },
+                      warningDotBuilder: (date) {
+                        return vm.hasHighLevelRecord(date);
                       },
                     ),
                   ),
@@ -104,10 +106,10 @@ class _HistoryScreenState extends State<HistoryScreen> {
                   const HistoryGraphCard(),
                   const HistoryRecordList(),
                 ],
-              );
-            },
-          ),
-        ),
+              ),
+            ),
+          );
+        },
       ),
     );
   }

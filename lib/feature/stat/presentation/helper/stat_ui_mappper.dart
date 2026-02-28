@@ -9,14 +9,14 @@ import 'package:dun_diary_app/shared/utils/date_utils.dart';
 class StatUiMappper {
   static List<StatCardData> mapToCardData(
     StatCalulatedType stats,
-    int? bloodPressureLevel,
+    BPLevel? bloodPressureLevel,
   ) {
     return [
       StatCardData(
         title: AppStrings.stat.avgBP,
         value: stats.avgBP,
         description: bloodPressureLevel != null
-            ? BloodPressureUtils.mapLevelLabel(bloodPressureLevel)
+            ? bloodPressureLevel.label
             : AppStrings.stat.noData,
         iconPath: AppIcons.duotone.heartPulse,
         background: CustomColor.pink1,
@@ -26,7 +26,9 @@ class StatUiMappper {
         iconPath: AppIcons.duotone.pulse,
         title: AppStrings.stat.fluctuation,
         value: stats.sd,
-        description: AppStrings.stat.fluctuationRange,
+        description: stats.isStable
+            ? AppStrings.stat.fluctuationLow
+            : AppStrings.stat.fluctuationHigh,
         background: CustomColor.blue1,
         foreground: CustomColor.blue5,
       ),

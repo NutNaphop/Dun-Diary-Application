@@ -13,6 +13,7 @@ class CustomDialog extends StatelessWidget {
   final String? secondaryButtonText;
   final VoidCallback? onSecondaryPressed;
   final bool isDismissible;
+  final Widget? body;
 
   const CustomDialog({
     super.key,
@@ -24,6 +25,7 @@ class CustomDialog extends StatelessWidget {
     this.secondaryButtonText,
     this.onSecondaryPressed,
     this.isDismissible = true,
+    this.body,
   });
 
   static Future<T?> show<T>(BuildContext context, {required Widget child}) {
@@ -71,6 +73,9 @@ class CustomDialog extends StatelessWidget {
                 textAlign: TextAlign.center,
               ),
             ],
+
+            // 4. Custom Body
+            if (body != null) ...[const SizedBox(height: 16), body!],
 
             const SizedBox(height: 24),
 

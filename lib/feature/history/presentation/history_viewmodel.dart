@@ -86,7 +86,7 @@ class HistoryViewmodel extends ChangeNotifier {
     return UnmodifiableListView(dailyRecords);
   }
 
-  int? getAverageLevelForDate(DateTime date) {
+  BPLevel? getAverageLevelForDate(DateTime date) {
     final key = DateTimeUtils.getYearMonthKey(date);
     final monthRecords = _monthlyCache[key];
 
@@ -97,13 +97,30 @@ class HistoryViewmodel extends ChangeNotifier {
         .toList();
     if (dailyRecs.isEmpty) return null;
 
-    final levels = dailyRecs
-        .map(
-          (r) => BloodPressureUtils.calculateBloodPressureLevel(r.sys, r.dia),
-        )
-        .toList();
+    return BloodPressureUtils.calculateOverallRiskLevel(
+      dailyRecs,
+      isStrict: false,
+    );
+  }
 
-    return BloodPressureUtils.calculateAVGLevel(levels);
+  bool hasHighLevelRecord(DateTime date) {
+    final key = DateTimeUtils.getYearMonthKey(date);
+    final monthRecords = _monthlyCache[key];
+    if (monthRecords == null) return false;
+    return monthRecords
+        .where(
+          (r) =>
+              r.createdAt.day == date.day &&
+              r.createdAt.month == date.month &&
+              r.createdAt.year == date.year,
+        )
+        .any((r) {
+          final level = BloodPressureUtils.calculateBloodPressureLevel(
+            r.sys,
+            r.dia,
+          );
+          return level.isDangerous;
+        });
   }
 
   DateTime get latestDataDate {

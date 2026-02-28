@@ -42,7 +42,7 @@ class RecordViewmodel extends ChangeNotifier {
   BloodPressure? _originalBpValue;
   DateTime? _originalRecordDate;
 
-  int get level => BloodPressureUtils.calculateBloodPressureLevel(
+  BPLevel get level => BloodPressureUtils.calculateBloodPressureLevel(
     _bpValue.sys,
     _bpValue.dia,
   );

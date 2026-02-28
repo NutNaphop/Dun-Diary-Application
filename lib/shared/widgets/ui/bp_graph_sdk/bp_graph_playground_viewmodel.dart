@@ -1,3 +1,4 @@
+import 'package:dun_diary_app/shared/constant/app_bp_level.dart';
 import 'package:dun_diary_app/core/constant/app_routes.dart';
 import 'package:dun_diary_app/core/services/navigation_service.dart';
 import 'package:dun_diary_app/shared/widgets/ui/bp_graph_sdk/models/blood_pressure_graph_models.dart';
@@ -53,13 +54,13 @@ class BpGraphPlaygroundViewModel extends ChangeNotifier {
   List<BloodPressureGraphData> getMockData() {
     return List.generate(7, (index) {
       final levels = [
-        BloodPressureLevel.normal,
-        BloodPressureLevel.elevated,
-        BloodPressureLevel.normal,
-        BloodPressureLevel.elevated,
-        BloodPressureLevel.normal,
-        BloodPressureLevel.elevated,
-        BloodPressureLevel.normal,
+        BPLevel.normal,
+        BPLevel.elevated,
+        BPLevel.normal,
+        BPLevel.elevated,
+        BPLevel.normal,
+        BPLevel.elevated,
+        BPLevel.normal,
       ];
       return BloodPressureGraphData(
         xLabel: '',
@@ -75,38 +76,38 @@ class BpGraphPlaygroundViewModel extends ChangeNotifier {
         return [
           BloodPressureGraphData(
             xLabel: '08:00',
-            level: BloodPressureLevel.low,
+            level: BPLevel.low,
             sourceData: 'T1',
           ),
           BloodPressureGraphData(
             xLabel: '09:00',
-            level: BloodPressureLevel.normal,
+            level: BPLevel.normal,
             sourceData: 'T2',
           ),
           BloodPressureGraphData(
             xLabel: '10:00',
-            level: BloodPressureLevel.elevated,
+            level: BPLevel.elevated,
             sourceData: 'T3',
           ),
           BloodPressureGraphData(
             xLabel: '11:00',
-            level: BloodPressureLevel.highStage1,
+            level: BPLevel.highStage1,
             sourceData: 'T4',
           ),
           BloodPressureGraphData(
             xLabel: '12:00',
-            level: BloodPressureLevel.highStage2,
+            level: BPLevel.highStage2,
             sourceData: 'T5',
           ),
           BloodPressureGraphData(
             xLabel: '13:00',
-            level: BloodPressureLevel.crisis,
+            level: BPLevel.crisis,
             sourceData: 'T6',
           ),
         ];
       case GraphFilterType.week:
         return List.generate(7, (index) {
-          final levels = BloodPressureLevel.values;
+          final levels = BPLevel.values;
           return BloodPressureGraphData(
             xLabel: '${index + 1}',
             level: levels[index % levels.length],
@@ -118,7 +119,7 @@ class BpGraphPlaygroundViewModel extends ChangeNotifier {
         return List.generate(6, (index) {
           return BloodPressureGraphData(
             xLabel: weeks[index],
-            level: BloodPressureLevel.values[index % 6],
+            level: BPLevel.values[index % 6],
             sourceData: 'W${index + 1}',
           );
         });
@@ -140,7 +141,7 @@ class BpGraphPlaygroundViewModel extends ChangeNotifier {
         return List.generate(12, (index) {
           return BloodPressureGraphData(
             xLabel: months[index],
-            level: BloodPressureLevel.values[index % 6],
+            level: BPLevel.values[index % 6],
             sourceData: 'M${index + 1}',
           );
         });

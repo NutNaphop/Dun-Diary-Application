@@ -2,9 +2,10 @@ import 'package:dun_diary_app/data/blood_pressure/model/bp_record.dart';
 
 class StatCalulatedType {
   final String avgBP;
-  final int? avgSys; // raw value สำหรับ logic
-  final int? avgDia; // raw value สำหรับ logic
+  final int? avgSys; // raw value
+  final int? avgDia; // raw value
   final String sd;
+  final bool isStable;
   final String maxBP;
   final String minBP;
   final DateTime? maxBPDate;
@@ -15,6 +16,7 @@ class StatCalulatedType {
     this.avgSys,
     this.avgDia,
     required this.sd,
+    this.isStable = false,
     required this.maxBP,
     required this.minBP,
     this.maxBPDate,

@@ -57,7 +57,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 padding: const EdgeInsets.symmetric(horizontal: 15),
                 child: Column(
                   mainAxisSize: MainAxisSize.max,
-                  spacing: 25,
+                  spacing: 10,
                   children: [
                     // --- ส่วนการ์ดแสดงผลสุขภาพ (Health Status Card) ---
                     CustomCard(

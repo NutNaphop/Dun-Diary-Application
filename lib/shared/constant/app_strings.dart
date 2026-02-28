@@ -177,14 +177,18 @@ class _StatStrings {
   const _StatStrings();
 
   final String stat = "สถิติ";
+  final String didYouKnow = "รู้หรือไม่ ?";
+  final String didYouKnowDesc =
+      "การบันทึกค่าในเวลาเดิมทุกวัน\nช่วยให้เห็นภาพรวมสุขภาพที่แม่นยำขึ้นนะ";
 
   // Summary
   final String healthSummary = "สรุปข้อมูลสุขภาพ";
 
   // Stat Cards
   final String avgBP = "ค่าเฉลี่ยความดัน";
-  final String fluctuation = "การแกว่งตัว";
-  final String fluctuationRange = "ระยะการแกว่งตัว";
+  final String fluctuation = "ความผันผวน";
+  final String fluctuationLow = "ความดันไม่คงที่";
+  final String fluctuationHigh = "ความดันมีความเสถียร";
   final String maxBP = "ค่าสูงสุด";
   final String minBP = "ค่าต่ำสุด";
   final String noData = "ไม่มีข้อมูล";
@@ -273,13 +277,19 @@ class _SettingStrings {
   final String accountFound = "พบข้อมูลบัญชีแล้ว !";
   final String readyToRecoverDesc =
       "ข้อมูลของคุณพร้อมกู้คืนแล้ว\nกรุณาตรวจสอบว่าอุปกรณ์เชื่อมต่ออินเทอร์เน็ต";
-  final String confirmRecoveryBtn = "ยืนยันกู้ข้อมูล";
+  final String confirmRecoveryBtn = "กู้ข้อมูล";
 
   // Recovery My Data - Dialog
-  final String confirmRecoveryTitle = "ยืนยันการกู้ข้อมูล";
+  final String confirmRecoveryTitle = "ยืนยันการกู้คืนข้อมูล";
   final String confirmRecoveryWarning =
       "⚠️ กรุณาอ่านก่อนกดยืนยัน:\n\n• ต้องเชื่อมต่ออินเทอร์เน็ตตลอดการกู้ข้อมูล\n• ห้ามออกจากหน้านี้หรือปิดแอประหว่างกู้ข้อมูล\n• ข้อมูลเดิมในเครื่องนี้จะถูกแทนที่ด้วยข้อมูลที่กู้คืน";
-  final String understandAndConfirm = "เข้าใจแล้ว ยืนยัน";
+  final String confirmRecovery = "ยืนยันการกู้คืน";
+  final String thisDataWill = "ข้อมูลปัจจุบันในเครื่องนี้จะ";
+  final String deleted = " ถูกลบ ";
+  final String andReplacedWith = "และ\nแทนที่ด้วยข้อมูลสำรองทั้งหมด";
+  final String duringRecovery = "ระหว่างดำเนินการกู้ข้อมูล";
+  final String connectInternet = "เชื่อมต่ออินเทอร์เน็ตไว้ตลอดเวลา";
+  final String doNotCloseOrExit = "ห้ามปิดแอปหรือสลับหน้าจอจนกว่าจะเสร็จ";
 }
 
 class _ResultStrings {

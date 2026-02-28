@@ -7,7 +7,7 @@ import 'package:dun_diary_app/shared/widgets/custom/text/text_widget.dart';
 import 'package:flutter/material.dart';
 
 class BloodPressureCard extends StatelessWidget {
-  final int? bloodPressureLevel;
+  final BPLevel? bloodPressureLevel;
   final String date;
   final Widget leadingIcon;
 
@@ -22,9 +22,7 @@ class BloodPressureCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final resultLabel = bloodPressureLevel == null
         ? AppStrings.stat.noDataYet
-        : AppStrings.stat.bpLevel(
-            BloodPressureUtils.mapLevelLabel(bloodPressureLevel),
-          );
+        : AppStrings.stat.bpLevel(bloodPressureLevel?.label ?? '');
     return CustomCard(
       contentPadding: EdgeInsets.all(15),
       content: Row(
@@ -42,7 +40,7 @@ class BloodPressureCard extends StatelessWidget {
                 fontWeight: Dimension.fontWeights.bold,
                 color: bloodPressureLevel == null
                     ? CustomColor.gray500
-                    : BloodPressureUtils.mapLevelColor(bloodPressureLevel),
+                    : bloodPressureLevel!.color,
               ),
               CustomText(
                 text: date,

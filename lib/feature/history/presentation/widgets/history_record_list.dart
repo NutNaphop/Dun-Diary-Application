@@ -26,39 +26,42 @@ class _HistoryRecordListState extends State<HistoryRecordList> {
   Widget build(BuildContext context) {
     final vm = context.watch<HistoryViewmodel>();
 
-    return CustomCard(
-      title: AppStrings.history.recordTitle,
-      contentPadding: const EdgeInsets.all(10),
-      content: ConstrainedBox(
-        constraints: const BoxConstraints(maxHeight: 250),
-        child: RawScrollbar(
-          thumbColor: CustomColor.gray300,
-          radius: const Radius.circular(90),
-          thickness: 4,
-          thumbVisibility: true,
-          controller: _scrollController,
-          padding: const EdgeInsets.only(top: 20, bottom: 20),
-          child: ListView.builder(
-            controller: _scrollController,
-            shrinkWrap: true,
-            itemCount: vm.selectedDateRecords.length,
-            itemBuilder: (context, index) {
-              final record = vm.selectedDateRecords[index];
-              return GestureDetector(
-                behavior: HitTestBehavior.opaque,
-                onTap: () => vm.redirectToBloodPressureDetail(record),
-                child: Padding(
-                  padding: const EdgeInsets.only(bottom: 5),
-                  child: HistoryCard(
-                    record: record,
-                    isHaveDivider: index != vm.selectedDateRecords.length - 1,
-                  ),
+    return vm.selectedDateRecords.isEmpty
+        ? const SizedBox.shrink()
+        : CustomCard(
+            title: AppStrings.history.recordTitle,
+            contentPadding: const EdgeInsets.all(10),
+            content: ConstrainedBox(
+              constraints: const BoxConstraints(maxHeight: 250),
+              child: RawScrollbar(
+                thumbColor: CustomColor.gray300,
+                radius: const Radius.circular(90),
+                thickness: 4,
+                thumbVisibility: true,
+                controller: _scrollController,
+                padding: const EdgeInsets.only(top: 20, bottom: 20),
+                child: ListView.builder(
+                  controller: _scrollController,
+                  shrinkWrap: true,
+                  itemCount: vm.selectedDateRecords.length,
+                  itemBuilder: (context, index) {
+                    final record = vm.selectedDateRecords[index];
+                    return GestureDetector(
+                      behavior: HitTestBehavior.opaque,
+                      onTap: () => vm.redirectToBloodPressureDetail(record),
+                      child: Padding(
+                        padding: const EdgeInsets.only(bottom: 5),
+                        child: HistoryCard(
+                          record: record,
+                          isHaveDivider:
+                              index != vm.selectedDateRecords.length - 1,
+                        ),
+                      ),
+                    );
+                  },
                 ),
-              );
-            },
-          ),
-        ),
-      ),
-    );
+              ),
+            ),
+          );
   }
 }

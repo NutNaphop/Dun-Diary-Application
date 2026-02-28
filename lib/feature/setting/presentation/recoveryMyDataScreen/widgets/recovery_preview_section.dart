@@ -2,16 +2,16 @@ import 'package:dun_diary_app/core/constant/app_routes.dart';
 import 'package:dun_diary_app/core/services/flushbar_service.dart';
 import 'package:dun_diary_app/core/services/navigation_service.dart';
 import 'package:dun_diary_app/feature/setting/presentation/recoveryMyDataScreen/recovery_my_data_viewModel.dart';
+import 'package:dun_diary_app/feature/setting/presentation/recoveryMyDataScreen/widgets/confirmRecoveryDialog.dart';
 import 'package:dun_diary_app/feature/setting/presentation/widgets/card/profile_card.dart';
 import 'package:dun_diary_app/shared/constant/app_icons.dart';
-import 'package:dun_diary_app/shared/constant/app_image.dart';
+import 'package:dun_diary_app/shared/constant/app_strings.dart';
 import 'package:dun_diary_app/shared/style/color.dart';
 import 'package:dun_diary_app/shared/style/dimension.dart';
 import 'package:dun_diary_app/shared/widgets/custom/button/custom_button.dart';
 import 'package:dun_diary_app/shared/widgets/custom/dialog/custom_dialog.dart';
 import 'package:dun_diary_app/shared/widgets/custom/img/custom_svg_widget.dart';
 import 'package:dun_diary_app/shared/widgets/custom/text/text_widget.dart';
-import 'package:dun_diary_app/shared/constant/app_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -144,13 +144,7 @@ class RecoveryPreviewSection extends StatelessWidget {
   Future<void> _showRecoveryConfirmDialog(BuildContext context) async {
     final result = await CustomDialog.show<bool>(
       context,
-      child: CustomDialog(
-        title: AppStrings.setting.confirmRecoveryTitle,
-        description: AppStrings.setting.confirmRecoveryWarning,
-        primaryButtonText: AppStrings.setting.understandAndConfirm,
-        secondaryButtonText: AppStrings.common.cancel,
-        content: SVGImage(path: AppImages.faq, width: 163, height: 120),
-      ),
+      child: ConfirmRecoveryDialog(),
     );
 
     if (result == true) {

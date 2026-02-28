@@ -1,3 +1,4 @@
+import 'package:dun_diary_app/shared/constant/app_bp_level.dart';
 import 'package:dun_diary_app/shared/style/color.dart';
 import 'package:dun_diary_app/shared/style/dimension.dart';
 import 'package:dun_diary_app/shared/widgets/custom/text/text_widget.dart';
@@ -125,7 +126,7 @@ class _BpGraphSdkState extends State<BpGraphSdk>
                                   10,
                               width: yLabelWidth,
                               child: CustomText(
-                                text: BloodPressureLevel.values[i].label,
+                                text: BPLevel.values[i].label,
                                 fontSize: Dimension.fontSizes.esm,
                                 fontWeight: Dimension.fontWeights.regular,
                                 color: CustomColor.gray600,
@@ -243,13 +244,13 @@ class _BpGraphSdkState extends State<BpGraphSdk>
 List<BloodPressureGraphData> _getMockData() {
   return List.generate(7, (index) {
     final levels = [
-      BloodPressureLevel.normal,
-      BloodPressureLevel.elevated,
-      BloodPressureLevel.normal,
-      BloodPressureLevel.elevated,
-      BloodPressureLevel.normal,
-      BloodPressureLevel.elevated,
-      BloodPressureLevel.normal,
+      BPLevel.normal,
+      BPLevel.elevated,
+      BPLevel.normal,
+      BPLevel.elevated,
+      BPLevel.normal,
+      BPLevel.elevated,
+      BPLevel.normal,
     ];
     return BloodPressureGraphData(
       xLabel: '',

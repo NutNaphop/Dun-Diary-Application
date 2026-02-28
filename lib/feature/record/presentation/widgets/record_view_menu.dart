@@ -22,6 +22,7 @@ class RecordViewMenu extends StatelessWidget {
         return Align(
           alignment: Alignment.bottomRight,
           child: CustomPopupMenuButton<ViewAction>(
+            menuMinWidth: 205,
             openAbove: true,
             icon: CustomBoxIcon(
               iconPath: AppIcons.outline.pen,
@@ -89,6 +90,8 @@ class RecordViewMenu extends StatelessWidget {
 
     if (result == true) {
       viewModel.deleteRecord();
+    } else {
+      viewModel.setMenuOpen(false);
     }
   }
 }

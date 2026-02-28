@@ -1,6 +1,8 @@
 /// Model สำหรับ Summary Item ที่ส่งไป AI
 ///
 /// ใช้แทน raw BPRecord เพื่อลด token usage
+import 'package:dun_diary_app/shared/constant/app_bp_level.dart';
+
 class AnalyzeSummaryItem {
   final String label;
   final int avgSys;
@@ -11,7 +13,7 @@ class AnalyzeSummaryItem {
   final int minDia;
   final int maxDia;
   final int recordCount;
-  final int level;
+  final BPLevel level;
 
   AnalyzeSummaryItem({
     required this.label,
@@ -36,7 +38,7 @@ class AnalyzeSummaryItem {
     'minDia': minDia,
     'maxDia': maxDia,
     'count': recordCount,
-    'level': level,
+    'level': level.index,
   };
 }
 
@@ -70,18 +72,21 @@ class AnalyzeSummary {
   final String rangeLabel;
   final List<AnalyzeSummaryItem> items;
   final int totalRecords;
+  final double sd;
 
   AnalyzeSummary({
     required this.periodType,
     required this.rangeLabel,
     required this.items,
     required this.totalRecords,
+    this.sd = 0.0,
   });
 
   Map<String, dynamic> toJson() => {
     'periodType': periodType.value,
     'rangeLabel': rangeLabel,
     'totalRecords': totalRecords,
+    'sd': sd,
     'items': items.map((e) => e.toJson()).toList(),
   };
 }

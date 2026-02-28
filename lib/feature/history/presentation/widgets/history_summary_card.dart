@@ -17,10 +17,9 @@ class HistorySummaryCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final vm = context.watch<HistoryViewmodel>();
 
+    final avgLevel = vm.getAverageLevelForDate(vm.selectedDate);
     final label = AppStrings.bloodPressure.bloodPressure(
-      BloodPressureUtils.mapLevelLabel(
-        vm.getAverageLevelForDate(vm.selectedDate),
-      ),
+      avgLevel?.label ?? '-',
     );
 
     if (vm.selectedDateRecords.isEmpty) {
@@ -28,11 +27,9 @@ class HistorySummaryCard extends StatelessWidget {
     }
 
     final lastRecordLevel = BloodPressureUtils.calculateBloodPressureLevel(
-      vm.selectedDateRecords.last.sys,
-      vm.selectedDateRecords.last.dia,
+      vm.selectedDateRecords.first.sys,
+      vm.selectedDateRecords.first.dia,
     );
-
-    final avgLevel = vm.getAverageLevelForDate(vm.selectedDate);
 
     return CustomCard(
       contentPadding: const EdgeInsets.all(10),

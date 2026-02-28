@@ -66,14 +66,14 @@ class GraphDataMapper {
       ).round();
 
       // หา Level จากค่าเฉลี่ย
-      final levelInt = BloodPressureUtils.calculateBloodPressureLevel(
+      final level = BloodPressureUtils.calculateBloodPressureLevel(
         avgSys,
         avgDia,
       );
 
       return BloodPressureGraphData(
         xLabel: entry.key,
-        level: _intToEnum(levelInt),
+        level: level,
         sourceData: dailyRecords.last,
       );
     }).toList();
@@ -121,14 +121,14 @@ class GraphDataMapper {
       final avgDia = BloodPressureUtils.calculateAVGDIA(
         list.map((e) => e.dia).toList(),
       ).round();
-      final levelInt = BloodPressureUtils.calculateBloodPressureLevel(
+      final level = BloodPressureUtils.calculateBloodPressureLevel(
         avgSys,
         avgDia,
       );
 
       return BloodPressureGraphData(
         xLabel: entry.key,
-        level: _intToEnum(levelInt),
+        level: level,
         sourceData: list.first,
       );
     }).toList();
@@ -165,40 +165,16 @@ class GraphDataMapper {
       final avgDia = BloodPressureUtils.calculateAVGDIA(
         list.map((e) => e.dia).toList(),
       ).round();
-      final levelInt = BloodPressureUtils.calculateBloodPressureLevel(
+      final level = BloodPressureUtils.calculateBloodPressureLevel(
         avgSys,
         avgDia,
       );
 
       return BloodPressureGraphData(
         xLabel: entry.key,
-        level: _intToEnum(levelInt),
+        level: level,
         sourceData: list.first,
       );
     }).toList();
-  }
-
-  // ===========================================================================
-  // 🔧 Helper: Int → Enum Conversion
-  // ===========================================================================
-
-  /// แปลง level int (0-5) เป็น BloodPressureLevel enum
-  static BloodPressureLevel _intToEnum(int level) {
-    switch (level) {
-      case 0:
-        return BloodPressureLevel.low;
-      case 1:
-        return BloodPressureLevel.normal;
-      case 2:
-        return BloodPressureLevel.elevated;
-      case 3:
-        return BloodPressureLevel.highStage1;
-      case 4:
-        return BloodPressureLevel.highStage2;
-      case 5:
-        return BloodPressureLevel.crisis;
-      default:
-        return BloodPressureLevel.normal;
-    }
   }
 }

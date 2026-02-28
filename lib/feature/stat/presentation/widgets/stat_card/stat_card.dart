@@ -23,7 +23,7 @@ class StatCard extends StatelessWidget {
     return CustomCard(
       contentPadding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
       content: Column(
-        spacing: 5,
+        spacing: 8,
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
@@ -46,7 +46,7 @@ class StatCard extends StatelessWidget {
           ),
           CustomText(
             text: description,
-            fontSize: Dimension.fontSizes.sm,
+            fontSize: Dimension.fontSizes.rg,
             fontWeight: Dimension.fontWeights.regular,
             color: CustomColor.gray500,
           ),

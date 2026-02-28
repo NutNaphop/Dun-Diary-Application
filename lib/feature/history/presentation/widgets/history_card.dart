@@ -21,7 +21,7 @@ class HistoryCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final int level = BloodPressureUtils.calculateBloodPressureLevel(
+    final level = BloodPressureUtils.calculateBloodPressureLevel(
       record.sys,
       record.dia,
     );
@@ -59,7 +59,7 @@ class HistoryCard extends StatelessWidget {
                   width: 5,
                   height: 80,
                   decoration: BoxDecoration(
-                    color: BloodPressureUtils.mapLevelColor(level),
+                    color: level.color,
                     borderRadius: BorderRadius.circular(10),
                   ),
                 ),
@@ -69,7 +69,7 @@ class HistoryCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     CustomText(
-                      text: BloodPressureUtils.mapLevelLabel(level),
+                      text: level.label,
                       fontSize: Dimension.fontSizes.h2,
                       fontWeight: Dimension.fontWeights.bold,
                       color: CustomColor.gray900,

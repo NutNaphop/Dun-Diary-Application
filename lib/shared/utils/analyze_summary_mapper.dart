@@ -43,11 +43,16 @@ class AnalyzeSummaryMapper {
         .map((e) => _createSummaryItem(e.key, e.value))
         .toList();
 
+    // คำนวณ SD รวมของทั้ง period
+    final avgSys = StatUtils.avgOf(records.map((e) => e.sys).toList());
+    final sd = StatUtils.calculateStandardDeviationError(records, avgSys);
+
     return AnalyzeSummary(
       periodType: periodType,
       rangeLabel: rangeLabel,
       items: items,
       totalRecords: records.length,
+      sd: sd,
     );
   }
 

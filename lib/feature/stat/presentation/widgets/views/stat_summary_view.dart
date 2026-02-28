@@ -1,9 +1,12 @@
 import 'package:dun_diary_app/data/analyze_record/model/analyze_result_model.dart';
+import 'package:dun_diary_app/shared/constant/app_animations.dart';
 import 'package:dun_diary_app/feature/stat/presentation/widgets/analyze_card/analyze_card.dart';
 import 'package:dun_diary_app/feature/stat/presentation/widgets/card/blood_pressure_card.dart';
 import 'package:dun_diary_app/feature/stat/presentation/widgets/stat_card/components/stat_icon.dart';
 import 'package:dun_diary_app/feature/stat/presentation/widgets/stat_card/stat_card.dart';
+import 'package:dun_diary_app/shared/constant/app_icons.dart';
 import 'package:dun_diary_app/shared/constant/app_strings.dart';
+import 'package:dun_diary_app/shared/style/color.dart';
 import 'package:dun_diary_app/shared/style/dimension.dart';
 import 'package:dun_diary_app/shared/utils/blood_pressure_utils.dart';
 import 'package:dun_diary_app/shared/widgets/custom/card/custom_card.dart';
@@ -19,7 +22,7 @@ class StatSummaryView extends StatelessWidget {
   final AnalyzeState analyzeState;
   final AnalyzeResultModel? resultFromAi;
   final List<StatCardData> data;
-  final int? bloodPressureLevel;
+  final BPLevel? bloodPressureLevel;
   final List<BloodPressureGraphData> graphData;
   final bool isInternetConnected;
   final VoidCallback? onAnalyzePressed;
@@ -40,31 +43,31 @@ class StatSummaryView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Padding(
-        padding: const EdgeInsets.only(bottom: 39),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Graph Section
-            CustomCard(
-              title: dateLabel,
-              titleFontSize: Dimension.fontSizes.h2,
-              contentPadding: const EdgeInsets.all(20),
-              content: Container(
-                height: 350,
-                width: double.infinity,
-                margin: const EdgeInsets.only(top: 10),
-                child: BpGraphSdk(
-                  key: ValueKey("graph_$dateLabel"),
-                  data: graphData,
-                  onButtonPress: onRecordPressed,
-                ),
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 39),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Graph Section
+          CustomCard(
+            title: dateLabel,
+            titleFontSize: Dimension.fontSizes.h2,
+            contentPadding: const EdgeInsets.all(20),
+            content: Container(
+              height: 350,
+              width: double.infinity,
+              margin: const EdgeInsets.only(top: 10),
+              child: BpGraphSdk(
+                key: ValueKey("graph_$dateLabel"),
+                data: graphData,
+                onButtonPress: onRecordPressed,
               ),
             ),
-            const SizedBox(height: 30),
+          ),
+          const SizedBox(height: 30),
 
-            // Summary Section
+          // Summary Section ( Need to hide when data is empty )
+          if (graphData.isNotEmpty) ...[
             CustomText(
               text: AppStrings.stat.healthSummary,
               fontSize: Dimension.fontSizes.h1,
@@ -75,7 +78,7 @@ class StatSummaryView extends StatelessWidget {
               bloodPressureLevel: bloodPressureLevel,
               date: dateLabel,
               leadingIcon: LottieAnimation(
-                path: BloodPressureUtils.mapLevelAnimation(bloodPressureLevel),
+                path: bloodPressureLevel?.animation ?? AppAnimations.empty,
                 width: 90,
                 height: 90,
               ),
@@ -122,8 +125,40 @@ class StatSummaryView extends StatelessWidget {
               isInternetConnect: isInternetConnected,
               onPressed: onAnalyzePressed,
             ),
+          ] else ...[
+            CustomCard(
+              contentPadding: EdgeInsets.all(10),
+              content: Row(
+                spacing: 23,
+                children: [
+                  SVGImage(
+                    path: AppIcons.duotone.lightbulb,
+                    width: 44,
+                    height: 44,
+                    color: CustomColor.yellow4,
+                  ),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    spacing: 4,
+                    children: [
+                      CustomText(
+                        text: AppStrings.stat.didYouKnow,
+                        fontSize: Dimension.fontSizes.h2,
+                        fontWeight: Dimension.fontWeights.medium,
+                      ),
+                      CustomText(
+                        text: AppStrings.stat.didYouKnowDesc,
+                        fontSize: Dimension.fontSizes.md,
+                        fontWeight: Dimension.fontWeights.regular,
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
           ],
-        ),
+        ],
       ),
     );
   }

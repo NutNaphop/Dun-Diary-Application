@@ -14,6 +14,7 @@ class CustomPopupMenuButton<T> extends StatelessWidget {
   final Color? backgroundColor;
   final ShapeBorder? shape;
   final bool openAbove;
+  final double menuMinWidth;
 
   // สมมติว่านี่คือ Shadow ของคุณ (หรือรับมาจากข้างนอกก็ได้)
   final List<BoxShadow>? customBoxShadows;
@@ -29,6 +30,7 @@ class CustomPopupMenuButton<T> extends StatelessWidget {
     this.backgroundColor,
     this.shape,
     this.openAbove = false,
+    this.menuMinWidth = 160,
     this.customBoxShadows, // รับค่า Shadow
   });
 
@@ -56,6 +58,7 @@ class CustomPopupMenuButton<T> extends StatelessWidget {
     }
 
     return PopupMenuButton<T>(
+      constraints: BoxConstraints(minWidth: menuMinWidth),
       offset: effectiveOffset,
       popUpAnimationStyle: AnimationStyle.noAnimation,
       icon: icon,
