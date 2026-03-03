@@ -83,7 +83,7 @@ class StatSummaryView extends StatelessWidget {
                 height: 90,
               ),
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 10),
 
             // Stat Section
             GridView.builder(

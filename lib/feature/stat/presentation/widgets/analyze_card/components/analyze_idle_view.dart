@@ -56,27 +56,26 @@ class AnalyzeIdleView extends StatelessWidget {
                 ),
               ),
               SizedBox(height: 15),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 40),
-                child: CustomButton(
-                  type: CustomButtonType.outline,
-                  boxShadow: [DropShadow.drop_card],
-                  textStyle: TextStyle(
-                    color: buttonContentColor,
-                    fontSize: Dimension.fontSizes.md,
-                    fontWeight: Dimension.fontWeights.bold,
-                  ),
-                  leadingIcon: SVGImage(
-                    path: AppIcons.fill.sparkle,
-                    width: 20,
-                    height: 20,
-                    color: buttonContentColor,
-                  ),
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  text: AppStrings.stat.startAnalyze,
-                  borderColor: buttonStrokeColor,
-                  onPressed: buttonCallback,
+              CustomButton(
+                expand: false,
+                padding: EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+                type: CustomButtonType.outline,
+                boxShadow: [DropShadow.drop_card],
+                textStyle: TextStyle(
+                  color: buttonContentColor,
+                  fontSize: Dimension.fontSizes.md,
+                  fontWeight: Dimension.fontWeights.bold,
                 ),
+                leadingIcon: SVGImage(
+                  path: AppIcons.fill.sparkle,
+                  width: 20,
+                  height: 20,
+                  color: buttonContentColor,
+                ),
+                mainAxisAlignment: MainAxisAlignment.center,
+                text: AppStrings.stat.startAnalyze,
+                borderColor: buttonStrokeColor,
+                onPressed: buttonCallback,
               ),
 
               if (!isInternetConnect)
