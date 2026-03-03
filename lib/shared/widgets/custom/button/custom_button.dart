@@ -20,6 +20,7 @@ class CustomButton extends StatelessWidget {
   final List<BoxShadow>? boxShadow;
   final VoidCallback? onPressed;
   final MainAxisAlignment? mainAxisAlignment;
+  final bool expand;
 
   const CustomButton({
     super.key,
@@ -37,6 +38,7 @@ class CustomButton extends StatelessWidget {
     this.trailingIcon,
     this.boxShadow,
     this.mainAxisAlignment,
+    this.expand = true,
   });
 
   @override
@@ -92,7 +94,7 @@ class CustomButton extends StatelessWidget {
                 padding ??
                 const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
             child: Row(
-              mainAxisSize: MainAxisSize.min,
+              mainAxisSize: expand ? MainAxisSize.max : MainAxisSize.min,
               mainAxisAlignment: effectiveMainAxisAlignment,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [

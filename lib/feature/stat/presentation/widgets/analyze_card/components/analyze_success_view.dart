@@ -102,6 +102,7 @@ class AnalyzeSuccessView extends StatelessWidget {
             SizedBox(height: 5),
             CustomButton(
               text: AppStrings.stat.reAnalyze,
+              expand: false,
               padding: EdgeInsets.symmetric(horizontal: 30, vertical: 15),
               leadingIcon: SVGImage(
                 path: AppIcons.outline.arrowClockwise,

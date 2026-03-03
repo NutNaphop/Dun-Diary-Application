@@ -234,7 +234,7 @@ class _SettingStrings {
   final String recoveryTitle = "กู้คืนข้อมูลของฉัน";
   final String uploadQRTitle = "อัปโหลด QR Code ของคุณ";
   final String uploadQRDescription =
-      "กรุณาเลือกรูปภาพ QR Code\nที่คุณบันทึกไว้\nเพื่อกู้คืนข้อมูลบัญชีของคุณ";
+      "กรุณาเลือกรูปภาพ QR Code ที่คุณบันทึกไว้\nเพื่อกู้คืนข้อมูลบัญชีของคุณ";
   final String selectFromAlbum = "เลือกรูปภาพจากอัลบั้ม";
   final String openCameraScanner = "เปิดกล้องสแกน QR Code";
 

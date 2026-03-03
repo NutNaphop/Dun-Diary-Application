@@ -10,6 +10,7 @@ class AppImages {
   static const homeBackground = '$_base/home_background.png';
   static const faq = '$_base/faq.svg';
   static const warning = '$_base/warning.svg';
+  static const upload = '$_base/upload.svg';
 }
 
 class _ProfileImages {

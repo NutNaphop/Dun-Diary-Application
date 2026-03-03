@@ -2,6 +2,7 @@ import 'package:dun_diary_app/core/constant/app_routes.dart';
 import 'package:dun_diary_app/core/services/navigation_service.dart';
 import 'package:dun_diary_app/feature/setting/presentation/recoveryMyDataScreen/recovery_my_data_viewModel.dart';
 import 'package:dun_diary_app/shared/constant/app_icons.dart';
+import 'package:dun_diary_app/shared/constant/app_image.dart';
 import 'package:dun_diary_app/shared/constant/app_strings.dart';
 import 'package:dun_diary_app/shared/style/color.dart';
 import 'package:dun_diary_app/shared/style/dimension.dart';
@@ -25,22 +26,7 @@ class RecoveryScannerSection extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               // QR Upload Placeholder
-              Container(
-                width: 300,
-                height: 300,
-                decoration: BoxDecoration(
-                  color: CustomColor.gray200,
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child: Center(
-                  child: SVGImage(
-                    path: AppIcons.duotone.image,
-                    width: 64,
-                    height: 64,
-                    color: CustomColor.gray500,
-                  ),
-                ),
-              ),
+              SVGImage(path: AppImages.upload, width: 186, height: 186),
               const SizedBox(height: 28),
 
               // Title
