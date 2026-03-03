@@ -38,7 +38,7 @@ class BloodPressureGauge extends StatelessWidget {
                 fontWeight: Dimension.fontWeights.regular,
               ),
               CustomText(
-                text: AppStrings.bloodPressure.high,
+                text: AppStrings.bloodPressure.elevated,
                 fontSize: Dimension.fontSizes.sm,
                 fontWeight: Dimension.fontWeights.regular,
               ),

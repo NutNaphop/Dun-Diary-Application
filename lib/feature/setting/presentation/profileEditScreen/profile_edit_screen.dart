@@ -43,7 +43,7 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
 
     return LayoutBuilder(
       builder: (context, constraints) {
-        final double coverHeight = constraints.maxHeight * 0.23;
+        final double coverHeight = constraints.maxHeight * 0.25;
 
         return CustomScaffold(
           usePadding: false,

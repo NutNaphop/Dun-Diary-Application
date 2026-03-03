@@ -7,6 +7,7 @@ import 'package:dun_diary_app/shared/constant/app_icons.dart';
 import 'package:dun_diary_app/shared/constant/app_image.dart';
 import 'package:dun_diary_app/shared/constant/app_strings.dart';
 import 'package:dun_diary_app/shared/style/color.dart';
+import 'package:dun_diary_app/shared/style/dimension.dart';
 import 'package:dun_diary_app/shared/widgets/custom/card/custom_card.dart';
 import 'package:dun_diary_app/shared/widgets/custom/card/no_content_card.dart';
 import 'package:dun_diary_app/shared/widgets/custom/card/stat_row.dart';
@@ -62,6 +63,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     // --- ส่วนการ์ดแสดงผลสุขภาพ (Health Status Card) ---
                     CustomCard(
                       title: AppStrings.home.healthToday,
+                      titleFontWeight: Dimension.fontWeights.medium,
                       contentPadding: const EdgeInsets.all(20),
                       content: Column(
                         mainAxisSize: MainAxisSize.max,

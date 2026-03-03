@@ -18,13 +18,13 @@ class CustomCard extends StatelessWidget {
   final EdgeInsets? contentPadding;
   final double borderRadius;
 
-  const CustomCard({
+  CustomCard({
     super.key,
     this.title,
     this.description,
     this.titleFontSize = 18,
     this.descriptionFontSize = 18,
-    this.titleFontWeight = FontWeight.bold,
+    this.titleFontWeight = FontWeight.w500,
     this.descriptionFontWeight = FontWeight.bold,
     this.titleColor,
     this.descriptionColor,

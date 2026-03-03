@@ -1,6 +1,7 @@
 import 'package:dun_diary_app/shared/constant/app_bp_level.dart';
 import 'package:dun_diary_app/feature/record/presentation/record_viewModel.dart';
 import 'package:dun_diary_app/shared/constant/app_strings.dart';
+import 'package:dun_diary_app/shared/style/dimension.dart';
 import 'package:dun_diary_app/shared/utils/blood_pressure_utils.dart';
 import 'package:dun_diary_app/shared/widgets/custom/card/custom_card.dart';
 import 'package:dun_diary_app/shared/widgets/ui/guage/guage.dart';
@@ -16,6 +17,7 @@ class RecordGaugeCard extends StatelessWidget {
       selector: (_, viewModel) => viewModel.level,
       builder: (context, level, child) => CustomCard(
         title: AppStrings.bloodPressure.bloodPressure(level.label),
+        titleFontWeight: Dimension.fontWeights.bold,
         titleFontSize: 21,
         titleTextAlign: TextAlign.center,
         contentPadding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
