@@ -102,7 +102,9 @@ class _HistoryScreenState extends State<HistoryScreen> {
                       },
                     ),
                   ),
-                  const HistorySummaryCard(),
+
+                  if (vm.selectedDateRecords.isNotEmpty)
+                    const HistorySummaryCard(),
                   const HistoryGraphCard(),
                   const HistoryRecordList(),
                 ],

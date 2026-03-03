@@ -50,7 +50,7 @@ class _HomeScreenState extends State<HomeScreen> {
       body: Column(
         children: [
           HomeHeader(userName: userName),
-          const SizedBox(height: 15),
+          const SizedBox(height: 20),
           Expanded(
             child: SingleChildScrollView(
               physics: const AlwaysScrollableScrollPhysics(),
@@ -117,7 +117,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
                     // Blood Pressure Card
                     HomeBpCard(),
-                    const SizedBox(height: 35),
                   ],
                 ),
               ),

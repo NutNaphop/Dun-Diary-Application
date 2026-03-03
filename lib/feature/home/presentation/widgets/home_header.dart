@@ -24,7 +24,7 @@ class HomeHeader extends StatelessWidget {
     final double screenHeight = MediaQuery.of(context).size.height;
     final double statusBarHeight = MediaQuery.of(context).padding.top;
     final double headerHeight = (screenHeight * 0.35).clamp(
-      340.0 + statusBarHeight,
+      0 + statusBarHeight,
       double.infinity,
     );
 
@@ -159,9 +159,7 @@ class HomeHeader extends StatelessWidget {
                   onPressed: viewModel.redirectToRecord,
                 ),
               ),
-
-              // Add some bottom padding if needed
-              const SizedBox(height: 25),
+              const SizedBox(height: 20),
             ],
           ),
         ),
