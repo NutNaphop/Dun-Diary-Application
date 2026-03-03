@@ -83,6 +83,7 @@ class RecoveryScannerSection extends StatelessWidget {
                       path: AppIcons.outline.camera,
                       width: 20,
                       height: 20,
+                      color: CustomColor.primaryColor,
                     ),
                     onPressed: isLoading
                         ? null
