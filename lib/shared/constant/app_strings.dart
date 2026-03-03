@@ -296,6 +296,7 @@ class _ResultStrings {
   const _ResultStrings();
 
   final String recordBloodPressure = "บันทึกความดัน";
+  final String bloodPressureResult = "ผลความดัน";
 }
 
 class _CalendarStrings {

@@ -44,18 +44,18 @@ class CustomButton extends StatelessWidget {
     final isFill = type == CustomButtonType.fill;
     final isDisabled = onPressed == null;
 
-    final effectiveBackgroundColor =
-        isDisabled
-            ? (isFill ? CustomColor.gray200 : CustomColor.white)
-            : (backgroundColor ??
-                (isFill ? CustomColor.accentColor : CustomColor.white));
+    final effectiveBackgroundColor = isDisabled
+        ? (isFill ? CustomColor.gray200 : CustomColor.white)
+        : (backgroundColor ??
+              (isFill ? CustomColor.accentColor : CustomColor.white));
 
-    final effectiveBorderColor =
-        isDisabled
-            ? CustomColor.gray300
-            : (borderColor ?? (isFill ? Colors.transparent : CustomColor.gray400));
+    final effectiveBorderColor = isDisabled
+        ? CustomColor.gray300
+        : (borderColor ?? (isFill ? Colors.transparent : CustomColor.gray300));
 
-    final defaultTextColor = isDisabled ? CustomColor.gray500 : (isFill ? CustomColor.white : CustomColor.gray900);
+    final defaultTextColor = isDisabled
+        ? CustomColor.gray500
+        : (isFill ? CustomColor.white : CustomColor.gray900);
 
     final effectiveTextStyle =
         textStyle ??
@@ -92,6 +92,7 @@ class CustomButton extends StatelessWidget {
                 padding ??
                 const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
             child: Row(
+              mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: effectiveMainAxisAlignment,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [

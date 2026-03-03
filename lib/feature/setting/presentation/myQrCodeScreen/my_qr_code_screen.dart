@@ -57,10 +57,11 @@ class _MyQrCodeScreenState extends State<MyQrCodeScreen> {
                   path: AppIcons.duotone.starCircle,
                   width: 24,
                   height: 24,
+                  color: CustomColor.yellow4,
                 ),
                 CustomText(
                   text: "เก็บรหัสนี้ไว้ให้ปลอดภัย",
-                  fontSize: Dimension.fontSizes.h2,
+                  fontSize: Dimension.fontSizes.h1,
                   fontWeight: Dimension.fontWeights.bold,
                 ),
               ],
@@ -70,8 +71,9 @@ class _MyQrCodeScreenState extends State<MyQrCodeScreen> {
               textAlign: TextAlign.center,
               text:
                   "ใช้สำหรับกู้คืนข้อมูลบัญชีของคุณ\nห้ามแบ่งปันรหัสกับผู้อื่น",
-              fontSize: Dimension.fontSizes.md,
+              fontSize: Dimension.fontSizes.h2,
               fontWeight: Dimension.fontWeights.medium,
+              color: CustomColor.gray600,
             ),
             SizedBox(height: 26),
 
@@ -104,7 +106,7 @@ class _MyQrCodeScreenState extends State<MyQrCodeScreen> {
                           SizedBox(height: 20),
                           CustomText(
                             text: "ชื่อผู้ใช้ : ${userName}",
-                            fontSize: Dimension.fontSizes.md,
+                            fontSize: Dimension.fontSizes.h2,
                             fontWeight: Dimension.fontWeights.bold,
                             color: CustomColor.gray500,
                           ),
