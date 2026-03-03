@@ -13,6 +13,7 @@ class CustomScaffold extends StatelessWidget {
   // ✅ Key Features: ควบคุม Padding ได้
   final bool usePadding;
   final bool useSafeArea;
+  final bool extendBodyBehindAppBar;
 
   // Color
   final Color backgroundColor;
@@ -28,6 +29,7 @@ class CustomScaffold extends StatelessWidget {
     this.actions,
     this.usePadding = true, // default เป็น true
     this.useSafeArea = true,
+    this.extendBodyBehindAppBar = false,
     this.backgroundColor = CustomColor.gray100,
   });
 
@@ -50,6 +52,7 @@ class CustomScaffold extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: backgroundColor,
+      extendBodyBehindAppBar: extendBodyBehindAppBar,
       appBar: appBar,
       body: content,
       floatingActionButton: floatingActionButton,
