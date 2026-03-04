@@ -34,7 +34,12 @@ jobs:
         run: echo "${{ secrets.FIREBASE_OPTIONS }}" > lib/firebase_options.dart
 
       - name: Build AAB
-        run: flutter build appbundle --release --build-number=${{ github.run_number }}
+        run: >
+          flutter build appbundle --release 
+          --build-number=${{ github.run_number }}
+          --dart-define=BASE_URL=${{ secrets.BASE_URL }}
+          --dart-define=QR_ENCRYPTION_KEY=${{ secrets.QR_ENCRYPTION_KEY }}
+          --dart-define=QR_ENCRYPTION_IV=${{ secrets.QR_ENCRYPTION_IV }}
 
       - name: Upload AAB artifact
         uses: actions/upload-artifact@v3

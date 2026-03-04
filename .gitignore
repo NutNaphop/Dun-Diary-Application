@@ -83,4 +83,5 @@ app.*.map.json
 
 # Secrets / Environment
 env.json
+env.product.json
 lib/firebase_options.dart
