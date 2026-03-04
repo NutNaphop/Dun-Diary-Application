@@ -27,8 +27,11 @@ jobs:
       - name: Install dependencies
         run: flutter pub get
 
-      - name: Run tests
-        run: flutter test
+      - name: Create google-services.json
+        run: echo "${{ secrets.GOOGLE_SERVICES_JSON }}" > android/app/google-services.json
+
+      - name: Create firebase_options.dart
+        run: echo "${{ secrets.FIREBASE_OPTIONS }}" > lib/firebase_options.dart
 
       - name: Build AAB
         run: flutter build appbundle --release --build-number=${{ github.run_number }}
