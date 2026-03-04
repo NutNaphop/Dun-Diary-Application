@@ -37,9 +37,9 @@ jobs:
         run: >
           flutter build apk --release 
           --build-number=${{ github.run_number }}
-          --dart-define=BASE_URL=${{ secrets.BASE_URL }}
-          --dart-define=QR_ENCRYPTION_KEY=${{ secrets.QR_ENCRYPTION_KEY }}
-          --dart-define=QR_ENCRYPTION_IV=${{ secrets.QR_ENCRYPTION_IV }}
+          --dart-define=BASE_URL="${{ secrets.BASE_URL }}"
+          --dart-define=QR_ENCRYPTION_KEY="${{ secrets.QR_ENCRYPTION_KEY }}"
+          --dart-define=QR_ENCRYPTION_IV="${{ secrets.QR_ENCRYPTION_IV }}"
 
       - name: Upload to Firebase Distribution
         uses: wzieba/Firebase-Distribution-Github-Action@v1
