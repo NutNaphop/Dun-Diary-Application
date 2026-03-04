@@ -64,7 +64,7 @@ class StatSummaryView extends StatelessWidget {
               ),
             ),
           ),
-          const SizedBox(height: 30),
+          const SizedBox(height: 10),
 
           // Summary Section ( Need to hide when data is empty )
           if (graphData.isNotEmpty) ...[
@@ -83,7 +83,7 @@ class StatSummaryView extends StatelessWidget {
                 height: 90,
               ),
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 10),
 
             // Stat Section
             GridView.builder(

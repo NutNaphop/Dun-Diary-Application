@@ -42,6 +42,7 @@ class _DuotoneIcons {
   final String note = '$_path/note.svg';
   final String qrcode = '$_path/qrcode.svg';
   final String lightbulb = '$_path/lightbulb.svg';
+  final String cloudDownload = '$_path/cloud_download.svg';
 }
 
 class _FillIcons {

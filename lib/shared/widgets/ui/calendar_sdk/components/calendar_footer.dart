@@ -1,5 +1,6 @@
 import 'package:dun_diary_app/shared/constant/app_strings.dart';
 import 'package:dun_diary_app/shared/style/color.dart';
+import 'package:dun_diary_app/shared/style/dimension.dart';
 import 'package:dun_diary_app/shared/style/drop_shadow.dart';
 import 'package:dun_diary_app/shared/widgets/custom/button/custom_button.dart';
 import 'package:flutter/material.dart';
@@ -34,7 +35,13 @@ class CalendarFooter extends StatelessWidget {
           CustomButton(
             text: goToPresentLabel,
             type: CustomButtonType.outline,
-            boxShadow: [DropShadow.drop_thumb],
+            borderColor: CustomColor.transparent,
+            backgroundColor: CustomColor.transparent,
+            textStyle: TextStyle(
+              color: CustomColor.gray600,
+              fontSize: Dimension.fontSizes.md,
+              fontWeight: Dimension.fontWeights.bold,
+            ),
             onPressed: onGoToPresent,
           ),
         ],

@@ -20,10 +20,11 @@ class HomeHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     final viewModel = context.read<HomeViewmodel>(); // เอาไว้กดปุ่ม
 
-    // Responsive height: Takes 35% of screen height, but at least 340px to fit content
+    // Responsive height: Takes 35% of screen height, but at least 340px + status bar to fit content
     final double screenHeight = MediaQuery.of(context).size.height;
+    final double statusBarHeight = MediaQuery.of(context).padding.top;
     final double headerHeight = (screenHeight * 0.35).clamp(
-      340.0,
+      0 + statusBarHeight,
       double.infinity,
     );
 
@@ -127,11 +128,12 @@ class HomeHeader extends StatelessWidget {
 
               const SizedBox(height: 5),
 
-              // 🃏 Layer 3: การ์ด "บันทึกความดัน" (อยู่ใน Flow ของ Column)
+              // 🃏 Layer 3: Blood Pressure Button Card
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 24),
+                padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: CustomButton(
                   text: AppStrings.home.recordPressure,
+                  borderColor: CustomColor.primaryColor,
                   textStyle: TextStyle(
                     color: CustomColor.gray900,
                     fontSize: Dimension.fontSizes.h2,
@@ -157,8 +159,6 @@ class HomeHeader extends StatelessWidget {
                   onPressed: viewModel.redirectToRecord,
                 ),
               ),
-
-              // Add some bottom padding if needed
               const SizedBox(height: 20),
             ],
           ),

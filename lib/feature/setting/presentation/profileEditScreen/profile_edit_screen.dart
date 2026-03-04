@@ -41,109 +41,140 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
   Widget build(BuildContext context) {
     final viewModel = context.watch<ProfileEditViewModel>();
 
-    return CustomScaffold(
-      usePadding: false,
-      appBar: MainAppBar(
-        title: "แก้ไขโปรไฟล์",
-        showBack: true,
-        backIconPath: AppIcons.outline.leftArrow,
-        onBackPressed: NavigationService.instance.goBack,
-      ),
-      body: Stack(
-        clipBehavior: Clip.none,
-        children: [
-          Container(
-            width: double.infinity,
-            margin: const EdgeInsets.only(top: 80),
-            padding: const EdgeInsets.only(
-              top: 60,
-              left: 20,
-              right: 20,
-              bottom: 30,
-            ),
-            decoration: BoxDecoration(
-              color: CustomColor.white,
-              borderRadius: const BorderRadius.vertical(
-                top: Radius.circular(20),
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final double coverHeight = constraints.maxHeight * 0.25;
+
+        return CustomScaffold(
+          usePadding: false,
+          useSafeArea: false,
+          extendBodyBehindAppBar: true,
+          appBar: MainAppBar(
+            title: "แก้ไขโปรไฟล์",
+            showBack: true,
+            backIconPath: AppIcons.outline.leftArrow,
+            onBackPressed: NavigationService.instance.goBack,
+            backgroundColor: Colors.transparent,
+          ),
+          body: Stack(
+            clipBehavior: Clip.none,
+            children: [
+              // 1. Background Cover (Layer 1)
+              Positioned(
+                top: 0,
+                left: 0,
+                right: 0,
+                child: Image.asset(
+                  AppImages.profileCover,
+                  width: double.infinity,
+                  height: coverHeight,
+                  fit: BoxFit.cover,
+                ),
               ),
-            ),
-            child: Column(
-              children: [
-                Form(
-                  key: _formKey,
+
+              // 2. Main Content Container (Layer 2)
+              Positioned.fill(
+                top: coverHeight - 40,
+                child: Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.only(
+                    top: 70, // Space for the avatar
+                    left: 20,
+                    right: 20,
+                    bottom: 30,
+                  ),
+                  decoration: BoxDecoration(
+                    color: CustomColor.white,
+                    borderRadius: const BorderRadius.vertical(
+                      top: Radius.circular(20),
+                    ),
+                  ),
                   child: Column(
                     children: [
-                      const SizedBox(height: 20),
-                      CustomTextField(
-                        label: "ชื่อ",
-                        maxLength: 20,
-                        restrictSpecialChars: true,
-                        controller: viewModel.nameController,
-                        validator: _nameValidator,
-                        suffixIcon: IconButton(
-                          onPressed: () {
-                            viewModel.randomName();
-                          },
-                          icon: SVGImage(
-                            path: AppIcons.outline.arrowClockwise,
-                            width: 24,
-                            height: 24,
-                            color: CustomColor.primaryColor,
-                          ),
-                          tooltip: "สุ่มชื่อใหม่",
+                      Form(
+                        key: _formKey,
+                        child: Column(
+                          children: [
+                            const SizedBox(height: 20),
+                            CustomTextField(
+                              label: "ชื่อ",
+                              maxLength: 20,
+                              restrictSpecialChars: true,
+                              controller: viewModel.nameController,
+                              validator: _nameValidator,
+                              suffixIcon: IconButton(
+                                onPressed: () {
+                                  viewModel.randomName();
+                                },
+                                icon: SVGImage(
+                                  path: AppIcons.outline.arrowClockwise,
+                                  width: 24,
+                                  height: 24,
+                                  color: CustomColor.primaryColor,
+                                ),
+                                tooltip: "สุ่มชื่อใหม่",
+                              ),
+                            ),
+                          ],
                         ),
+                      ),
+                      Spacer(),
+                      const SizedBox(height: 10),
+                      Row(
+                        spacing: 10,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Expanded(
+                            child: CustomButton(
+                              text: AppStrings.common.cancel,
+                              onPressed: () {
+                                NavigationService.instance.goBack();
+                              },
+                              type: CustomButtonType.outline,
+                            ),
+                          ),
+                          Expanded(
+                            child: CustomButton(
+                              text: AppStrings.common.save,
+                              type: CustomButtonType.fill,
+                              onPressed: !viewModel.hasChanges
+                                  ? null
+                                  : viewModel.saveProfile,
+                            ),
+                          ),
+                        ],
                       ),
                     ],
                   ),
                 ),
-                Spacer(),
-                const SizedBox(height: 10),
-                Row(
-                  spacing: 10,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Expanded(
-                      child: CustomButton(
-                        text: AppStrings.common.cancel,
-                        onPressed: () {
-                          NavigationService.instance.goBack();
-                        },
-                        type: CustomButtonType.outline,
-                      ),
+              ),
+
+              // 3. Avatar (Layer 3 - Topmost)
+              Positioned(
+                top:
+                    coverHeight -
+                    100, // Overlap the cover and the white container
+                left: 0,
+                right: 0,
+                child: Center(
+                  child: Container(
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      boxShadow: [DropShadow.drop_card],
                     ),
-                    Expanded(
-                      child: CustomButton(
-                        text: AppStrings.common.save,
-                        type: CustomButtonType.fill,
-                        onPressed: !viewModel.hasChanges
-                            ? null
-                            : viewModel.saveProfile,
-                      ),
+                    child: CircleAvatar(
+                      radius: 50,
+                      backgroundColor: CustomColor
+                          .white, // Add white background just in case
+                      backgroundImage: AssetImage(AppImages.profile.avatar1),
                     ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-          Positioned(
-            top: 30,
-            left: 0,
-            right: 0,
-            child: Center(
-              child: Container(
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  boxShadow: [DropShadow.drop_card],
-                ),
-                child: CircleAvatar(
-                  radius: 50,
-                  backgroundImage: AssetImage(AppImages.profile.avatar1),
+                  ),
                 ),
               ),
-            ),
+            ],
           ),
-        ],
-      ),
+        );
+      },
     );
   }
 

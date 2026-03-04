@@ -97,30 +97,27 @@ class AnalyzeSuccessView extends StatelessWidget {
           ),
         ),
         Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
           spacing: 10,
           children: [
             SizedBox(height: 5),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 40),
-              child: CustomButton(
-                text: AppStrings.stat.reAnalyze,
-                leadingIcon: SVGImage(
-                  path: AppIcons.outline.arrowClockwise,
-                  width: 20,
-                  height: 20,
-                  color: CustomColor.accentColor,
-                ),
-                type: CustomButtonType.outline,
-                width: double.infinity,
-                textStyle: TextStyle(
-                  color: CustomColor.accentColor,
-                  fontSize: Dimension.fontSizes.md,
-                  fontWeight: Dimension.fontWeights.bold,
-                ),
-                borderColor: CustomColor.accentColor,
-                onPressed: onPressed,
+            CustomButton(
+              text: AppStrings.stat.reAnalyze,
+              expand: false,
+              padding: EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+              leadingIcon: SVGImage(
+                path: AppIcons.outline.arrowClockwise,
+                width: 20,
+                height: 20,
+                color: CustomColor.accentColor,
               ),
+              type: CustomButtonType.outline,
+              textStyle: TextStyle(
+                color: CustomColor.accentColor,
+                fontSize: Dimension.fontSizes.md,
+                fontWeight: Dimension.fontWeights.bold,
+              ),
+              borderColor: CustomColor.accentColor,
+              onPressed: onPressed,
             ),
             SizedBox(height: 5),
             CustomText(

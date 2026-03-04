@@ -6,7 +6,7 @@ class SettingItem {
   final IconData? iconData;
   final String? route;
   final VoidCallback? onTap;
-  final String? trailingText;
+  final String? trailingIconPath;
 
   SettingItem({
     required this.title,
@@ -14,6 +14,6 @@ class SettingItem {
     this.iconData,
     this.route,
     this.onTap,
-    this.trailingText,
+    this.trailingIconPath,
   });
 }

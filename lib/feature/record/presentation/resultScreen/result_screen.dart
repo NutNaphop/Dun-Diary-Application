@@ -5,6 +5,7 @@ import 'package:dun_diary_app/feature/record/presentation/resultScreen/result_vi
 import 'package:dun_diary_app/shared/constant/app_icons.dart';
 import 'package:dun_diary_app/shared/constant/app_strings.dart';
 import 'package:dun_diary_app/shared/style/color.dart';
+import 'package:dun_diary_app/shared/style/dimension.dart';
 import 'package:dun_diary_app/shared/style/drop_shadow.dart';
 import 'package:dun_diary_app/shared/widgets/custom/button/custom_button.dart';
 import 'package:dun_diary_app/shared/widgets/custom/card/custom_card.dart';
@@ -75,8 +76,21 @@ class _ResultScreenState extends State<ResultScreen> {
               child: Column(
                 spacing: 21,
                 children: [
-                  ImageDisplay(image: viewModel.selectedImage),
+                  Container(
+                    height: 250,
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(12),
+                      image: DecorationImage(
+                        image: FileImage(viewModel.selectedImage!),
+                        fit: BoxFit.contain,
+                      ),
+                    ),
+                  ),
                   CustomCard(
+                    title: AppStrings.result.bloodPressureResult,
+                    titleFontWeight: Dimension.fontWeights.medium,
+                    titleFontSize: Dimension.fontSizes.h2,
                     contentPadding: EdgeInsets.all(10),
                     content: Column(
                       children: [

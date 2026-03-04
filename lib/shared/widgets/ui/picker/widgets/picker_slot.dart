@@ -22,32 +22,36 @@ class PickerSlot extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-          child: InputDecorator(
-            decoration: InputDecoration(
-              labelText: label,
-              labelStyle: TextStyle(
-                color: CustomColor.gray900,
-                fontSize: Dimension.fontSizes.sm,
-                fontWeight: Dimension.fontWeights.medium,
+        child: InputDecorator(
+          decoration: InputDecoration(
+            labelText: label,
+            labelStyle: TextStyle(
+              color: CustomColor.gray900,
+              fontSize: Dimension.fontSizes.sm,
+              fontWeight: Dimension.fontWeights.medium,
+            ),
+            border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(10),
+              borderSide: BorderSide(color: CustomColor.gray500, width: 1),
+            ),
+            contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+            fillColor: CustomColor.white,
+            filled: true,
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              CustomText(
+                text: displayText,
+                fontSize: Dimension.fontSizes.md,
+                fontWeight: Dimension.fontWeights.regular,
               ),
-              border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
-              contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-              fillColor: CustomColor.white,
-              filled: true,
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                CustomText(
-                  text: displayText,
-                  fontSize: Dimension.fontSizes.md,
-                  fontWeight: Dimension.fontWeights.regular,
-                ),
-                trailingIcon,
-              ],
-            ),
+              trailingIcon,
+            ],
           ),
         ),
+      ),
     );
   }
 }

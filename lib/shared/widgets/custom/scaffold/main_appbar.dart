@@ -12,6 +12,7 @@ class MainAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String? backIconPath;
   final List<Widget>? actions;
   final VoidCallback? onBackPressed;
+  final Color? backgroundColor;
 
   const MainAppBar({
     super.key,
@@ -20,6 +21,7 @@ class MainAppBar extends StatelessWidget implements PreferredSizeWidget {
     this.backIconPath,
     this.actions,
     this.onBackPressed,
+    this.backgroundColor,
   });
 
   @override

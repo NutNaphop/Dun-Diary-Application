@@ -29,8 +29,9 @@ class SettingMenuData {
       items: [
         SettingItem(
           title: 'แก้ไขโปรไฟล์',
-          svgPath: AppIcons.duotone.note,
+          svgPath: AppIcons.bottomNav.userCircle,
           route: AppRoutes.setting.profileEdit,
+          trailingIconPath: AppIcons.outline.pen,
         ),
       ],
     ),
@@ -49,7 +50,7 @@ class RecoveryMenuData {
         ),
         SettingItem(
           title: 'กู้คืนข้อมูลของฉัน',
-          svgPath: AppIcons.bottomNav.userCircle,
+          svgPath: AppIcons.duotone.cloudDownload,
           route: AppRoutes.setting.recoveryMyData,
           onTap: () => AppLogger.debug('Usage Guide tapped'),
         ),

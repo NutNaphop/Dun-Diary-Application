@@ -81,7 +81,7 @@ class _StatScreenState extends State<StatScreen> {
               }
               return Column(
                 children: [
-                  SizedBox(height: 20),
+                  SizedBox(height: 15),
                   StatSummaryView(
                     dateLabel: data.dateLabel,
                     analyzeState: data.analyzeState,

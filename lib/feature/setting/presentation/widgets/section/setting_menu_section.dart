@@ -66,9 +66,9 @@ class SettingMenuSection extends StatelessWidget {
               return MenuItem(
                 leadingIcon: leadingIcon,
                 actionIcon: SVGImage(
-                  path: AppIcons.outline.rightArrow,
-                  width: 24,
-                  height: 24,
+                  path: item.trailingIconPath ?? AppIcons.outline.rightArrow,
+                  width: 22,
+                  height: 22,
                   color: CustomColor.gray900,
                 ),
                 title: item.title,

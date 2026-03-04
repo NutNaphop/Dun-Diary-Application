@@ -34,7 +34,10 @@ class _QrScannerScreenState extends State<QrScannerScreen> {
         builder: (context, constraints) {
           final double scanAreaSize = constraints.maxWidth * 0.7;
           final Rect scanWindow = Rect.fromCenter(
-            center: Offset(constraints.maxWidth / 2, constraints.maxHeight / 2),
+            center: Offset(
+              constraints.maxWidth / 2,
+              (constraints.maxHeight / 2) - 60, // ขยับขึ้น 60 พิกเซล
+            ),
             width: scanAreaSize,
             height: scanAreaSize,
           );
@@ -60,7 +63,7 @@ class _QrScannerScreenState extends State<QrScannerScreen> {
                 painter: ScannerOverlayPainter(scanWindow: scanWindow),
               ),
               Positioned(
-                bottom: (constraints.maxHeight / 2) - (scanAreaSize / 2) - 60,
+                bottom: (constraints.maxHeight / 2) - (scanAreaSize / 2),
                 left: 0,
                 right: 0,
                 child: const Center(
