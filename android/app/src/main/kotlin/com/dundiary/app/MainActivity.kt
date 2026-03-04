@@ -1,4 +1,4 @@
-package com.example.dun_diary_app
+package com.dundiary.app
 
 import io.flutter.embedding.android.FlutterActivity
 
