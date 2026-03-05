@@ -51,14 +51,16 @@ jobs:
           EOF
 
       - name: Create Built-in Environment variables
+        env:
+          BASE_URL: ${{ secrets.BASE_URL }}
+          QR_ENCRYPTION_KEY: ${{ secrets.QR_ENCRYPTION_KEY }}
+          QR_ENCRYPTION_IV: ${{ secrets.QR_ENCRYPTION_IV }}
         run: |
-          cat << EOF > env.product.json
-          {
-            "BASE_URL": "${{ secrets.BASE_URL }}",
-            "QR_ENCRYPTION_KEY": "${{ secrets.QR_ENCRYPTION_KEY }}",
-            "QR_ENCRYPTION_IV": "${{ secrets.QR_ENCRYPTION_IV }}"
-          }
-          EOF
+          jq -n \
+            --arg BASE_URL "$BASE_URL" \
+            --arg QR_ENCRYPTION_KEY "$QR_ENCRYPTION_KEY" \
+            --arg QR_ENCRYPTION_IV "$QR_ENCRYPTION_IV" \
+            '{BASE_URL: $BASE_URL, QR_ENCRYPTION_KEY: $QR_ENCRYPTION_KEY, QR_ENCRYPTION_IV: $QR_ENCRYPTION_IV}' > env.product.json
 
       - name: Build AAB
         run: flutter build appbundle --release --build-number=${{ github.run_number }} --dart-define-from-file=env.product.json
