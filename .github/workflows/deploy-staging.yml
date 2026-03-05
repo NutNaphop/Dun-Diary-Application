@@ -50,13 +50,18 @@ jobs:
           ${{ secrets.FIREBASE_OPTIONS }}
           EOF
 
+      - name: Create Built-in Environment variables
+        run: |
+          cat << EOF > env.product.json
+          {
+            "BASE_URL": "${{ secrets.BASE_URL }}",
+            "QR_ENCRYPTION_KEY": "${{ secrets.QR_ENCRYPTION_KEY }}",
+            "QR_ENCRYPTION_IV": "${{ secrets.QR_ENCRYPTION_IV }}"
+          }
+          EOF
+
       - name: Build APK
-        run: >
-          flutter build apk --release 
-          --build-number=${{ github.run_number }}
-          --dart-define=BASE_URL="${{ secrets.BASE_URL }}"
-          --dart-define=QR_ENCRYPTION_KEY="${{ secrets.QR_ENCRYPTION_KEY }}"
-          --dart-define=QR_ENCRYPTION_IV="${{ secrets.QR_ENCRYPTION_IV }}"
+        run: flutter build apk --release --build-number=${{ github.run_number }} --dart-define-from-file=env.product.json
 
       - name: Upload to Firebase Distribution
         uses: wzieba/Firebase-Distribution-Github-Action@v1
