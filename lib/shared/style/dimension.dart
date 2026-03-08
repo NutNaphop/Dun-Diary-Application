@@ -25,30 +25,21 @@ class _Padding {
 class _FontSize {
   const _FontSize._();
   // fontSize
-  final double xl = 28.0;
+  final double xl = 28.0; // 28
 
-  /// 28
-  final double lg = 24.0;
+  final double lg = 24.0; // 24
 
-  /// 24
-  final double h1 = 21.0;
+  final double h1 = 21.0; // 21
 
-  /// 21
-  final double h2 = 16.0;
+  final double h2 = 16.0; // 16
 
-  /// 16
-  final double md = 14.0;
+  final double md = 14.0; // 14
 
-  /// 14
-  final double rg = 12.0;
+  final double rg = 12.0; // 12
 
-  /// 12
-  final double sm = 11.0;
+  final double sm = 11.0; // 11
 
-  /// 11
-  final double esm = 10.0;
-
-  /// 10
+  final double esm = 10.0; // 10
 }
 
 class _IconSize {

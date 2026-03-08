@@ -1,4 +1,5 @@
 import 'package:dun_diary_app/shared/style/color.dart';
+import 'package:dun_diary_app/shared/style/dimension.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -48,19 +49,16 @@ class CustomTextField extends StatelessWidget {
       keyboardType: keyboardType,
       maxLength: maxLength,
       inputFormatters: formatters,
-      style: const TextStyle(
-        fontSize: 16,
-        color: CustomColor.gray900,
-        fontFamily: "NotoSanThai",
-      ),
+      style: TextStyle(color: CustomColor.gray900, fontFamily: "NotoSanThai"),
       decoration: InputDecoration(
         labelText: label,
         suffixIcon: suffixIcon,
         counterText:
             "", // Hide default counter "0/100" (Optional, usually cleaner)
-        labelStyle: const TextStyle(
+        labelStyle: TextStyle(
           fontFamily: "NotoSanThai",
           color: CustomColor.gray500,
+          fontSize: Dimension.fontSizes.h1,
         ),
         floatingLabelBehavior: FloatingLabelBehavior.always,
         contentPadding: const EdgeInsets.symmetric(

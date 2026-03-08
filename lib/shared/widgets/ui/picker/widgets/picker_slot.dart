@@ -26,9 +26,10 @@ class PickerSlot extends StatelessWidget {
           decoration: InputDecoration(
             labelText: label,
             labelStyle: TextStyle(
-              color: CustomColor.gray900,
-              fontSize: Dimension.fontSizes.sm,
+              color: CustomColor.gray500,
+              fontSize: 20,
               fontWeight: Dimension.fontWeights.medium,
+              fontFamily: "NotoSanThai",
             ),
             border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
             enabledBorder: OutlineInputBorder(

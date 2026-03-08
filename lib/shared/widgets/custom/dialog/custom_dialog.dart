@@ -14,6 +14,7 @@ class CustomDialog extends StatelessWidget {
   final VoidCallback? onSecondaryPressed;
   final bool isDismissible;
   final Widget? body;
+  final Color? confirmButtonColor;
 
   const CustomDialog({
     super.key,
@@ -26,6 +27,7 @@ class CustomDialog extends StatelessWidget {
     this.onSecondaryPressed,
     this.isDismissible = true,
     this.body,
+    this.confirmButtonColor,
   });
 
   static Future<T?> show<T>(BuildContext context, {required Widget child}) {
@@ -107,6 +109,7 @@ class CustomDialog extends StatelessWidget {
                     child: CustomButton(
                       text: primaryButtonText!,
                       type: CustomButtonType.fill,
+                      backgroundColor: confirmButtonColor,
                       onPressed: () {
                         if (onPrimaryPressed != null) {
                           onPrimaryPressed!();

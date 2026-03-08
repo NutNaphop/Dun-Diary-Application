@@ -85,6 +85,7 @@ class RecordViewMenu extends StatelessWidget {
           width: 163,
           height: 120,
         ),
+        confirmButtonColor: CustomColor.red7,
       ),
     );
 
