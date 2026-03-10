@@ -47,6 +47,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
             onPressed: () => _openCalendar(context),
           ),
           CustomPopupMenuButton(
+            menuMinWidth: 205,
             openAbove: false,
             offset: const Offset(0, 30),
             icon: SVGImage(path: AppIcons.outline.dotThree),

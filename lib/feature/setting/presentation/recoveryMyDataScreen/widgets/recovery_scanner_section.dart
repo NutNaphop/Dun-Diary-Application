@@ -61,6 +61,12 @@ class RecoveryScannerSection extends StatelessWidget {
                   CustomButton(
                     text: AppStrings.setting.selectFromAlbum,
                     type: CustomButtonType.fill,
+                    leadingIcon: SVGImage(
+                      path: AppIcons.outline.image,
+                      width: 20,
+                      height: 20,
+                      color: CustomColor.white,
+                    ),
                     onPressed: isLoading
                         ? null
                         : () async {
@@ -71,7 +77,7 @@ class RecoveryScannerSection extends StatelessWidget {
 
                   // Secondary: Open Camera Scanner
                   CustomButton(
-                    text: AppStrings.setting.openCameraScanner,
+                    text: AppStrings.setting.scanQRCode,
                     type: CustomButtonType.outline,
                     borderColor: CustomColor.primaryColor,
                     textStyle: TextStyle(

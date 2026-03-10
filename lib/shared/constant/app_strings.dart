@@ -18,6 +18,7 @@ class AppStrings {
   static const result = _ResultStrings();
   static const stat = _StatStrings();
   static const setting = _SettingStrings();
+  static const citation = _CitationStrings();
 }
 
 class _CommonStrings {
@@ -101,7 +102,7 @@ class _BloodPressureStrings {
   final String lowDesc =
       "ความดันโลหิตต่ำกว่าเกณฑ์\nควรทานอาหารที่มีประโยชน์และพักผ่อนให้เพียงพอ";
   final String normalDesc =
-      "ความดันโลหิตปกติ\nสุขภาพแข็งแรงดีมาก รักษาไว้แบบนี้นะครับ";
+      "ความดันโลหิตปกติ\nสุขภาพแข็งแรงดีมาก รักษาไว้แบบนี้ต่อไป";
   final String elevatedDesc =
       "ความดันโลหิตเริ่มสูง (Elevated)\nควรคุมอาหารและออกกำลังกายสม่ำเสมอ";
   final String highStage1Desc =
@@ -211,6 +212,7 @@ class _StatStrings {
   final String connectInternet = "เชื่อมต่ออินเตอร์เน็ต เพื่อให้ AI ช่วยสรุปผล";
 
   // Analyze - Processing
+  final String analyzing = "กำลังวิเคราะห์";
   final String processingTitle = "กำลังประมวลผลสุขภาพ";
   final String processingDesc = "AI กำลังวิเคราะห์ผลเพื่อคุณโดยเฉพาะ";
   final String processingWarning = "กรุณารอสักครู่ อย่าปิดหรือออกจากหน้าจอนี้";
@@ -227,6 +229,14 @@ class _StatStrings {
       "เพิ่มข้อมูลความดันโลหิตก่อน เพื่อให้ AI ช่วยวิเคราะห์ผลและสรุปให้คุณ";
 }
 
+class _CitationStrings {
+  const _CitationStrings();
+
+  final String ahaSourceName = "American Heart Association (AHA)";
+  final String ahaUrl =
+      "https://www.heart.org/en/health-topics/high-blood-pressure/understanding-blood-pressure-readings";
+}
+
 class _SettingStrings {
   const _SettingStrings();
 
@@ -236,7 +246,7 @@ class _SettingStrings {
   final String uploadQRDescription =
       "กรุณาเลือกรูปภาพ QR Code ที่คุณบันทึกไว้\nเพื่อกู้คืนข้อมูลบัญชีของคุณ";
   final String selectFromAlbum = "เลือกรูปภาพจากอัลบั้ม";
-  final String openCameraScanner = "เปิดกล้องสแกน QR Code";
+  final String scanQRCode = "สแกน QR Code";
 
   // Recovery My Data - Errors
   final String qrNotFoundInImage = "ไม่พบ QR code ในรูปภาพนี้";

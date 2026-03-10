@@ -6,6 +6,7 @@ import 'package:dun_diary_app/shared/style/color.dart';
 import 'package:dun_diary_app/shared/style/dimension.dart';
 import 'package:dun_diary_app/shared/widgets/custom/button/custom_button.dart';
 import 'package:dun_diary_app/shared/widgets/custom/img/custom_svg_widget.dart';
+import 'package:dun_diary_app/shared/widgets/custom/text/citation_source.dart';
 import 'package:dun_diary_app/shared/widgets/custom/text/text_widget.dart';
 import 'package:flutter/material.dart';
 
@@ -120,11 +121,10 @@ class AnalyzeSuccessView extends StatelessWidget {
               onPressed: onPressed,
             ),
             SizedBox(height: 5),
-            CustomText(
-              text: AppStrings.stat.sourceFrom(result?.reference ?? ''),
-              textAlign: TextAlign.center,
-              fontSize: Dimension.fontSizes.rg,
-              fontWeight: Dimension.fontWeights.regular,
+            CitationSource(
+              sourceName:
+                  result?.reference ?? AppStrings.citation.ahaSourceName,
+              url: AppStrings.citation.ahaUrl,
               color: CustomColor.gray600,
             ),
           ],

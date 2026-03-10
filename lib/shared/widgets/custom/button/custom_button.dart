@@ -64,7 +64,7 @@ class CustomButton extends StatelessWidget {
         TextStyle(
           color: defaultTextColor,
           fontSize: Dimension.fontSizes.h2,
-          fontWeight: Dimension.fontWeights.bold,
+          fontWeight: Dimension.fontWeights.semiBold,
         );
 
     final effectiveMainAxisAlignment =

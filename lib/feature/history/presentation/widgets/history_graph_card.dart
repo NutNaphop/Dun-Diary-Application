@@ -7,7 +7,14 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class HistoryGraphCard extends StatelessWidget {
-  const HistoryGraphCard({super.key});
+  final double graphHeight;
+  final EdgeInsets? contentPadding;
+
+  const HistoryGraphCard({
+    super.key,
+    this.graphHeight = 343,
+    this.contentPadding,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -16,9 +23,9 @@ class HistoryGraphCard extends StatelessWidget {
     return CustomCard(
       title: DateTimeUtils.formatToThaiDateFull(vm.selectedDate),
       titleFontSize: Dimension.fontSizes.h2,
-      contentPadding: const EdgeInsets.all(20),
+      contentPadding: contentPadding ?? const EdgeInsets.all(20),
       content: Container(
-        height: 343,
+        height: graphHeight,
         margin: const EdgeInsets.only(top: 10),
         child: BpGraphSdk(
           data: vm.selectedDateGraphData,
