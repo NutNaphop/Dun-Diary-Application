@@ -75,20 +75,14 @@ class HomeHeader extends StatelessWidget {
                             ),
                           ],
                         ),
-                        // Bell Icon
+                        // Info Icon
                         GestureDetector(
                           onTap: () {},
                           child: Container(
-                            padding: const EdgeInsets.all(4),
-                            decoration: BoxDecoration(
-                              color: CustomColor.white,
-                              shape: BoxShape.circle,
-                            ),
+                            width: 33,
+                            height: 33,
                             child: SVGImage(
-                              path: AppIcons.outline.bell,
-                              width: 24,
-                              height: 24,
-                              color: CustomColor.accentColor,
+                              path: AppIcons.fill.questionMarkFull,
                             ),
                           ),
                         ),

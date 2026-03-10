@@ -12,14 +12,20 @@ import 'package:flutter/material.dart';
 class BloodPressureGauge extends StatelessWidget {
   final BPLevel level;
   final BPLevel? avgLevel;
+  final bool compact;
 
-  const BloodPressureGauge({super.key, required this.level, this.avgLevel});
+  const BloodPressureGauge({
+    super.key,
+    required this.level,
+    this.avgLevel,
+    this.compact = false,
+  });
 
   @override
   Widget build(BuildContext context) {
     // ความสูงของแถบเกจ
-    const double gaugeHeight = 30.0;
-    const double borderRadius = gaugeHeight / 2;
+    final double gaugeHeight = compact ? 22.0 : 30.0;
+    final double borderRadius = gaugeHeight / 2;
     double alignmentAVGValue = avgLevel != null
         ? GuageUtils.getAlignmentForAVGLevel(avgLevel!.index)
         : 0.0;

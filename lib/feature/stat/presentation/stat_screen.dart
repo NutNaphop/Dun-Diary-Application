@@ -1,3 +1,5 @@
+import 'package:dun_diary_app/feature/history/presentation/widgets/history_pic_export_sheet.dart'
+    show HistoryPicExportSheet;
 import 'package:dun_diary_app/shared/constant/app_bp_level.dart';
 import 'package:dun_diary_app/core/network/network_info.dart';
 import 'package:dun_diary_app/data/analyze_record/model/analyze_result_model.dart';
@@ -9,9 +11,12 @@ import 'package:dun_diary_app/feature/stat/presentation/widgets/stat_card/stat_c
 import 'package:dun_diary_app/feature/stat/presentation/widgets/views/stat_summary_view.dart';
 import 'package:dun_diary_app/shared/constant/app_icons.dart';
 import 'package:dun_diary_app/shared/constant/app_strings.dart';
+import 'package:dun_diary_app/shared/style/dimension.dart';
+import 'package:dun_diary_app/shared/widgets/custom/button/custom_popup_menu.dart';
 import 'package:dun_diary_app/shared/widgets/custom/img/custom_svg_widget.dart';
 import 'package:dun_diary_app/shared/widgets/custom/scaffold/custom_scaffold.dart';
 import 'package:dun_diary_app/shared/widgets/custom/scaffold/main_appbar.dart';
+import 'package:dun_diary_app/shared/widgets/custom/text/text_widget.dart';
 import 'package:dun_diary_app/shared/widgets/ui/bp_graph_sdk/models/blood_pressure_graph_models.dart';
 import 'package:dun_diary_app/shared/widgets/ui/calendar_sdk/calendar_sdk.dart';
 import 'package:dun_diary_app/shared/widgets/ui/tab_bar/app_tab_bar.dart';
@@ -50,7 +55,26 @@ class _StatScreenState extends State<StatScreen> {
             path: AppIcons.outline.calendar,
             onPressed: () => _showCalendarDialog(context, viewModel),
           ),
-          IconButtonSVG(path: AppIcons.outline.dotThree, onPressed: () {}),
+          CustomPopupMenuButton(
+            menuMinWidth: 205,
+            openAbove: false,
+            offset: const Offset(0, 30),
+            icon: SVGImage(path: AppIcons.outline.dotThree),
+            items: [
+              PopupMenuItem(
+                child: CustomText(
+                  text: AppStrings.history.exportImage,
+                  fontSize: Dimension.fontSizes.md,
+                  fontWeight: Dimension.fontWeights.regular,
+                ),
+                onTap: () async {
+                  await Future.delayed(Duration.zero);
+                  if (!context.mounted) return;
+                  _showImageExportSheet(context);
+                },
+              ),
+            ],
+          ),
         ],
       ),
       body: SingleChildScrollView(
@@ -120,6 +144,10 @@ class _StatScreenState extends State<StatScreen> {
     if (selectedDate != null) {
       viewModel.onCalendarDateSelected(selectedDate);
     }
+  }
+
+  void _showImageExportSheet(BuildContext context) {
+    HistoryPicExportSheet.show(context);
   }
 }
 

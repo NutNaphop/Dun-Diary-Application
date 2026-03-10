@@ -128,7 +128,7 @@ class HistoryPicExportSheet extends StatelessWidget {
   Widget _buildPrettyReportLayout(BuildContext context) {
     return Container(
       color: CustomColor.white,
-      padding: const EdgeInsets.all(24.0),
+      padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 16.0),
       child: AbsorbPointer(
         absorbing: true,
         child: Column(
@@ -160,22 +160,25 @@ class HistoryPicExportSheet extends StatelessWidget {
               ],
             ),
 
-            SizedBox(height: 30),
+            SizedBox(height: 16),
 
             // Cards Wrapper
             _buildCardWrapper(
               title: AppStrings.history.summarize,
-              child: HistorySummaryCard(), // Reuse Widget เดิม
+              child: HistorySummaryCard(compact: true),
             ),
 
-            SizedBox(height: 15),
+            SizedBox(height: 10),
 
             _buildCardWrapper(
               title: AppStrings.history.displayGraph,
-              child: HistoryGraphCard(), // Reuse Widget เดิม
+              child: HistoryGraphCard(
+                graphHeight: 250,
+                contentPadding: const EdgeInsets.all(12),
+              ),
             ),
 
-            SizedBox(height: 30),
+            SizedBox(height: 16),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -193,7 +196,7 @@ class HistoryPicExportSheet extends StatelessWidget {
                 ),
               ],
             ),
-            SizedBox(height: 20), // เผื่อพื้นที่ด้านล่าง
+            SizedBox(height: 12),
           ],
         ),
       ),

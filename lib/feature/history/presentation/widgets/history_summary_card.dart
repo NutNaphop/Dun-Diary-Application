@@ -11,7 +11,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class HistorySummaryCard extends StatelessWidget {
-  const HistorySummaryCard({super.key});
+  final bool compact;
+
+  const HistorySummaryCard({super.key, this.compact = false});
 
   @override
   Widget build(BuildContext context) {
@@ -32,17 +34,17 @@ class HistorySummaryCard extends StatelessWidget {
     );
 
     return CustomCard(
-      contentPadding: const EdgeInsets.all(10),
+      contentPadding: EdgeInsets.all(compact ? 6 : 10),
       content: Column(
         children: [
           CustomText(
             text: label,
-            fontSize: Dimension.fontSizes.h1,
+            fontSize: compact ? Dimension.fontSizes.h2 : Dimension.fontSizes.h1,
             fontWeight: Dimension.fontWeights.bold,
             color: CustomColor.gray900,
             textAlign: TextAlign.center,
           ),
-          const SizedBox(height: 4),
+          SizedBox(height: compact ? 2 : 4),
           CustomText(
             text: DateTimeUtils.getHistoryTimeLabel(
               vm.selectedDateRecords.firstOrNull?.createdAt,
@@ -52,7 +54,11 @@ class HistorySummaryCard extends StatelessWidget {
             color: CustomColor.gray500,
             textAlign: TextAlign.center,
           ),
-          BloodPressureGauge(level: lastRecordLevel, avgLevel: avgLevel),
+          BloodPressureGauge(
+            level: lastRecordLevel,
+            avgLevel: avgLevel,
+            compact: compact,
+          ),
         ],
       ),
     );

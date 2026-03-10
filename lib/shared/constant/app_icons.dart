@@ -53,6 +53,7 @@ class _FillIcons {
   final String image = '$_path/image.svg';
   final String notification = '$_path/notification.svg';
   final String sparkle = '$_path/sparkle.svg';
+  final String questionMarkFull = '$_path/question_mark_full.svg';
 }
 
 class _OutlineIcons {
@@ -73,4 +74,5 @@ class _OutlineIcons {
   final String pen = '$_path/pen.svg';
   final String bell = '$_path/bell.svg';
   final String infoCircle = '$_path/info_circle.svg';
+  final String questionMark = '$_path/question_mark.svg';
 }
