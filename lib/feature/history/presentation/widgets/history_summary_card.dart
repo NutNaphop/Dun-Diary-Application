@@ -71,7 +71,7 @@ class HistorySummaryCard extends StatelessWidget {
         CitationSource(
           sourceName: AppStrings.citation.ahaSourceName,
           url: AppStrings.citation.ahaUrl,
-          color: CustomColor.gray500,
+          color: CustomColor.gray400,
         ),
       ],
     );
