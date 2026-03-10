@@ -1,5 +1,3 @@
-import 'package:dun_diary_app/feature/history/presentation/widgets/history_pic_export_sheet.dart'
-    show HistoryPicExportSheet;
 import 'package:dun_diary_app/shared/constant/app_bp_level.dart';
 import 'package:dun_diary_app/core/network/network_info.dart';
 import 'package:dun_diary_app/data/analyze_record/model/analyze_result_model.dart';
@@ -8,6 +6,7 @@ import 'package:dun_diary_app/data/blood_pressure/repository/blood_pressure_repo
 import 'package:dun_diary_app/feature/stat/presentation/stat_viewModel.dart';
 import 'package:dun_diary_app/feature/stat/presentation/widgets/analyze_card/analyze_card.dart';
 import 'package:dun_diary_app/feature/stat/presentation/widgets/stat_card/stat_card.dart';
+import 'package:dun_diary_app/feature/stat/presentation/widgets/views/stat_pic_export_sheet.dart';
 import 'package:dun_diary_app/feature/stat/presentation/widgets/views/stat_summary_view.dart';
 import 'package:dun_diary_app/shared/constant/app_icons.dart';
 import 'package:dun_diary_app/shared/constant/app_strings.dart';
@@ -147,7 +146,7 @@ class _StatScreenState extends State<StatScreen> {
   }
 
   void _showImageExportSheet(BuildContext context) {
-    HistoryPicExportSheet.show(context);
+    StatPicExportSheet.show(context);
   }
 }
 

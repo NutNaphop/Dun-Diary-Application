@@ -15,6 +15,7 @@ import 'package:dun_diary_app/shared/widgets/custom/img/custom_svg_widget.dart';
 import 'package:dun_diary_app/shared/widgets/custom/text/text_widget.dart';
 import 'package:dun_diary_app/shared/widgets/ui/bp_graph_sdk/bp_graph_sdk.dart';
 import 'package:dun_diary_app/shared/widgets/ui/bp_graph_sdk/models/blood_pressure_graph_models.dart';
+import 'package:dun_diary_app/shared/widgets/ui/report/report_export_sheet.dart';
 import 'package:flutter/material.dart';
 
 class StatSummaryView extends StatelessWidget {
@@ -27,6 +28,7 @@ class StatSummaryView extends StatelessWidget {
   final bool isInternetConnected;
   final VoidCallback? onAnalyzePressed;
   final VoidCallback? onRecordPressed;
+  final bool compact; // compact for export report
 
   const StatSummaryView({
     super.key,
@@ -39,28 +41,31 @@ class StatSummaryView extends StatelessWidget {
     this.isInternetConnected = true,
     required this.onAnalyzePressed,
     required this.onRecordPressed,
+    this.compact = false,
   });
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 39),
+      padding: EdgeInsets.only(bottom: compact ? 0 : 39),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Graph Section
-          CustomCard(
-            title: dateLabel,
-            titleFontSize: Dimension.fontSizes.h2,
-            contentPadding: const EdgeInsets.all(20),
-            content: Container(
-              height: 350,
-              width: double.infinity,
-              margin: const EdgeInsets.only(top: 10),
-              child: BpGraphSdk(
-                key: ValueKey("graph_$dateLabel"),
-                data: graphData,
-                onButtonPress: onRecordPressed,
+          _wrapCard(
+            CustomCard(
+              title: dateLabel,
+              titleFontSize: Dimension.fontSizes.h2,
+              contentPadding: EdgeInsets.all(compact ? 12 : 20),
+              content: Container(
+                height: compact ? 250 : 350,
+                width: double.infinity,
+                margin: const EdgeInsets.only(top: 10),
+                child: BpGraphSdk(
+                  key: ValueKey("graph_$dateLabel"),
+                  data: graphData,
+                  onButtonPress: compact ? null : onRecordPressed,
+                ),
               ),
             ),
           ),
@@ -68,19 +73,23 @@ class StatSummaryView extends StatelessWidget {
 
           // Summary Section ( Need to hide when data is empty )
           if (graphData.isNotEmpty) ...[
-            CustomText(
-              text: AppStrings.stat.healthSummary,
-              fontSize: Dimension.fontSizes.h1,
-              fontWeight: Dimension.fontWeights.bold,
-            ),
-            const SizedBox(height: 15),
-            BloodPressureCard(
-              bloodPressureLevel: bloodPressureLevel,
-              date: dateLabel,
-              leadingIcon: LottieAnimation(
-                path: bloodPressureLevel?.animation ?? AppAnimations.empty,
-                width: 90,
-                height: 90,
+            if (!compact) ...[
+              CustomText(
+                text: AppStrings.stat.healthSummary,
+                fontSize: Dimension.fontSizes.h1,
+                fontWeight: Dimension.fontWeights.bold,
+              ),
+              const SizedBox(height: 15),
+            ],
+            _wrapCard(
+              BloodPressureCard(
+                bloodPressureLevel: bloodPressureLevel,
+                date: dateLabel,
+                leadingIcon: LottieAnimation(
+                  path: bloodPressureLevel?.animation ?? AppAnimations.empty,
+                  width: 90,
+                  height: 90,
+                ),
               ),
             ),
             const SizedBox(height: 10),
@@ -89,7 +98,7 @@ class StatSummaryView extends StatelessWidget {
             GridView.builder(
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
-              itemCount: data.length, // กำหนดจำนวน Item ที่ต้องการแสดง
+              itemCount: data.length,
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,
                 crossAxisSpacing: 10,
@@ -117,15 +126,17 @@ class StatSummaryView extends StatelessWidget {
               },
             ),
 
-            // Analyze Section
-            SizedBox(height: 15),
-            AnalyzeCard(
-              state: analyzeState,
-              resultFromAi: resultFromAi,
-              isInternetConnect: isInternetConnected,
-              onPressed: onAnalyzePressed,
-            ),
-          ] else ...[
+            // Analyze Section — only in normal mode
+            if (!compact) ...[
+              SizedBox(height: 15),
+              AnalyzeCard(
+                state: analyzeState,
+                resultFromAi: resultFromAi,
+                isInternetConnect: isInternetConnected,
+                onPressed: onAnalyzePressed,
+              ),
+            ],
+          ] else if (!compact) ...[
             CustomCard(
               contentPadding: EdgeInsets.all(10),
               content: Row(
@@ -161,5 +172,10 @@ class StatSummaryView extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  Widget _wrapCard(Widget child) {
+    if (!compact) return child;
+    return ReportExportSheet.buildCardWrapper(child: child);
   }
 }
