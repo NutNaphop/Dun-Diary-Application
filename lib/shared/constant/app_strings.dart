@@ -18,6 +18,7 @@ class AppStrings {
   static const result = _ResultStrings();
   static const stat = _StatStrings();
   static const setting = _SettingStrings();
+  static const citation = _CitationStrings();
 }
 
 class _CommonStrings {
@@ -101,7 +102,7 @@ class _BloodPressureStrings {
   final String lowDesc =
       "ความดันโลหิตต่ำกว่าเกณฑ์\nควรทานอาหารที่มีประโยชน์และพักผ่อนให้เพียงพอ";
   final String normalDesc =
-      "ความดันโลหิตปกติ\nสุขภาพแข็งแรงดีมาก รักษาไว้แบบนี้นะครับ";
+      "ความดันโลหิตปกติ\nสุขภาพแข็งแรงดีมาก รักษาไว้แบบนี้ต่อไป";
   final String elevatedDesc =
       "ความดันโลหิตเริ่มสูง (Elevated)\nควรคุมอาหารและออกกำลังกายสม่ำเสมอ";
   final String highStage1Desc =
@@ -225,6 +226,14 @@ class _StatStrings {
   final String noDataTitle = "ยังไม่มีข้อมูลในช่วงเวลานี้";
   final String noDataDesc =
       "เพิ่มข้อมูลความดันโลหิตก่อน เพื่อให้ AI ช่วยวิเคราะห์ผลและสรุปให้คุณ";
+}
+
+class _CitationStrings {
+  const _CitationStrings();
+
+  final String ahaSourceName = "American Heart Association (AHA)";
+  final String ahaUrl =
+      "https://www.heart.org/en/health-topics/high-blood-pressure/understanding-blood-pressure-readings";
 }
 
 class _SettingStrings {

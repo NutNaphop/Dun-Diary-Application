@@ -69,8 +69,9 @@ class HistorySummaryCard extends StatelessWidget {
         ),
         SizedBox(height: 5),
         CitationSource(
-          sourceName: "American Heart Association (AHA)",
-          url: "https://www.heart.org/en/health-topics/high-blood-pressure",
+          sourceName: AppStrings.citation.ahaSourceName,
+          url: AppStrings.citation.ahaUrl,
+          color: CustomColor.gray500,
         ),
       ],
     );

@@ -123,9 +123,8 @@ class AnalyzeSuccessView extends StatelessWidget {
             SizedBox(height: 5),
             CitationSource(
               sourceName:
-                  result?.reference ?? 'American Heart Association (AHA)',
-              url:
-                  "https://www.heart.org/en/health-topics/high-blood-pressure/understanding-blood-pressure-readings",
+                  result?.reference ?? AppStrings.citation.ahaSourceName,
+              url: AppStrings.citation.ahaUrl,
               color: CustomColor.gray600,
             ),
           ],
