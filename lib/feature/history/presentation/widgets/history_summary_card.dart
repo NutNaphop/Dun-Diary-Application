@@ -5,6 +5,7 @@ import 'package:dun_diary_app/shared/style/dimension.dart';
 import 'package:dun_diary_app/shared/utils/blood_pressure_utils.dart';
 import 'package:dun_diary_app/shared/utils/date_utils.dart';
 import 'package:dun_diary_app/shared/widgets/custom/card/custom_card.dart';
+import 'package:dun_diary_app/shared/widgets/custom/text/citation_source.dart';
 import 'package:dun_diary_app/shared/widgets/custom/text/text_widget.dart';
 import 'package:dun_diary_app/shared/widgets/ui/guage/guage.dart';
 import 'package:flutter/material.dart';
@@ -33,34 +34,45 @@ class HistorySummaryCard extends StatelessWidget {
       vm.selectedDateRecords.first.dia,
     );
 
-    return CustomCard(
-      contentPadding: EdgeInsets.all(compact ? 6 : 10),
-      content: Column(
-        children: [
-          CustomText(
-            text: label,
-            fontSize: compact ? Dimension.fontSizes.h2 : Dimension.fontSizes.h1,
-            fontWeight: Dimension.fontWeights.bold,
-            color: CustomColor.gray900,
-            textAlign: TextAlign.center,
+    return Column(
+      children: [
+        CustomCard(
+          contentPadding: EdgeInsets.all(compact ? 6 : 10),
+          content: Column(
+            children: [
+              CustomText(
+                text: label,
+                fontSize: compact
+                    ? Dimension.fontSizes.h2
+                    : Dimension.fontSizes.h1,
+                fontWeight: Dimension.fontWeights.bold,
+                color: CustomColor.gray900,
+                textAlign: TextAlign.center,
+              ),
+              SizedBox(height: compact ? 2 : 4),
+              CustomText(
+                text: DateTimeUtils.getHistoryTimeLabel(
+                  vm.selectedDateRecords.firstOrNull?.createdAt,
+                ),
+                fontSize: Dimension.fontSizes.md,
+                fontWeight: Dimension.fontWeights.medium,
+                color: CustomColor.gray500,
+                textAlign: TextAlign.center,
+              ),
+              BloodPressureGauge(
+                level: lastRecordLevel,
+                avgLevel: avgLevel,
+                compact: compact,
+              ),
+            ],
           ),
-          SizedBox(height: compact ? 2 : 4),
-          CustomText(
-            text: DateTimeUtils.getHistoryTimeLabel(
-              vm.selectedDateRecords.firstOrNull?.createdAt,
-            ),
-            fontSize: Dimension.fontSizes.md,
-            fontWeight: Dimension.fontWeights.medium,
-            color: CustomColor.gray500,
-            textAlign: TextAlign.center,
-          ),
-          BloodPressureGauge(
-            level: lastRecordLevel,
-            avgLevel: avgLevel,
-            compact: compact,
-          ),
-        ],
-      ),
+        ),
+        SizedBox(height: 5),
+        CitationSource(
+          sourceName: "American Heart Association (AHA)",
+          url: "https://www.heart.org/en/health-topics/high-blood-pressure",
+        ),
+      ],
     );
   }
 }
