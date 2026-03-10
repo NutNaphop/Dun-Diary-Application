@@ -41,7 +41,7 @@ class MenuItem extends StatelessWidget {
                   CustomText(
                     text: title,
                     fontSize: Dimension.fontSizes.h2,
-                    fontWeight: Dimension.fontWeights.bold,
+                    fontWeight: Dimension.fontWeights.semiBold,
                   ),
                   Spacer(),
                   actionIcon,

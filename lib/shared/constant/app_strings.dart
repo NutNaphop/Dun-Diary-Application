@@ -236,7 +236,7 @@ class _SettingStrings {
   final String uploadQRDescription =
       "กรุณาเลือกรูปภาพ QR Code ที่คุณบันทึกไว้\nเพื่อกู้คืนข้อมูลบัญชีของคุณ";
   final String selectFromAlbum = "เลือกรูปภาพจากอัลบั้ม";
-  final String openCameraScanner = "เปิดกล้องสแกน QR Code";
+  final String scanQRCode = "สแกน QR Code";
 
   // Recovery My Data - Errors
   final String qrNotFoundInImage = "ไม่พบ QR code ในรูปภาพนี้";

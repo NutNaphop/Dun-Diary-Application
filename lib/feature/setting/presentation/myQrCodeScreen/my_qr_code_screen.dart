@@ -118,7 +118,13 @@ class _MyQrCodeScreenState extends State<MyQrCodeScreen> {
             SizedBox(
               width: double.infinity,
               child: CustomButton(
-                text: "บันทึกรูปลงเครื่อง",
+                text: "บันทึกรูปภาพ",
+                leadingIcon: SVGImage(
+                  path: AppIcons.outline.download,
+                  width: 24,
+                  height: 24,
+                  color: CustomColor.white,
+                ),
                 type: CustomButtonType.fill,
                 onPressed: context.read<MyQrCodeViewmodel>().snapImage,
               ),
