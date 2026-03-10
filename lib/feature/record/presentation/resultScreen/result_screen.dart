@@ -13,7 +13,6 @@ import 'package:dun_diary_app/shared/widgets/custom/card/stat_row.dart';
 import 'package:dun_diary_app/shared/widgets/custom/img/custom_svg_widget.dart';
 import 'package:dun_diary_app/shared/widgets/custom/scaffold/custom_scaffold.dart';
 import 'package:dun_diary_app/shared/widgets/custom/scaffold/main_appbar.dart';
-import 'package:dun_diary_app/shared/widgets/ui/image/image_display.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -70,7 +69,23 @@ class _ResultScreenState extends State<ResultScreen> {
         onBackPressed: () => NavigationService.instance.goBack(),
       ),
       body: !viewModel.isAnalysisCompleted
-          ? Center(child: ImageDisplay(image: null))
+          ? Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  CircularProgressIndicator(color: CustomColor.accentColor),
+                  SizedBox(height: 16),
+                  Text(
+                    AppStrings.stat.analyzing,
+                    style: TextStyle(
+                      color: CustomColor.gray600,
+                      fontSize: Dimension.fontSizes.h2,
+                      fontWeight: Dimension.fontWeights.medium,
+                    ),
+                  ),
+                ],
+              ),
+            )
           : Container(
               padding: EdgeInsets.only(top: 33, bottom: 30),
               child: Column(

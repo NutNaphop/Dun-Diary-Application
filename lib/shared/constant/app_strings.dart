@@ -212,6 +212,7 @@ class _StatStrings {
   final String connectInternet = "เชื่อมต่ออินเตอร์เน็ต เพื่อให้ AI ช่วยสรุปผล";
 
   // Analyze - Processing
+  final String analyzing = "กำลังวิเคราะห์";
   final String processingTitle = "กำลังประมวลผลสุขภาพ";
   final String processingDesc = "AI กำลังวิเคราะห์ผลเพื่อคุณโดยเฉพาะ";
   final String processingWarning = "กรุณารอสักครู่ อย่าปิดหรือออกจากหน้าจอนี้";
