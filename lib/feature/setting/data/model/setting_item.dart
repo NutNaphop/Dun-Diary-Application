@@ -7,6 +7,7 @@ class SettingItem {
   final IconData? iconData;
   final Color? iconColor;
   final String? route;
+  final Object? arguments;
   final VoidCallback? onTap;
   final String? trailingIconPath;
 
@@ -17,6 +18,7 @@ class SettingItem {
     this.iconData,
     this.iconColor,
     this.route,
+    this.arguments,
     this.onTap,
     this.trailingIconPath,
   });

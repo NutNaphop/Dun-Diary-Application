@@ -74,7 +74,12 @@ class SettingMenuSection extends StatelessWidget {
                 title: item.title,
                 description: item.description,
                 onTap: () {
-                  if (item.route != null) {
+                  if (item.arguments != null) {
+                    NavigationService.instance.pushNamed(
+                      item.route!,
+                      arguments: item.arguments,
+                    );
+                  } else if (item.route != null) {
                     NavigationService.instance.pushNamed(item.route!);
                   }
                   item.onTap?.call();

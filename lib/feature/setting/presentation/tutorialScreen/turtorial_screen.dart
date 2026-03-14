@@ -1,4 +1,4 @@
-import 'package:dun_diary_app/feature/setting/presentation/turtorialScreen/turtorial_screen_viewModel.dart';
+import 'package:dun_diary_app/feature/setting/presentation/tutorialScreen/tutorial_screen_viewModel.dart';
 import 'package:dun_diary_app/feature/setting/presentation/widgets/section/setting_menu_section.dart';
 import 'package:dun_diary_app/shared/widgets/custom/scaffold/custom_scaffold.dart';
 import 'package:dun_diary_app/shared/widgets/custom/scaffold/main_appbar.dart';
