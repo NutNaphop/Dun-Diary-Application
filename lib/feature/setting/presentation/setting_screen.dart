@@ -25,7 +25,7 @@ class _SettingScreenState extends State<SettingScreen> {
   Widget build(BuildContext context) {
     final userName = context.select((GlobalUserProvider p) => p.displayName);
 
-    final viewModel = context.watch<SettingViewmodel>();
+    final viewModel = context.read<SettingViewmodel>();
     return CustomScaffold(
       body: Padding(
         padding: const EdgeInsets.symmetric(vertical: 20),

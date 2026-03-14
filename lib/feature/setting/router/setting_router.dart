@@ -6,6 +6,7 @@ import 'package:dun_diary_app/feature/setting/presentation/profileSettingScreen/
 import 'package:dun_diary_app/feature/setting/presentation/qrScanScreen/qr_scanner_screen.dart';
 import 'package:dun_diary_app/feature/setting/presentation/recoveryMyDataScreen/recovery_my_data_screen.dart';
 import 'package:dun_diary_app/feature/setting/presentation/recoverySettingScreen/recovery_setting_screen.dart';
+import 'package:dun_diary_app/feature/setting/presentation/turtorialScreen/turtorial_screen.dart';
 import 'package:flutter/material.dart';
 
 class SettingRouter extends BaseFeatureRouter {
@@ -17,8 +18,6 @@ class SettingRouter extends BaseFeatureRouter {
     AppRoutes.setting.myQrcode: (_) => MyQrCodeScreen.create(),
     AppRoutes.setting.recoveryMyData: (_) => RecoveryMyDataScreen.create(),
     AppRoutes.setting.qrScanner: (_) => QrScannerScreen(),
-    AppRoutes.setting.tutorial: (_) => const Scaffold(
-      body: Center(child: Text("Tutorial Screen (Coming Soon)")),
-    ),
+    AppRoutes.setting.tutorial: (_) => TurtorialScreen.create(),
   };
 }

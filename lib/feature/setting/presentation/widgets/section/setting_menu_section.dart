@@ -26,7 +26,7 @@ class SettingMenuSection extends StatelessWidget {
             ),
           ),
         CustomCard(
-          borderRadius: 20,
+          borderRadius: 15,
           content: Column(
             children: section.items.asMap().entries.map((entry) {
               final index = entry.key;
@@ -36,14 +36,14 @@ class SettingMenuSection extends StatelessWidget {
 
               BorderRadius? borderRadius;
               if (isFirst && isLast) {
-                borderRadius = BorderRadius.circular(16);
+                borderRadius = BorderRadius.circular(15);
               } else if (isFirst) {
                 borderRadius = const BorderRadius.vertical(
-                  top: Radius.circular(16),
+                  top: Radius.circular(15),
                 );
               } else if (isLast) {
                 borderRadius = const BorderRadius.vertical(
-                  bottom: Radius.circular(16),
+                  bottom: Radius.circular(15),
                 );
               }
 
@@ -53,12 +53,12 @@ class SettingMenuSection extends StatelessWidget {
                   path: item.svgPath!,
                   width: 28,
                   height: 28,
-                  color: CustomColor.gray400,
+                  color: item.iconColor ?? CustomColor.gray400,
                 );
               } else if (item.iconData != null) {
                 leadingIcon = Icon(
                   item.iconData,
-                  color: CustomColor.gray400,
+                  color: item.iconColor ?? CustomColor.gray400,
                   size: 28,
                 );
               }
@@ -72,6 +72,7 @@ class SettingMenuSection extends StatelessWidget {
                   color: CustomColor.gray900,
                 ),
                 title: item.title,
+                description: item.description,
                 onTap: () {
                   if (item.route != null) {
                     NavigationService.instance.pushNamed(item.route!);
