@@ -1,5 +1,5 @@
 import 'package:dun_diary_app/feature/setting/data/model/tutorial_topic.dart';
-import 'package:dun_diary_app/feature/setting/data/tutorial_data_source.dart';
+import 'package:dun_diary_app/feature/setting/data/datasource/tutorial_data_source.dart';
 import 'package:flutter/material.dart';
 
 class TutorialDetailViewModel extends ChangeNotifier {

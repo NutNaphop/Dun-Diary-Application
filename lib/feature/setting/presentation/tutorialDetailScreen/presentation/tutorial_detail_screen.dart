@@ -1,6 +1,7 @@
 import 'package:dun_diary_app/core/services/navigation_service.dart';
 import 'package:dun_diary_app/feature/setting/data/model/tutorial_topic.dart';
 import 'package:dun_diary_app/feature/setting/presentation/tutorialDetailScreen/presentation/tutorial_detail_viewModel.dart';
+import 'package:dun_diary_app/feature/setting/presentation/tutorialDetailScreen/widgets/tutorial_block_widget.dart';
 import 'package:dun_diary_app/feature/setting/presentation/tutorialDetailScreen/widgets/tutorial_carousel.dart';
 import 'package:dun_diary_app/shared/style/color.dart';
 import 'package:dun_diary_app/shared/style/dimension.dart';
@@ -119,17 +120,8 @@ class _TutorialViewScreenState extends State<TutorialViewScreen> {
                     ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      children: currentStep.instructions
-                          .map(
-                            (text) => Padding(
-                              padding: const EdgeInsets.only(bottom: 8.0),
-                              child: CustomText(
-                                text: text,
-                                fontSize: Dimension.fontSizes.h2,
-                                fontWeight: Dimension.fontWeights.regular,
-                              ),
-                            ),
-                          )
+                      children: currentStep.blocks
+                          .map((block) => TutorialBlockWidget(block: block))
                           .toList(),
                     ),
                   ),
