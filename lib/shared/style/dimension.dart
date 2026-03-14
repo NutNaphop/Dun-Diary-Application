@@ -31,6 +31,8 @@ class _FontSize {
 
   final double h1 = 21.0; // 21
 
+  final double subH1 = 18.0; // 18
+
   final double h2 = 16.0; // 16
 
   final double md = 14.0; // 14

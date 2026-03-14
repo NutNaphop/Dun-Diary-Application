@@ -7,7 +7,7 @@ import 'package:dun_diary_app/feature/setting/presentation/recoverySettingScreen
 import 'package:dun_diary_app/feature/setting/presentation/recoveryMyDataScreen/recovery_my_data_screen.dart';
 import 'package:dun_diary_app/feature/setting/presentation/qrScanScreen/qr_scanner_screen.dart';
 import 'package:dun_diary_app/feature/setting/presentation/tutorialScreen/turtorial_screen.dart';
-import 'package:dun_diary_app/feature/setting/presentation/tutorialScreen/views/tutorial_view_screen.dart';
+import 'package:dun_diary_app/feature/setting/presentation/tutorialDetailScreen/presentation/tutorial_detail_screen.dart';
 import 'package:dun_diary_app/feature/setting/data/model/tutorial_topic.dart';
 import 'package:flutter/material.dart';
 
@@ -23,7 +23,7 @@ class SettingRouter extends BaseFeatureRouter {
     AppRoutes.setting.tutorial: (_) => TurtorialScreen.create(),
     AppRoutes.setting.tutorialView: (args) {
       final topic = args as TutorialTopic;
-      return TutorialViewScreen(topic: topic);
+      return TutorialViewScreen.create(topic);
     },
   };
 }
