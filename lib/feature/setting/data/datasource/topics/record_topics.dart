@@ -17,19 +17,32 @@ List<TutorialStep> recordTopics = [
     ],
   ),
   TutorialStep(
+    imagePath: '',
+    descriptionTitle: 'การบันทึกค่าความดันด้วยตัวเอง',
+    blocks: [
+      NumberedBlock(
+        number: 1,
+        text: 'เลื่อนตัวเลขเพื่อระบุค่าความดัน (SYS, DIA) และชีพจร (PUL)',
+      ),
+      NumberedBlock(
+        number: 2,
+        text: 'แอปจะประเมินระดับความดันของคุณผ่านแถบสีให้ทันที',
+      ),
+      NumberedBlock(
+        number: 3,
+        text: 'ตรวจสอบวันที่และเวลา แล้วกดปุ่ม "บันทึก" ด้านล่างสุด',
+      ),
+    ],
+  ),
+  TutorialStep(
     imagePath: 'assets/images/tutorial/bp_step2.png',
     descriptionTitle: 'การบันทึกความดันผ่านรูปถ่าย',
     blocks: [
       ParagraphBlock(text: 'แตะไอคอนกล้อง 📷 เพื่อเลือกวิธีสแกน'),
-      NumberedBlock(
-        number: 1,
-        boldTitle: 'ถ่ายรูปผลวัด',
-        text: 'ถ่ายหน้าจอเครื่องวัดความดัน',
-      ),
+      NumberedBlock(number: 1, text: 'ถ่ายรูปผลวัดถ่ายหน้าจอเครื่องวัดความดัน'),
       NumberedBlock(
         number: 2,
-        boldTitle: 'เลือกรูปจากคลัง',
-        text: 'เลือกรูปจากในมือถือของคุณ',
+        text: 'เลือกรูปจากคลังเลือกรูปจากในมือถือของคุณ',
       ),
     ],
   ),
@@ -41,12 +54,30 @@ List<TutorialStep> recordTopics = [
       NumberedBlock(
         number: 1,
         boldTitle: 'ถ่ายให้ชัด',
-        text: 'ถ่ายหน้าจอไม่ให้เบลอ ไร้แสงสะท้อน เพื่อให้ AI อ่านค่าได้แม่นยำ',
+        text:
+            'ถ่ายให้ชัด ถ่ายหน้าจอไม่ให้เบลอ ไร้แสงสะท้อน เพื่อให้ AI อ่านค่าได้แม่นยำ',
       ),
       NumberedBlock(
         number: 2,
         boldTitle: 'ตรวจสอบและบันทึก',
-        text: 'เช็คความถูกต้องของตัวเลข แล้วกดปุ่ม "บันทึก"',
+        text: 'ตรวจสอบและบันทึก เช็คความถูกต้องของตัวเลข แล้วกดปุ่ม "บันทึก"',
+      ),
+    ],
+  ),
+  TutorialStep(
+    imagePath: 'assets/images/tutorial/bp_step3.png',
+    descriptionTitle: 'การบันทึกโดยเลือกรูปจากอัลบั้ม',
+    blocks: [
+      ParagraphBlock(text: 'เลือกรูปภาพจากอัลบั้ม'),
+      NumberedBlock(
+        number: 1,
+        boldTitle: 'ถ่ายให้ชัด',
+        text: 'เลือกรูป เลือกภาพหน้าจอเครื่องวัดที่คุณถ่ายเก็บไว้ ในมือถือ',
+      ),
+      NumberedBlock(
+        number: 2,
+        boldTitle: 'ตรวจสอบและบันทึก',
+        text: 'ตรวจสอบและบันทึก เช็คตัวเลขที่ระบบอ่านได้ แล้วกด "บันทึก"',
       ),
     ],
   ),

@@ -75,7 +75,7 @@ class TutorialBlockWidget extends StatelessWidget {
           ),
           Expanded(
             child: CustomText(
-              text: "${block.boldTitle ?? ''} ${block.text}",
+              text: "${block.boldTitle ?? ''}${block.text}",
               fontSize: Dimension.fontSizes.h2,
               fontWeight: Dimension.fontWeights.regular,
               color: CustomColor.gray600,
@@ -101,7 +101,7 @@ class TutorialBlockWidget extends StatelessWidget {
           ),
           Expanded(
             child: CustomText(
-              text: "${block.boldTitle ?? ''} ${block.text}",
+              text: "${block.boldTitle ?? ''}${block.text}",
               fontSize: Dimension.fontSizes.h2,
               fontWeight: Dimension.fontWeights.regular,
               color: CustomColor.gray600,

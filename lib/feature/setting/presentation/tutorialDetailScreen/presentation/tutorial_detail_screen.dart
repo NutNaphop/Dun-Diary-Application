@@ -142,21 +142,17 @@ class _TutorialViewScreenState extends State<TutorialViewScreen> {
                   child: CustomButton(
                     text: 'ย้อนกลับ',
                     type: CustomButtonType.outline,
-                    onPressed: currentPage > 0
-                        ? () => viewModel.previousPage()
-                        : () => NavigationService.instance.goBack(),
+                    isDisable: currentPage == 0,
+                    onPressed: () => viewModel.previousPage(),
                   ),
                 ),
                 const SizedBox(width: 16),
                 Expanded(
                   child: CustomButton(
-                    text: currentPage == steps.length - 1
-                        ? 'เสร็จสิ้น'
-                        : 'ถัดไป',
+                    text: 'ถัดไป',
+                    isDisable: currentPage == steps.length - 1,
                     type: CustomButtonType.fill,
-                    onPressed: currentPage == steps.length - 1
-                        ? () => NavigationService.instance.goBack()
-                        : () => viewModel.nextPage(),
+                    onPressed: () => viewModel.nextPage(),
                   ),
                 ),
               ],

@@ -26,7 +26,7 @@ class TutorialCarousel extends StatelessWidget {
       itemBuilder: (context, index) {
         // final step = steps[index];
         return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+          padding: const EdgeInsets.symmetric(horizontal: 8.0),
           child: Container(
             height: 343,
             width: double.infinity,
