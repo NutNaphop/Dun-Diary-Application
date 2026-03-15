@@ -17,7 +17,7 @@ class TutorialDetailViewModel extends ChangeNotifier {
   void init(TutorialTopic topic) {
     _topic = topic;
     _steps = TutorialDataSource.getStepsForTopic(topic);
-    pageController = PageController(viewportFraction: 0.85);
+    pageController = PageController(viewportFraction: 0.92);
   }
 
   void setCurrentPage(int index) {

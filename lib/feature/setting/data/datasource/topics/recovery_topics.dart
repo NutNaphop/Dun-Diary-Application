@@ -1,9 +1,10 @@
 import 'package:dun_diary_app/feature/setting/data/datasource/tutorial_data_source.dart';
 import 'package:dun_diary_app/feature/setting/data/model/tutorial_content_block.dart';
+import 'package:dun_diary_app/shared/constant/app_image.dart';
 
 List<TutorialStep> recoveryTopics = [
   TutorialStep(
-    imagePath: 'assets/images/tutorial/recovery_step1.png',
+    imagePath: TutorialImages.recovery.recovery1,
     descriptionTitle: 'การสำรองและกู้คืนข้อมูล',
     blocks: [
       ParagraphBlock(
@@ -13,7 +14,7 @@ List<TutorialStep> recoveryTopics = [
     ],
   ),
   TutorialStep(
-    imagePath: 'assets/images/tutorial/recovery_step1.png',
+    imagePath: TutorialImages.recovery.recovery2,
     descriptionTitle: 'การสำรองและกู้คืนข้อมูล',
     blocks: [
       BulletBlock(
@@ -27,7 +28,7 @@ List<TutorialStep> recoveryTopics = [
     ],
   ),
   TutorialStep(
-    imagePath: 'assets/images/tutorial/recovery_step1.png',
+    imagePath: TutorialImages.recovery.recovery3,
     descriptionTitle: 'บันทึก QR Code ของคุณ',
     blocks: [
       ParagraphBlock(
@@ -37,7 +38,7 @@ List<TutorialStep> recoveryTopics = [
     ],
   ),
   TutorialStep(
-    imagePath: 'assets/images/tutorial/recovery_step1.png',
+    imagePath: TutorialImages.recovery.recovery4,
     descriptionTitle: 'วิธีกู้คืนข้อมูลด้วย QR Code',
     blocks: [
       BulletBlock(
@@ -52,7 +53,7 @@ List<TutorialStep> recoveryTopics = [
     ],
   ),
   TutorialStep(
-    imagePath: 'assets/images/tutorial/recovery_step1.png',
+    imagePath: TutorialImages.recovery.recovery5,
     descriptionTitle: 'พบข้อมูลและพร้อมกู้คืน',
     blocks: [
       BulletBlock(

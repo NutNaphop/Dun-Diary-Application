@@ -1,9 +1,10 @@
 import 'package:dun_diary_app/feature/setting/data/datasource/tutorial_data_source.dart';
 import 'package:dun_diary_app/feature/setting/data/model/tutorial_content_block.dart';
+import 'package:dun_diary_app/shared/constant/app_image.dart';
 
 List<TutorialStep> exportTopics = [
   TutorialStep(
-    imagePath: 'assets/images/tutorial/export_step1.png',
+    imagePath: TutorialImages.export.export1,
     descriptionTitle: 'การส่งออกข้อมูล',
     blocks: [
       ParagraphBlock(
@@ -13,7 +14,7 @@ List<TutorialStep> exportTopics = [
     ],
   ),
   TutorialStep(
-    imagePath: 'assets/images/tutorial/export_step1.png',
+    imagePath: TutorialImages.export.export2,
     descriptionTitle: 'การส่งออกเป็นไฟล์ CSV',
     blocks: [
       ParagraphBlock(
@@ -23,7 +24,7 @@ List<TutorialStep> exportTopics = [
     ],
   ),
   TutorialStep(
-    imagePath: 'assets/images/tutorial/export_step1.png',
+    imagePath: TutorialImages.export.export3,
     descriptionTitle: 'แชร์หรือบันทึกเป็นรูปภาพ',
     blocks: [
       ParagraphBlock(

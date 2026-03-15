@@ -103,7 +103,10 @@ class _TutorialViewScreenState extends State<TutorialViewScreen> {
           Expanded(
             flex: 4,
             child: SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(horizontal: 24.0),
+              padding: EdgeInsets.symmetric(
+                horizontal:
+                    MediaQuery.of(context).size.width * (1 - 0.92) / 2 + 8,
+              ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,

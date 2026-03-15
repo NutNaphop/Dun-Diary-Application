@@ -1,9 +1,10 @@
 import 'package:dun_diary_app/feature/setting/data/datasource/tutorial_data_source.dart';
 import 'package:dun_diary_app/feature/setting/data/model/tutorial_content_block.dart';
+import 'package:dun_diary_app/shared/constant/app_image.dart';
 
 List<TutorialStep> analyzeTopics = [
   TutorialStep(
-    imagePath: 'assets/images/tutorial/analyze_step1.png',
+    imagePath: TutorialImages.analyze.analyze1,
     descriptionTitle: 'การวิเคราะห์ข้อมูล',
     blocks: [
       BulletBlock(
@@ -13,7 +14,7 @@ List<TutorialStep> analyzeTopics = [
     ],
   ),
   TutorialStep(
-    imagePath: 'assets/images/tutorial/analyze_step2.png',
+    imagePath: TutorialImages.analyze.analyze2,
     descriptionTitle: 'สรุปผลและวิเคราะห์ด้วย AI',
     blocks: [
       BulletBlock(

@@ -1,9 +1,10 @@
 import 'package:dun_diary_app/feature/setting/data/datasource/tutorial_data_source.dart';
 import 'package:dun_diary_app/feature/setting/data/model/tutorial_content_block.dart';
+import 'package:dun_diary_app/shared/constant/app_image.dart';
 
 List<TutorialStep> historyTopics = [
   TutorialStep(
-    imagePath: 'assets/images/tutorial/history_step1.png',
+    imagePath: TutorialImages.history.history1,
     descriptionTitle: 'ดูประวัติและกราฟรายวัน',
     blocks: [
       ParagraphBlock(
@@ -13,7 +14,7 @@ List<TutorialStep> historyTopics = [
     ],
   ),
   TutorialStep(
-    imagePath: 'assets/images/tutorial/history_step2.png',
+    imagePath: TutorialImages.history.history2,
     descriptionTitle: 'ดูและแก้ไขข้อมูล',
     blocks: [
       ParagraphBlock(
@@ -23,7 +24,7 @@ List<TutorialStep> historyTopics = [
     ],
   ),
   TutorialStep(
-    imagePath: 'assets/images/tutorial/history_step3.png',
+    imagePath: TutorialImages.history.history3,
     descriptionTitle: 'แก้ไขและลบข้อมูล',
     blocks: [
       BulletBlock(

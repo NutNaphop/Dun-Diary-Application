@@ -1,9 +1,10 @@
 import 'package:dun_diary_app/feature/setting/data/datasource/tutorial_data_source.dart';
 import 'package:dun_diary_app/feature/setting/data/model/tutorial_content_block.dart';
+import 'package:dun_diary_app/shared/constant/app_image.dart';
 
 List<TutorialStep> recordTopics = [
   TutorialStep(
-    imagePath: 'assets/images/tutorial/bp_step1.png',
+    imagePath: TutorialImages.record.record1,
     descriptionTitle: 'วิธีการบันทึกความดันประจำวัน',
     blocks: [
       PrefixBlock(
@@ -17,7 +18,7 @@ List<TutorialStep> recordTopics = [
     ],
   ),
   TutorialStep(
-    imagePath: '',
+    imagePath: TutorialImages.record.record2,
     descriptionTitle: 'การบันทึกค่าความดันด้วยตัวเอง',
     blocks: [
       NumberedBlock(
@@ -35,7 +36,7 @@ List<TutorialStep> recordTopics = [
     ],
   ),
   TutorialStep(
-    imagePath: 'assets/images/tutorial/bp_step2.png',
+    imagePath: TutorialImages.record.record3,
     descriptionTitle: 'การบันทึกความดันผ่านรูปถ่าย',
     blocks: [
       ParagraphBlock(text: 'แตะไอคอนกล้อง 📷 เพื่อเลือกวิธีสแกน'),
@@ -47,7 +48,7 @@ List<TutorialStep> recordTopics = [
     ],
   ),
   TutorialStep(
-    imagePath: 'assets/images/tutorial/bp_step3.png',
+    imagePath: TutorialImages.record.record4,
     descriptionTitle: 'การบันทึกความดันผ่านรูปถ่าย',
     blocks: [
       ParagraphBlock(text: 'ถ่ายรูปผลวัดความดันง่ายๆ'),
@@ -65,7 +66,7 @@ List<TutorialStep> recordTopics = [
     ],
   ),
   TutorialStep(
-    imagePath: 'assets/images/tutorial/bp_step3.png',
+    imagePath: TutorialImages.record.record5,
     descriptionTitle: 'การบันทึกโดยเลือกรูปจากอัลบั้ม',
     blocks: [
       ParagraphBlock(text: 'เลือกรูปภาพจากอัลบั้ม'),
