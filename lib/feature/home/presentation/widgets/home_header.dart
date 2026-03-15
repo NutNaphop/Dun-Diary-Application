@@ -77,7 +77,7 @@ class HomeHeader extends StatelessWidget {
                         ),
                         // Info Icon
                         GestureDetector(
-                          onTap: () {},
+                          onTap: viewModel.redirectToTutorial,
                           child: Container(
                             width: 33,
                             height: 33,
