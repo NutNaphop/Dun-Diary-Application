@@ -71,12 +71,10 @@ List<TutorialStep> recordTopics = [
       ParagraphBlock(text: 'เลือกรูปภาพจากอัลบั้ม'),
       NumberedBlock(
         number: 1,
-        boldTitle: 'ถ่ายให้ชัด',
         text: 'เลือกรูป เลือกภาพหน้าจอเครื่องวัดที่คุณถ่ายเก็บไว้ ในมือถือ',
       ),
       NumberedBlock(
         number: 2,
-        boldTitle: 'ตรวจสอบและบันทึก',
         text: 'ตรวจสอบและบันทึก เช็คตัวเลขที่ระบบอ่านได้ แล้วกด "บันทึก"',
       ),
     ],

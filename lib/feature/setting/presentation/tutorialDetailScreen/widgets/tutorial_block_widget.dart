@@ -74,11 +74,24 @@ class TutorialBlockWidget extends StatelessWidget {
             color: CustomColor.gray900,
           ),
           Expanded(
-            child: CustomText(
-              text: "${block.boldTitle ?? ''}${block.text}",
-              fontSize: Dimension.fontSizes.h2,
-              fontWeight: Dimension.fontWeights.regular,
-              color: CustomColor.gray600,
+            child: RichText(
+              text: TextSpan(
+                style: TextStyle(
+                  fontSize: Dimension.fontSizes.h2,
+                  fontWeight: Dimension.fontWeights.regular,
+                  color: CustomColor.gray600,
+                  fontFamily: 'NotoSanThai',
+                ),
+                children: [
+                  if (block.boldTitle != null)
+                    TextSpan(
+                      text: block.boldTitle,
+                      style: TextStyle(fontWeight: Dimension.fontWeights.bold),
+                    ),
+                  TextSpan(text: ' '),
+                  TextSpan(text: block.text),
+                ],
+              ),
             ),
           ),
         ],

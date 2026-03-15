@@ -2,6 +2,7 @@ import 'package:dun_diary_app/feature/setting/data/datasource/topics/analyze_top
 import 'package:dun_diary_app/feature/setting/data/datasource/topics/export_topics.dart';
 import 'package:dun_diary_app/feature/setting/data/datasource/topics/history_topics.dart';
 import 'package:dun_diary_app/feature/setting/data/datasource/topics/record_topics.dart';
+import 'package:dun_diary_app/feature/setting/data/datasource/topics/recovery_topics.dart';
 import 'package:dun_diary_app/feature/setting/data/model/tutorial_topic.dart';
 import 'package:dun_diary_app/feature/setting/data/model/tutorial_content_block.dart';
 
@@ -30,7 +31,7 @@ class TutorialDataSource {
         return historyTopics;
 
       case TutorialTopic.recoveryData:
-        return recordTopics;
+        return recoveryTopics;
 
       case TutorialTopic.exportData:
         return exportTopics;
