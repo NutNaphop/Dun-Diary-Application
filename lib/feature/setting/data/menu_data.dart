@@ -12,12 +12,14 @@ class SettingMenuData {
       items: [
         SettingItem(
           title: 'การสำรองข้อมูลและกู้ข้อมูล',
+          iconColor: CustomColor.primaryColor,
           svgPath: AppIcons.duotone.note,
           route: AppRoutes.setting.recovery,
           onTap: () => AppLogger.debug('Backup tapped'),
         ),
         SettingItem(
           title: 'วิธีการใช้งาน',
+          iconColor: CustomColor.primaryColor,
           svgPath: AppIcons.duotone.infoCircle,
           route: AppRoutes.setting.tutorial,
           onTap: () => AppLogger.debug('Usage Guide tapped'),
@@ -31,6 +33,7 @@ class SettingMenuData {
       items: [
         SettingItem(
           title: 'แก้ไขโปรไฟล์',
+          iconColor: CustomColor.primaryColor,
           svgPath: AppIcons.bottomNav.userCircle,
           route: AppRoutes.setting.profileEdit,
           trailingIconPath: AppIcons.outline.pen,
@@ -46,12 +49,14 @@ class RecoveryMenuData {
       items: [
         SettingItem(
           title: 'QR Code ของฉัน',
+          iconColor: CustomColor.primaryColor,
           svgPath: AppIcons.duotone.qrcode,
           route: AppRoutes.setting.myQrcode,
           onTap: () => AppLogger.debug('Backup tapped'),
         ),
         SettingItem(
           title: 'กู้คืนข้อมูลของฉัน',
+          iconColor: CustomColor.brown1,
           svgPath: AppIcons.duotone.cloudDownload,
           route: AppRoutes.setting.recoveryMyData,
           onTap: () => AppLogger.debug('Usage Guide tapped'),

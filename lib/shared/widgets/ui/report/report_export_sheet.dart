@@ -193,22 +193,7 @@ class ReportExportSheet extends StatelessWidget {
 
   /// Helper: card wrapper with shadow border
   static Widget buildCardWrapper({required Widget child}) {
-    return Container(
-      width: double.infinity,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 10,
-            offset: Offset(0, 4),
-          ),
-        ],
-        border: Border.all(color: Colors.grey.shade100),
-      ),
-      child: ClipRRect(borderRadius: BorderRadius.circular(16), child: child),
-    );
+    return child;
   }
 
   Widget _buildActionButton(

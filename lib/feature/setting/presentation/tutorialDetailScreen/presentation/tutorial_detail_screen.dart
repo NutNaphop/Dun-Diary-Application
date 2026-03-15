@@ -46,7 +46,7 @@ class _TutorialViewScreenState extends State<TutorialViewScreen> {
           centerTitle: true,
           onBackPressed: () => NavigationService.instance.goBack(),
         ),
-        body: const Center(child: Text("ไม่พบข้อมูล Tutorial")),
+        body: const Center(child: CustomText(text: "ไม่พบข้อมูล Tutorial")),
       );
     }
 
@@ -65,6 +65,7 @@ class _TutorialViewScreenState extends State<TutorialViewScreen> {
       ),
       body: Column(
         children: [
+          const SizedBox(height: 12),
           // 1. Carousel Widget
           Expanded(
             flex: 11,
@@ -91,13 +92,13 @@ class _TutorialViewScreenState extends State<TutorialViewScreen> {
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   color: currentPage == index
-                      ? CustomColor.gray500
+                      ? CustomColor.primaryColor
                       : CustomColor.gray300,
                 ),
               ),
             ),
           ),
-          const SizedBox(height: 32),
+          const SizedBox(height: 20),
 
           // 3. Content Detail for current step
           Expanded(
@@ -135,8 +136,9 @@ class _TutorialViewScreenState extends State<TutorialViewScreen> {
 
           // 4. Buttons Flow
           Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 24.0,
+            padding: EdgeInsets.symmetric(
+              horizontal:
+                  MediaQuery.of(context).size.width * (1 - 0.92) / 2 + 8,
               vertical: 24.0,
             ),
             child: Row(

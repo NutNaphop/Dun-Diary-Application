@@ -15,6 +15,8 @@ class TutorialCarousel extends StatelessWidget {
     this.viewportFraction = 0.92,
   });
 
+  static const double _imageAspectRatio = 732 / 1332;
+
   @override
   Widget build(BuildContext context) {
     if (steps.isEmpty) return const SizedBox.shrink();
@@ -35,8 +37,17 @@ class TutorialCarousel extends StatelessWidget {
               ),
               borderRadius: BorderRadius.circular(10),
             ),
-            child: Center(
-              child: Image.asset(steps[index].imagePath, fit: BoxFit.contain),
+            padding: EdgeInsets.only(top: 20),
+            child: Align(
+              alignment: Alignment.topCenter,
+              child: AspectRatio(
+                aspectRatio: _imageAspectRatio,
+                child: Image.asset(
+                  steps[index].imagePath,
+                  fit: BoxFit.contain,
+                  alignment: Alignment.topCenter,
+                ),
+              ),
             ),
           ),
         );
