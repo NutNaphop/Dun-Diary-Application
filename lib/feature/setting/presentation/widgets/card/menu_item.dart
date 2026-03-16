@@ -7,6 +7,7 @@ class MenuItem extends StatelessWidget {
   final Widget leadingIcon;
   final Widget actionIcon;
   final String title;
+  final String? description;
   final VoidCallback onTap;
   final bool isHaveDivider;
   final BorderRadius? borderRadius;
@@ -16,6 +17,7 @@ class MenuItem extends StatelessWidget {
     required this.leadingIcon,
     required this.actionIcon,
     required this.title,
+    this.description,
     required this.onTap,
     this.isHaveDivider = true,
     this.borderRadius,
@@ -38,10 +40,23 @@ class MenuItem extends StatelessWidget {
                 children: [
                   leadingIcon,
                   SizedBox(width: 15),
-                  CustomText(
-                    text: title,
-                    fontSize: Dimension.fontSizes.h2,
-                    fontWeight: Dimension.fontWeights.semiBold,
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      CustomText(
+                        text: title,
+                        fontSize: Dimension.fontSizes.h2,
+                        fontWeight: Dimension.fontWeights.semiBold,
+                      ),
+                      if (description != null)
+                        CustomText(
+                          text: description!,
+                          fontSize: Dimension.fontSizes.rg,
+                          fontWeight: Dimension.fontWeights.regular,
+                          color: CustomColor.gray500,
+                        ),
+                    ],
                   ),
                   Spacer(),
                   actionIcon,

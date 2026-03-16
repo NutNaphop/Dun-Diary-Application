@@ -32,10 +32,11 @@ class MockDataSeeder {
           Duration(hours: 8 + random.nextInt(12), minutes: random.nextInt(60)),
         );
 
-        // สุ่มค่าความดัน (ให้มีแกว่งๆ บ้าง)
-        final sys = 100 + random.nextInt(40); // 100 - 140
-        final dia = 70 + random.nextInt(20); // 70 - 90
-        final pulse = 60 + random.nextInt(40); // 60 - 100
+        // สุ่มค่าความดันแบบการแจกแจงปกติ (Normal Distribution) 
+        // ให้ค่าส่วนใหญ่อยู่ในเกณฑ์ปกติ แต่มีเล็กน้อยที่แกว่งไปมาดูสมจริง
+        final sys = _generateNormalInt(random, 115, 8).clamp(90, 180); // จะเกาะกลุ่มแถว 107-123 เป็นส่วนใหญ่
+        final dia = _generateNormalInt(random, 75, 5).clamp(60, 110);  // จะเกาะกลุ่มแถว 70-80 เป็นส่วนใหญ่
+        final pulse = _generateNormalInt(random, 75, 8).clamp(50, 120); // จะเกาะกลุ่มแถว 67-83 เป็นส่วนใหญ่
 
         final record = BPRecord(
           id: uuid.v4(),
@@ -53,5 +54,13 @@ class MockDataSeeder {
       }
     }
     AppLogger.info("Seeding Complete! Enjoy your data.");
+  }
+
+  /// สุ่มค่าด้วยการแจกแจงแบบปกติ (Normal Distribution - Box-Muller transform)
+  int _generateNormalInt(Random random, double mean, double stdDev) {
+    double u1 = 1.0 - random.nextDouble(); // (0, 1]
+    double u2 = 1.0 - random.nextDouble(); // (0, 1]
+    double randStdNormal = sqrt(-2.0 * log(u1)) * sin(2.0 * pi * u2); // Normal(0, 1)
+    return (mean + stdDev * randStdNormal).round();
   }
 }

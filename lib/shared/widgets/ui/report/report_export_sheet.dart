@@ -193,22 +193,7 @@ class ReportExportSheet extends StatelessWidget {
 
   /// Helper: card wrapper with shadow border
   static Widget buildCardWrapper({required Widget child}) {
-    return Container(
-      width: double.infinity,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 10,
-            offset: Offset(0, 4),
-          ),
-        ],
-        border: Border.all(color: Colors.grey.shade100),
-      ),
-      child: ClipRRect(borderRadius: BorderRadius.circular(16), child: child),
-    );
+    return child;
   }
 
   Widget _buildActionButton(
@@ -217,31 +202,40 @@ class ReportExportSheet extends StatelessWidget {
     required String label,
     required VoidCallback onTap,
   }) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Column(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: CustomColor.gray100,
-            ),
-            child: SVGImage(
-              path: iconPath,
-              width: 24,
-              height: 24,
-              color: CustomColor.gray900,
-            ),
+    return Material(
+      color: Colors.transparent,
+      borderRadius: BorderRadius.circular(12),
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(12),
+
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          child: Column(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: CustomColor.gray100,
+                ),
+                child: SVGImage(
+                  path: iconPath,
+                  width: 24,
+                  height: 24,
+                  color: CustomColor.gray900,
+                ),
+              ),
+              SizedBox(height: 8),
+              CustomText(
+                text: label,
+                fontSize: Dimension.fontSizes.sm,
+                fontWeight: Dimension.fontWeights.medium,
+                color: CustomColor.gray600,
+              ),
+            ],
           ),
-          SizedBox(height: 8),
-          CustomText(
-            text: label,
-            fontSize: Dimension.fontSizes.sm,
-            fontWeight: Dimension.fontWeights.medium,
-            color: CustomColor.gray600,
-          ),
-        ],
+        ),
       ),
     );
   }

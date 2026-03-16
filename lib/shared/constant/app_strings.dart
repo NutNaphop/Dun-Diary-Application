@@ -138,7 +138,7 @@ class _RecordStrings {
 
   final String recordBloodPressure = "บันทึกความดัน";
   final String snapPhoto = "ถ่ายรูปผลวัด";
-  final String uploadPhoto = "เลือกรูปจากคลัง";
+  final String uploadPhoto = "เลือกรูปจากอัลบั้ม";
   final String errorRecord = "เกิดข้อผิดพลาดในการบันทึกข้อมูล";
   final String canNotReadImage = "ไม่สามารถอ่านค่าจากรูปภาพได้";
 

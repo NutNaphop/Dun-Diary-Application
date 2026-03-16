@@ -40,6 +40,7 @@ class HistoryCSVExportSheet extends StatelessWidget {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            SizedBox(height: 16),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Column(
@@ -48,13 +49,14 @@ class HistoryCSVExportSheet extends StatelessWidget {
                 children: [
                   CustomText(
                     text: AppStrings.history.exportCsv,
-                    fontSize: Dimension.fontSizes.h1,
-                    fontWeight: Dimension.fontWeights.bold,
+                    fontSize: Dimension.fontSizes.h2,
+                    fontWeight: Dimension.fontWeights.medium,
                   ),
                   CustomText(
                     text: AppStrings.history.timeRange,
                     fontSize: Dimension.fontSizes.md,
-                    fontWeight: Dimension.fontWeights.medium,
+                    fontWeight: Dimension.fontWeights.semiBold,
+                    color: CustomColor.gray600,
                   ),
                 ],
               ),
@@ -108,10 +110,10 @@ class HistoryCSVExportSheet extends StatelessWidget {
                     },
             ),
 
-            const SizedBox(height: 40),
+            const SizedBox(height: 80),
             Divider(color: CustomColor.gray300, thickness: 1),
             const SizedBox(height: 22),
-
+            // ปุ่ม
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Row(
@@ -159,7 +161,11 @@ class HistoryCSVExportSheet extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          CustomText(text: label, fontSize: 18),
+          CustomText(
+            text: label,
+            fontSize: 18,
+            fontWeight: Dimension.fontWeights.regular,
+          ),
           const SizedBox(height: 8),
           GestureDetector(
             onTap: onTap,

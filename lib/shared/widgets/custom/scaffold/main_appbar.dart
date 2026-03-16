@@ -13,6 +13,7 @@ class MainAppBar extends StatelessWidget implements PreferredSizeWidget {
   final List<Widget>? actions;
   final VoidCallback? onBackPressed;
   final Color? backgroundColor;
+  final bool centerTitle;
 
   const MainAppBar({
     super.key,
@@ -22,6 +23,7 @@ class MainAppBar extends StatelessWidget implements PreferredSizeWidget {
     this.actions,
     this.onBackPressed,
     this.backgroundColor,
+    this.centerTitle = false,
   });
 
   @override
@@ -44,6 +46,7 @@ class MainAppBar extends StatelessWidget implements PreferredSizeWidget {
         fontSize: Dimension.fontSizes.h2,
         fontWeight: Dimension.fontWeights.semiBold,
       ),
+      centerTitle: centerTitle,
       backgroundColor: Colors.white,
       surfaceTintColor: Colors.transparent,
       elevation: 0,

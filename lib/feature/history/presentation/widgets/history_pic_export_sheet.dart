@@ -20,7 +20,7 @@ class HistoryPicExportSheet {
           ReportExportSheet.buildCardWrapper(
             child: HistorySummaryCard(compact: true),
           ),
-          SizedBox(height: 10),
+          SizedBox(height: 15),
           ReportExportSheet.buildCardWrapper(
             child: HistoryGraphCard(
               graphHeight: 250,

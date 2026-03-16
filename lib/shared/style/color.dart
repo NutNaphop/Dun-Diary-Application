@@ -50,6 +50,7 @@ class CustomColor {
   static const blue6 = Color(0xFFD2F4F6);
   static const blue7 = Color(0xFF22BDE4);
   static const blue8 = Color(0xFFECF6FC);
+  static const blue9 = Color(0xFF5879BA);
 
   // Red
   static const red1 = Color(0xFFFFD9D5);
@@ -64,6 +65,7 @@ class CustomColor {
   static const orange1 = Color(0xFFFFE5D4);
   static const orange2 = Color(0xFFFFA500);
   static const orange3 = Color(0xFFF4891F);
+
   // Pink
   static const pink1 = Color(0xFFFFD4EF);
   static const pink2 = Color(0xFFF93399);
@@ -73,4 +75,9 @@ class CustomColor {
   static const purple1 = Color(0xFFA949E1);
   static const purple2 = Color(0xFF9933F9);
   static const purple3 = Color(0xFFEFD4FF);
+  static const purple4 = Color(0xFF8B58BA);
+  static const purple5 = Color(0xFFBA58A0);
+
+  // Brown
+  static const brown1 = Color(0xFFBA7558);
 }

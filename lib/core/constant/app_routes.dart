@@ -30,4 +30,6 @@ class _SettingRoutes {
   String get qrScanner => '$recovery/qrScanner';
 
   String get tutorial => '$root/tutorial';
+
+  String get tutorialView => '$tutorial/view';
 }
