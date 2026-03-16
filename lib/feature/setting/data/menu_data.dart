@@ -18,7 +18,7 @@ class SettingMenuData {
           onTap: () => AppLogger.debug('Backup tapped'),
         ),
         SettingItem(
-          title: 'วิธีการใช้งาน',
+          title: 'คู่มือการใช้งาน',
           iconColor: CustomColor.primaryColor,
           svgPath: AppIcons.duotone.infoCircle,
           route: AppRoutes.setting.tutorial,
