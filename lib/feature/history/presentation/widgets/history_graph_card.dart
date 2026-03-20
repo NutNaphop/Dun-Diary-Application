@@ -29,6 +29,7 @@ class HistoryGraphCard extends StatelessWidget {
         margin: const EdgeInsets.only(top: 10),
         child: BpGraphSdk(
           data: vm.selectedDateGraphData,
+          isShowActionButton: vm.selectedDate.isBefore(DateTime.now()),
           onButtonPress: vm.redirectToRecord,
         ),
       ),

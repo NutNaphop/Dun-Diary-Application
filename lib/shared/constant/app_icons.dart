@@ -75,6 +75,7 @@ class _OutlineIcons {
   final String download = '$_path/download.svg';
   final String share = '$_path/share.svg';
   final String pen = '$_path/pen.svg';
+  final String plus = '$_path/plus.svg';
   final String bell = '$_path/bell.svg';
   final String infoCircle = '$_path/info_circle.svg';
   final String questionMark = '$_path/question_mark.svg';

@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:dun_diary_app/core/constant/app_routes.dart';
 import 'package:dun_diary_app/core/router/base_feature_router.dart';
-import 'package:dun_diary_app/data/blood_pressure/model/bp_record.dart';
 import 'package:dun_diary_app/feature/record/presentation/record_screen.dart';
 import 'package:dun_diary_app/feature/record/presentation/resultScreen/result_screen.dart';
 import 'package:flutter/material.dart';
@@ -11,7 +10,7 @@ class RecordRouter extends BaseFeatureRouter {
   @override
   Map<String, Widget Function(dynamic args)> get routes => {
     AppRoutes.record: (args) {
-      if (args is BPRecord) {
+      if (args is RecordScreenArgs) {
         return RecordScreen.createWithRecord(args);
       }
       return RecordScreen.create();

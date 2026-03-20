@@ -1,15 +1,23 @@
+import 'package:dun_diary_app/shared/constant/app_icons.dart';
 import 'package:dun_diary_app/shared/constant/app_strings.dart';
 import 'package:dun_diary_app/shared/style/color.dart';
 import 'package:dun_diary_app/shared/style/dimension.dart';
 import 'package:dun_diary_app/shared/widgets/custom/button/custom_button.dart';
+import 'package:dun_diary_app/shared/widgets/custom/img/custom_svg_widget.dart';
 import 'package:dun_diary_app/shared/widgets/custom/text/text_widget.dart';
 import 'package:flutter/material.dart';
 
 class NoDataLayout extends StatelessWidget {
   final String heading;
+  final bool showButton;
   final VoidCallback? onButtonPress;
 
-  const NoDataLayout({super.key, required this.heading, this.onButtonPress});
+  const NoDataLayout({
+    super.key,
+    required this.heading,
+    this.showButton = true,
+    this.onButtonPress,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -28,29 +36,36 @@ class NoDataLayout extends StatelessWidget {
               CustomText(
                 text: headingText,
                 fontSize: Dimension.fontSizes.h2,
-                fontWeight: Dimension.fontWeights.bold,
+                fontWeight: Dimension.fontWeights.medium,
               ),
               CustomText(
                 text: AppStrings.bpGraphSdk.graphWillShowHere,
                 fontSize: Dimension.fontSizes.rg,
-                fontWeight: Dimension.fontWeights.medium,
+                fontWeight: Dimension.fontWeights.regular,
               ),
             ],
           ),
 
-          CustomButton(
-            text: AppStrings.bpGraphSdk.addRecordToday,
-            type: CustomButtonType.fill,
-            backgroundColor: CustomColor.accentColor,
-            textStyle: TextStyle(
-              color: Colors.white,
-              fontSize: Dimension.fontSizes.h2,
-              fontWeight: Dimension.fontWeights.bold,
+          if (showButton)
+            CustomButton(
+              text: AppStrings.bpGraphSdk.addRecord,
+              type: CustomButtonType.fill,
+              backgroundColor: CustomColor.accentColor,
+              leadingIcon: SVGImage(
+                path: AppIcons.outline.plus,
+                width: 20,
+                height: 20,
+                color: CustomColor.white,
+              ),
+              textStyle: TextStyle(
+                color: Colors.white,
+                fontSize: Dimension.fontSizes.h2,
+                fontWeight: Dimension.fontWeights.bold,
+              ),
+              width: 150,
+              padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+              onPressed: onButtonPress ?? () {},
             ),
-            width: 150,
-            padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-            onPressed: onButtonPress ?? () {},
-          ),
         ],
       ),
     );

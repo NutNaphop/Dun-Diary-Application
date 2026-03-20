@@ -50,6 +50,11 @@ class DateTimeUtils {
     return "${date.day}/${date.month}/${date.year + 543} ${date.hour.toString().padLeft(2, '0')}:${date.minute.toString().padLeft(2, '0')}";
   }
 
+  /// แปลงเป็น String แบบ "HH:mm" เช่น 14:30
+  static String formatOnlyTime(DateTime date) {
+    return "${date.hour.toString().padLeft(2, '0')}:${date.minute.toString().padLeft(2, '0')}";
+  }
+
   /// แปลงเป็น String แบบ มกราคม 2567
   static String formatMonthYear(DateTime date) {
     return "${getMonthFull(date.month)} ${date.year + 543}";

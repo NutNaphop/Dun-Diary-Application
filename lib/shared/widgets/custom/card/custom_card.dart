@@ -1,10 +1,12 @@
 import 'package:dun_diary_app/shared/style/color.dart';
+import 'package:dun_diary_app/shared/style/dimension.dart';
 import 'package:dun_diary_app/shared/style/drop_shadow.dart';
 import 'package:dun_diary_app/shared/widgets/custom/text/text_widget.dart';
 import 'package:flutter/material.dart';
 
 class CustomCard extends StatelessWidget {
   final String? title;
+  final String? tralingTitle;
   final String? description;
   final double titleFontSize;
   final double descriptionFontSize;
@@ -21,6 +23,7 @@ class CustomCard extends StatelessWidget {
   CustomCard({
     super.key,
     this.title,
+    this.tralingTitle,
     this.description,
     this.titleFontSize = 18,
     this.descriptionFontSize = 18,
@@ -56,12 +59,31 @@ class CustomCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 if (title != null)
-                  CustomText(
-                    text: title!,
-                    fontSize: titleFontSize,
-                    fontWeight: titleFontWeight,
-                    color: titleColor,
-                    textAlign: titleTextAlign,
+                  Row(
+                    mainAxisAlignment: tralingTitle != null
+                        ? MainAxisAlignment.spaceBetween
+                        : titleTextAlign == TextAlign.start
+                        ? MainAxisAlignment.start
+                        : titleTextAlign == TextAlign.center
+                        ? MainAxisAlignment.center
+                        : MainAxisAlignment.end,
+                    children: [
+                      CustomText(
+                        text: title!,
+                        fontSize: titleFontSize,
+                        fontWeight: titleFontWeight,
+                        color: titleColor,
+                        textAlign: titleTextAlign,
+                      ),
+                      if (tralingTitle != null)
+                        CustomText(
+                          text: tralingTitle!,
+                          fontSize: Dimension.fontSizes.rg,
+                          fontWeight: Dimension.fontWeights.regular,
+                          color: CustomColor.gray400,
+                          textAlign: titleTextAlign,
+                        ),
+                    ],
                   ),
                 if (description != null)
                   CustomText(
