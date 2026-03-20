@@ -27,7 +27,7 @@ class _HistoryRecordListState extends State<HistoryRecordList> {
     final vm = context.watch<HistoryViewmodel>();
 
     return vm.selectedDateRecords.isEmpty
-        ? const SizedBox.shrink()
+        ? SizedBox.shrink()
         : CustomCard(
             title: AppStrings.history.recordTitle,
             contentPadding: const EdgeInsets.all(10),

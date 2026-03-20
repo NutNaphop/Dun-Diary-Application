@@ -77,6 +77,8 @@ class _BloodPressureStrings {
   final String pulseShortLabel = "PUL";
   final String pulseUnit = "bpm";
   final String pulseDesc = "อัตราการเต้นของหัวใจ";
+  String pulseDescFormat(String value) =>
+      "$pulseDesc: $value ${pulseUnit.toUpperCase()}";
 
   final String average = "ค่าเฉลี่ย";
   final String weightLabel = "น้ำหนักตัว";
@@ -126,6 +128,7 @@ class _HomeStrings {
 
   String greeting(String name) => "สวัสดี คุณ$name";
   final String recordPressure = "บันทึกความดัน";
+  String recordAt(String time) => "บันทึกเมื่อ $time";
   final String healthToday = "สุขภาพของคุณวันนี้";
   final String noContent = "ยังไม่มีการบันทึกวันนี้";
   final String pressToRecord = "กดปุ่มบันทึกเพื่อเริ่มต้น";
@@ -344,5 +347,5 @@ class _BPGraphStrings {
   final recordToSeeTrend =
       "บันทึกค่าความดัน เพื่อดูสรุปสถิติและแนวโน้มสุขภาพของคุณ";
   final graphWillShowHere = "กราฟวิเคราะห์จะปรากฎที่นี่";
-  final addRecordToday = "เพิ่มบันทึกวันนี้";
+  final addRecord = "เพิ่มบันทึก";
 }

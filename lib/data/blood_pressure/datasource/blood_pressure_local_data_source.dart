@@ -2,6 +2,7 @@ import 'package:dun_diary_app/core/constant/hive_constants.dart';
 import 'package:dun_diary_app/core/services/app_logger.dart';
 import 'package:dun_diary_app/data/blood_pressure/model/bp_record.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'dart:async';
 
 /// Local Data Source สำหรับจัดการข้อมูล Blood Pressure Records
 ///
@@ -20,6 +21,10 @@ class BloodPressureLocalDataSource {
   /// Box เก็บ Queue สำหรับการอัปเดตข้อมูล
   final Box<String> _upsertQueue;
   final Box<String> _deleteQueue;
+
+  // Stream Event
+  final StreamController<void> _updateStreamController =
+      StreamController<void>.broadcast();
 
   BloodPressureLocalDataSource()
     : _metaBox = Hive.box(HiveBoxName.metaBox),
@@ -54,6 +59,7 @@ class BloodPressureLocalDataSource {
 
     // 3. อัปเดต Metadata
     await _updateMetaOnAdd(record.createdAt.year);
+    _updateStreamController.add(null);
   }
 
   /// ลบ Record ตาม ID พร้อมอัปเดต Metadata
@@ -63,12 +69,14 @@ class BloodPressureLocalDataSource {
       final year = record.createdAt.year;
       await _box.delete(id);
       await _updateMetaOnDelete(year);
+      _updateStreamController.add(null);
     }
   }
 
   /// อัปเดต Record (ใช้เมื่อแก้ไขสถานะ เช่น isSynced)
   Future<void> updateRecord(BPRecord record) async {
     await _box.put(record.id, record);
+    _updateStreamController.add(null);
   }
 
   /// ดึง Record ตาม ID
@@ -327,7 +335,7 @@ class BloodPressureLocalDataSource {
 
   /// Stream สำหรับ listen การเปลี่ยนแปลงของ Records
   Stream<dynamic> watchRecords() {
-    return _box.watch();
+    return _updateStreamController.stream;
   }
 
   /// 🔧 Debug Mode : Delete All Data

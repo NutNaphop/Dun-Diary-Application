@@ -13,6 +13,7 @@ import 'package:flutter/material.dart';
 class BpGraphSdk extends StatefulWidget {
   final String? heading;
   final List<BloodPressureGraphData> data;
+  final bool isShowActionButton;
   final Function(BloodPressureGraphData)? onPointTap;
   final VoidCallback? onButtonPress;
 
@@ -20,6 +21,7 @@ class BpGraphSdk extends StatefulWidget {
     super.key,
     this.heading,
     required this.data,
+    this.isShowActionButton = true,
     this.onPointTap,
     this.onButtonPress,
   });
@@ -220,7 +222,7 @@ class _BpGraphSdkState extends State<BpGraphSdk>
                                 );
                               }
                               return const SizedBox.shrink();
-                            }).toList(),
+                            }),
                         ],
                       ),
                     ),
@@ -229,6 +231,7 @@ class _BpGraphSdkState extends State<BpGraphSdk>
                   if (isNoData)
                     NoDataLayout(
                       heading: headingDisplayText,
+                      showButton: widget.isShowActionButton,
                       onButtonPress: widget.onButtonPress,
                     ),
                 ],

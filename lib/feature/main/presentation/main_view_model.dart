@@ -1,7 +1,8 @@
-import 'package:dun_diary_app/core/mixins/record_navigation_mixin.dart';
+import 'package:dun_diary_app/core/constant/app_routes.dart';
+import 'package:dun_diary_app/core/services/navigation_service.dart';
 import 'package:flutter/material.dart';
 
-class MainViewModel extends ChangeNotifier with RecordNavigationMixin {
+class MainViewModel extends ChangeNotifier {
   int _currentIndex = 0;
 
   int get currentIndex => _currentIndex;
@@ -14,5 +15,9 @@ class MainViewModel extends ChangeNotifier with RecordNavigationMixin {
 
     _currentIndex = index;
     notifyListeners();
+  }
+
+  void redirectToRecord() {
+    NavigationService.instance.pushNamed(AppRoutes.record);
   }
 }

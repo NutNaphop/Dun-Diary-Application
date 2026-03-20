@@ -68,7 +68,7 @@ class RecordViewmodel extends ChangeNotifier {
   bool get isReadOnly => _isReadOnly;
   bool get hasExistingData => _editingRecordId != null;
 
-  void init(BPRecord? record) {
+  void init(BPRecord? record, DateTime? initialDate) {
     if (record != null) {
       _editingRecordId = record.id;
       _bpValue = BloodPressure(
@@ -89,7 +89,7 @@ class RecordViewmodel extends ChangeNotifier {
     } else {
       _editingRecordId = null;
       _bpValue = BloodPressure(sys: 113, dia: 64, pul: 74);
-      _recordDate = DateTime.now();
+      _recordDate = initialDate ?? DateTime.now();
       _isReadOnly = false;
     }
     notifyListeners();
@@ -183,7 +183,7 @@ class RecordViewmodel extends ChangeNotifier {
             _originalRecordDate == _recordDate) {
           _isReadOnly = true;
           _isLoading = false;
-          FlushbarService.instance.showSuccess("แก้ไขข้อมูลเรียบร้อย");
+          FlushbarService.instance.showSuccess("แก้ไขข้อมูลสำเร็จ");
           notifyListeners();
           return;
         }
@@ -205,7 +205,7 @@ class RecordViewmodel extends ChangeNotifier {
         );
         _isReadOnly = true;
         _isLoading = false;
-        FlushbarService.instance.showSuccess("แก้ไขข้อมูลเรียบร้อย");
+        FlushbarService.instance.showSuccess("แก้ไขข้อมูลสำเร็จ");
         notifyListeners();
       } else {
         // 3. สร้าง Record Object
@@ -225,6 +225,7 @@ class RecordViewmodel extends ChangeNotifier {
 
         _isLoading = false;
         notifyListeners();
+        FlushbarService.instance.showSuccess("บันทึกข้อมูลสำเร็จ");
         NavigationService.instance.goBack(result: true);
       }
     } catch (e) {

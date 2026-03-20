@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:dun_diary_app/core/constant/app_routes.dart';
 import 'package:dun_diary_app/core/network/network_info.dart';
 import 'package:dun_diary_app/core/services/app_logger.dart';
@@ -33,14 +35,17 @@ class StatViewmodel extends ChangeNotifier {
   final AnalyzeRepository _analyzeRepo;
   final NetworkInfo _networkInfo;
 
+  StreamSubscription? _dbSubscription;
+
   StatViewmodel(this._bpRepo, this._analyzeRepo, this._networkInfo) {
-    _loadData();
+    _initData();
   }
 
   bool _disposed = false;
 
   @override
   void dispose() {
+    _dbSubscription?.cancel();
     _disposed = true;
     super.dispose();
   }
@@ -48,6 +53,13 @@ class StatViewmodel extends ChangeNotifier {
   @override
   void notifyListeners() {
     if (!_disposed) super.notifyListeners();
+  }
+
+  void _initData() {
+    _loadData();
+    _dbSubscription = _bpRepo.watchRecords().listen((_) {
+      _loadData();
+    });
   }
 
   // ===========================================================================

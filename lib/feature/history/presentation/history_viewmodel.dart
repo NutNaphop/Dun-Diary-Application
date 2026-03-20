@@ -8,6 +8,7 @@ import 'package:dun_diary_app/core/services/flushbar_service.dart';
 import 'package:dun_diary_app/core/services/navigation_service.dart';
 import 'package:dun_diary_app/data/blood_pressure/model/bp_record.dart';
 import 'package:dun_diary_app/data/blood_pressure/repository/blood_pressure_repository.dart';
+import 'package:dun_diary_app/feature/record/presentation/record_screen.dart';
 import 'package:dun_diary_app/shared/constant/app_strings.dart';
 import 'package:dun_diary_app/shared/utils/blood_pressure_utils.dart';
 import 'package:dun_diary_app/shared/utils/date_utils.dart';
@@ -140,11 +141,21 @@ class HistoryViewmodel extends ChangeNotifier {
   }
 
   void redirectToRecord() {
-    NavigationService.instance.pushNamed(AppRoutes.record);
+    final customSelectedDate = DateTime(
+      selectedDate.year,
+      selectedDate.month,
+      selectedDate.day,
+      DateTime.now().hour,
+      DateTime.now().minute,
+      DateTime.now().second,
+    );
+    final args = RecordScreenArgs(initialDate: customSelectedDate);
+    NavigationService.instance.pushNamed(AppRoutes.record, arguments: args);
   }
 
   void redirectToBloodPressureDetail(BPRecord record) {
-    NavigationService.instance.pushNamed(AppRoutes.record, arguments: record);
+    final args = RecordScreenArgs(record: record);
+    NavigationService.instance.pushNamed(AppRoutes.record, arguments: args);
   }
 
   void selectDate(DateTime date) {

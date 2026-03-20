@@ -19,23 +19,27 @@ import 'package:provider/provider.dart';
 
 enum ViewMode { read, edit }
 
+class RecordScreenArgs {
+  final BPRecord? record;
+  final DateTime? initialDate;
+
+  const RecordScreenArgs({this.record, this.initialDate});
+}
+
 class RecordScreen extends StatelessWidget {
   final BPRecord? record;
 
   const RecordScreen({super.key, this.record});
 
-  // Factory สำหรับ Create Mode
   static Widget create() {
-    return _createProvider(null);
+    return _createProvider(RecordScreenArgs());
   }
 
-  // Factory สำหรับ Edit Mode
-  static Widget createWithRecord(BPRecord record) {
-    return _createProvider(record);
+  static Widget createWithRecord(RecordScreenArgs args) {
+    return _createProvider(args);
   }
 
-  // Helper สร้าง Provider พร้อม init ข้อมูล
-  static Widget _createProvider(BPRecord? record) {
+  static Widget _createProvider(RecordScreenArgs args) {
     return ChangeNotifierProvider(
       create: (context) {
         final vm = RecordViewmodel(
@@ -44,7 +48,7 @@ class RecordScreen extends StatelessWidget {
           mediaService: context.read<MediaService>(),
           networkInfo: context.read<NetworkInfo>(),
         );
-        vm.init(record);
+        vm.init(args.record, args.initialDate);
         return vm;
       },
       child: const RecordScreen(),

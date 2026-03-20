@@ -75,18 +75,20 @@ class HistoryCard extends StatelessWidget {
                       color: CustomColor.gray900,
                     ),
                     CustomText(
-                      text:
-                          "${record.pulse} ${AppStrings.bloodPressure.pulseUnit}",
-                      fontSize: Dimension.fontSizes.rg,
+                      text: AppStrings.bloodPressure.pulseDescFormat(
+                        record.pulse.toString(),
+                      ),
+                      fontSize: Dimension.fontSizes.md,
                       fontWeight: Dimension.fontWeights.regular,
                       color: CustomColor.gray900,
                     ),
                     Row(
                       children: [
                         CustomText(
-                          text: DateTimeUtils.formatToThaiDate(
-                            record.createdAt,
-                          ),
+                          text: DateTimeUtils.formatToTime(record.createdAt),
+                          fontSize: Dimension.fontSizes.rg,
+                          fontWeight: Dimension.fontWeights.regular,
+                          color: CustomColor.gray500,
                         ),
                       ],
                     ),
