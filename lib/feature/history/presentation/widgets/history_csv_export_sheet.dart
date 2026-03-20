@@ -25,7 +25,6 @@ class HistoryCSVExportSheet extends StatelessWidget {
     CustomBottomSheet.show(
       context: context,
       padding: EdgeInsets.zero,
-      height: MediaQuery.of(context).size.height * 0.55,
       child: ChangeNotifierProvider.value(
         value: vm,
         child: HistoryCSVExportSheet(onExport: vm.exportToCsv),
@@ -75,7 +74,7 @@ class HistoryCSVExportSheet extends StatelessWidget {
                     return CalendarSDK(
                       type: CalendarType.month,
                       initialDate: vm.exportStartDate,
-                      firstDate: DateTime(2020),
+                      firstDate: vm.exportStartDate,
                       lastDate: DateTime.now(),
                     );
                   },
@@ -110,9 +109,9 @@ class HistoryCSVExportSheet extends StatelessWidget {
                     },
             ),
 
-            const SizedBox(height: 80),
+            const SizedBox(height: 45),
             Divider(color: CustomColor.gray300, thickness: 1),
-            const SizedBox(height: 22),
+            const SizedBox(height: 16),
             // ปุ่ม
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -143,6 +142,7 @@ class HistoryCSVExportSheet extends StatelessWidget {
                 ],
               ),
             ),
+            SizedBox(height: MediaQuery.of(context).padding.bottom + 16),
           ],
         );
       },
@@ -179,13 +179,15 @@ class HistoryCSVExportSheet extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    dateValue != null
+                  CustomText(
+                    text: dateValue != null
                         ? DateTimeUtils.formatMonthYear(dateValue)
                         : AppStrings.history.selectMonth,
-                    style: TextStyle(
-                      color: dateValue != null ? Colors.black : Colors.grey,
-                    ),
+                    fontSize: Dimension.fontSizes.md,
+                    fontWeight: Dimension.fontWeights.regular,
+                    color: dateValue != null
+                        ? CustomColor.gray900
+                        : CustomColor.gray400,
                   ),
                   SVGImage(
                     path: AppIcons.outline.calendar,
