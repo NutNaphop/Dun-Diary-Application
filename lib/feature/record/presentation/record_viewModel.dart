@@ -183,7 +183,7 @@ class RecordViewmodel extends ChangeNotifier {
             _originalRecordDate == _recordDate) {
           _isReadOnly = true;
           _isLoading = false;
-          FlushbarService.instance.showSuccess("แก้ไขข้อมูลเรียบร้อย");
+          FlushbarService.instance.showSuccess("แก้ไขข้อมูลสำเร็จ");
           notifyListeners();
           return;
         }
@@ -205,7 +205,7 @@ class RecordViewmodel extends ChangeNotifier {
         );
         _isReadOnly = true;
         _isLoading = false;
-        FlushbarService.instance.showSuccess("แก้ไขข้อมูลเรียบร้อย");
+        FlushbarService.instance.showSuccess("แก้ไขข้อมูลสำเร็จ");
         notifyListeners();
       } else {
         // 3. สร้าง Record Object
@@ -225,6 +225,7 @@ class RecordViewmodel extends ChangeNotifier {
 
         _isLoading = false;
         notifyListeners();
+        FlushbarService.instance.showSuccess("บันทึกข้อมูลสำเร็จ");
         NavigationService.instance.goBack(result: true);
       }
     } catch (e) {

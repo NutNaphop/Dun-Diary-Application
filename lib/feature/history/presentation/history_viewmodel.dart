@@ -141,7 +141,15 @@ class HistoryViewmodel extends ChangeNotifier {
   }
 
   void redirectToRecord() {
-    final args = RecordScreenArgs(initialDate: selectedDate);
+    final customSelectedDate = DateTime(
+      selectedDate.year,
+      selectedDate.month,
+      selectedDate.day,
+      DateTime.now().hour,
+      DateTime.now().minute,
+      DateTime.now().second,
+    );
+    final args = RecordScreenArgs(initialDate: customSelectedDate);
     NavigationService.instance.pushNamed(AppRoutes.record, arguments: args);
   }
 

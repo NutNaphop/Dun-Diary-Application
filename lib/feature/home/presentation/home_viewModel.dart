@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:dun_diary_app/core/constant/app_routes.dart';
-import 'package:dun_diary_app/core/mixins/record_navigation_mixin.dart';
 import 'package:dun_diary_app/core/services/app_logger.dart';
 import 'package:dun_diary_app/core/services/dialog_service.dart';
 import 'package:dun_diary_app/core/services/flushbar_service.dart';
@@ -12,7 +11,7 @@ import 'package:dun_diary_app/data/blood_pressure/repository/blood_pressure_repo
 import 'package:dun_diary_app/shared/utils/mock_data_seeder.dart';
 import 'package:flutter/material.dart';
 
-class HomeViewmodel extends ChangeNotifier with RecordNavigationMixin {
+class HomeViewmodel extends ChangeNotifier {
   final BloodPressureRepository _recordRepo;
 
   StreamSubscription? _dbSubscription;
@@ -45,9 +44,12 @@ class HomeViewmodel extends ChangeNotifier with RecordNavigationMixin {
     notifyListeners();
   }
 
+  void redirectToRecord() {
+    NavigationService.instance.pushNamed(AppRoutes.record);
+  }
+
   void _initData() {
     _updateLatestRecord();
-    // ดักฟังการเปลี่ยนแปลงข้อมูล (Add/Update/Delete) แล้วอัปเดตหน้าจอทันที
     _dbSubscription = _recordRepo.watchRecords().listen((_) {
       _updateLatestRecord();
     });
