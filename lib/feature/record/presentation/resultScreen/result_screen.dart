@@ -13,6 +13,7 @@ import 'package:dun_diary_app/shared/widgets/custom/card/stat_row.dart';
 import 'package:dun_diary_app/shared/widgets/custom/img/custom_svg_widget.dart';
 import 'package:dun_diary_app/shared/widgets/custom/scaffold/custom_scaffold.dart';
 import 'package:dun_diary_app/shared/widgets/custom/scaffold/main_appbar.dart';
+import 'package:dun_diary_app/shared/widgets/custom/text/text_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -75,13 +76,11 @@ class _ResultScreenState extends State<ResultScreen> {
                 children: [
                   CircularProgressIndicator(color: CustomColor.accentColor),
                   SizedBox(height: 16),
-                  Text(
-                    AppStrings.stat.analyzing,
-                    style: TextStyle(
-                      color: CustomColor.gray600,
-                      fontSize: Dimension.fontSizes.h2,
-                      fontWeight: Dimension.fontWeights.medium,
-                    ),
+                  CustomText(
+                    text: AppStrings.stat.analyzing,
+                    fontWeight: Dimension.fontWeights.medium,
+                    fontSize: Dimension.fontSizes.h2,
+                    color: CustomColor.gray600,
                   ),
                 ],
               ),

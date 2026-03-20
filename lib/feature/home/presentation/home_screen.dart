@@ -67,11 +67,13 @@ class _HomeScreenState extends State<HomeScreen> {
                     // --- ส่วนการ์ดแสดงผลสุขภาพ (Health Status Card) ---
                     CustomCard(
                       title: AppStrings.home.healthToday,
-                      tralingTitle: AppStrings.home.recordAt(
-                        DateTimeUtils.formatOnlyTime(
-                          latestRecord?.createdAt ?? DateTime.now(),
-                        ),
-                      ),
+                      tralingTitle: latestRecord != null
+                          ? AppStrings.home.recordAt(
+                              DateTimeUtils.formatOnlyTime(
+                                latestRecord.createdAt,
+                              ),
+                            )
+                          : null,
                       titleFontWeight: Dimension.fontWeights.medium,
                       contentPadding: const EdgeInsets.all(20),
                       content: Column(

@@ -13,8 +13,8 @@ class WheelNumber extends StatefulWidget {
     super.key,
     this.initialValue = 0,
     required this.onChanged,
-    this.min = 50,
-    this.max = 200,
+    this.min = 20,
+    this.max = 300,
   });
 
   @override
