@@ -19,21 +19,29 @@ class ModelService {
     _loadingCompleter = Completer<void>();
 
     try {
-      final modelName = "yoloV8F_640_float16.tflite";
-      final modelAssetPath = 'assets/models/$modelName';
-      final tempDir = Directory.systemTemp;
-      final modelFile = File('${tempDir.path}/$modelName');
-      final modelData = await rootBundle.load(modelAssetPath);
-      await modelFile.writeAsBytes(modelData.buffer.asUint8List());
+      String targetModelPath = "";
+
+      if (Platform.isIOS) {
+        targetModelPath = "yoloV8F_640_float16.mlmodel";
+      } else {
+        final modelName = "yoloV8F_640_float16.tflite";
+        final tempDir = Directory.systemTemp;
+        final modelFile = File('${tempDir.path}/$modelName');
+        if (!await modelFile.exists()) {
+          final modelData = await rootBundle.load('assets/models/$modelName');
+          await modelFile.writeAsBytes(modelData.buffer.asUint8List());
+        }
+        targetModelPath = modelFile.path;
+      }
 
       _yolo = YOLO(
-        modelPath: modelFile.path,
+        modelPath: targetModelPath,
         task: YOLOTask.detect,
         useGpu: false,
       );
 
       await _yolo!.loadModel();
-      AppLogger.info("Loaded Model: $modelName");
+      AppLogger.info("Loaded Model: $targetModelPath");
       _loadingCompleter!.complete();
     } catch (e) {
       AppLogger.error("Error loading model", e);

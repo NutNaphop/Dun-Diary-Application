@@ -13,7 +13,7 @@ class QrScannerScreen extends StatefulWidget {
 
 class _QrScannerScreenState extends State<QrScannerScreen> {
   bool _isScanned = false;
-  final MobileScannerController _controller = MobileScannerController();
+  final MobileScannerController _controller = MobileScannerController(facing: CameraFacing.back);
 
   @override
   void dispose() {

@@ -31,8 +31,6 @@
 		<key>UISupportedInterfaceOrientations</key>
 		<array>
 			<string>UIInterfaceOrientationPortrait</string>
-			<string>UIInterfaceOrientationLandscapeLeft</string>
-			<string>UIInterfaceOrientationLandscapeRight</string>
 		</array>
 		<key>UISupportedInterfaceOrientations~ipad</key>
 		<array>
@@ -54,5 +52,11 @@
 		<string>แอปต้องการเข้าถึงกล้อง เพื่อถ่ายรูปผลวัดความดันของคุณ</string>
 		<key>UIStatusBarHidden</key>
 		<false/>
+		<!-- URL Schemes for url_launcher -->
+		<key>LSApplicationQueriesSchemes</key>
+		<array>
+			<string>https</string>
+			<string>http</string>
+		</array>
 	</dict>
 </plist>
