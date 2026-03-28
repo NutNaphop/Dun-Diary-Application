@@ -1,0 +1,77 @@
+name: Deploy to Firebase Distribution
+
+on:
+  push:
+    branches:
+      - develop
+
+jobs:
+  deploy-firebase:
+    name: Build APK & Deploy to Firebase
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          lfs: true
+
+      - name: Setup Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+
+      - name: Cache Flutter Pub and Gradle
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.pub-cache
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-pub-gradle-${{ hashFiles('**/pubspec.yaml', '**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-pub-gradle-
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.38.7'
+          channel: 'stable'
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Create google-services.json
+        run: |
+          cat << EOF > android/app/google-services.json
+          ${{ secrets.GOOGLE_SERVICES_JSON }}
+          EOF
+
+      - name: Create firebase_options.dart
+        run: |
+          cat << EOF > lib/firebase_options.dart
+          ${{ secrets.FIREBASE_OPTIONS }}
+          EOF
+
+      - name: Create Built-in Environment variables
+        env:
+          BASE_URL: ${{ secrets.BASE_URL }}
+          QR_ENCRYPTION_KEY: ${{ secrets.QR_ENCRYPTION_KEY }}
+          QR_ENCRYPTION_IV: ${{ secrets.QR_ENCRYPTION_IV }}
+        run: |
+          jq -n \
+            --arg BASE_URL "$BASE_URL" \
+            --arg QR_ENCRYPTION_KEY "$QR_ENCRYPTION_KEY" \
+            --arg QR_ENCRYPTION_IV "$QR_ENCRYPTION_IV" \
+            '{BASE_URL: $BASE_URL, QR_ENCRYPTION_KEY: $QR_ENCRYPTION_KEY, QR_ENCRYPTION_IV: $QR_ENCRYPTION_IV}' > env.product.json
+
+      - name: Build APK
+        run: flutter build apk --release --build-number=${{ github.run_number }} --dart-define-from-file=env.product.json
+
+      - name: Upload to Firebase Distribution
+        uses: wzieba/Firebase-Distribution-Github-Action@v1
+        with:
+          appId: ${{ secrets.FIREBASE_APP_ID }}
+          token: ${{ secrets.FIREBASE_TOKEN }}
+          groups: testers
+          file: build/app/outputs/flutter-apk/app-release.apk
+          releaseNotes: "Build from commit: ${{ github.sha }}"

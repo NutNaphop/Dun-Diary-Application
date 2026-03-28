@@ -1,0 +1,110 @@
+name: Build Release APK
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  build-release:
+    name: Build APK & Create Release
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          lfs: true
+
+      - name: Extract version from tag
+        id: version
+        run: echo "VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
+
+      - name: Setup Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+
+      - name: Cache Flutter Pub and Gradle
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.pub-cache
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-pub-gradle-${{ hashFiles('**/pubspec.yaml', '**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-pub-gradle-
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.38.7'
+          channel: 'stable'
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Create google-services.json
+        run: |
+          cat << EOF > android/app/google-services.json
+          ${{ secrets.GOOGLE_SERVICES_JSON }}
+          EOF
+
+      - name: Create firebase_options.dart
+        run: |
+          cat << EOF > lib/firebase_options.dart
+          ${{ secrets.FIREBASE_OPTIONS }}
+          EOF
+
+      - name: Create Built-in Environment variables
+        env:
+          BASE_URL: ${{ secrets.BASE_URL }}
+          QR_ENCRYPTION_KEY: ${{ secrets.QR_ENCRYPTION_KEY }}
+          QR_ENCRYPTION_IV: ${{ secrets.QR_ENCRYPTION_IV }}
+        run: |
+          jq -n \
+            --arg BASE_URL "$BASE_URL" \
+            --arg QR_ENCRYPTION_KEY "$QR_ENCRYPTION_KEY" \
+            --arg QR_ENCRYPTION_IV "$QR_ENCRYPTION_IV" \
+            '{BASE_URL: $BASE_URL, QR_ENCRYPTION_KEY: $QR_ENCRYPTION_KEY, QR_ENCRYPTION_IV: $QR_ENCRYPTION_IV}' > env.product.json
+
+      - name: Build split APKs (per ABI)
+        run: flutter build apk --release --split-per-abi --build-number=${{ github.run_number }} --dart-define-from-file=env.product.json
+
+      - name: Build fat APK (universal)
+        run: flutter build apk --release --build-number=${{ github.run_number }} --dart-define-from-file=env.product.json
+
+      - name: Rename APK files
+        run: |
+          VERSION=${{ steps.version.outputs.VERSION }}
+          APK_DIR=build/app/outputs/flutter-apk
+          mv $APK_DIR/app-armeabi-v7a-release.apk $APK_DIR/dun-diary-v${VERSION}-armeabi-v7a.apk
+          mv $APK_DIR/app-arm64-v8a-release.apk $APK_DIR/dun-diary-v${VERSION}-arm64-v8a.apk
+          mv $APK_DIR/app-x86_64-release.apk $APK_DIR/dun-diary-v${VERSION}-x86_64.apk
+          mv $APK_DIR/app-release.apk $APK_DIR/dun-diary-v${VERSION}-universal.apk
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: "Dun Diary v${{ steps.version.outputs.VERSION }}"
+          body: |
+            ## Dun Diary v${{ steps.version.outputs.VERSION }}
+
+            **Build Number:** ${{ github.run_number }}
+            **Commit:** ${{ github.sha }}
+
+            ### 📦 Downloads
+            | File | For |
+            |------|--------|
+            | `dun-diary-v${{ steps.version.outputs.VERSION }}-arm64-v8a.apk` | Most new phones (recommended) |
+            | `dun-diary-v${{ steps.version.outputs.VERSION }}-armeabi-v7a.apk` | Old 32-bit phones |
+            | `dun-diary-v${{ steps.version.outputs.VERSION }}-x86_64.apk` | Emulator / Chromebook |
+            | `dun-diary-v${{ steps.version.outputs.VERSION }}-universal.apk` | All phones (larger file) |
+          files: |
+            build/app/outputs/flutter-apk/dun-diary-v${{ steps.version.outputs.VERSION }}-armeabi-v7a.apk
+            build/app/outputs/flutter-apk/dun-diary-v${{ steps.version.outputs.VERSION }}-arm64-v8a.apk
+            build/app/outputs/flutter-apk/dun-diary-v${{ steps.version.outputs.VERSION }}-x86_64.apk
+            build/app/outputs/flutter-apk/dun-diary-v${{ steps.version.outputs.VERSION }}-universal.apk

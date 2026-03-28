@@ -1,0 +1,79 @@
+import 'package:dun_diary_app/feature/history/presentation/history_viewmodel.dart';
+import 'package:dun_diary_app/shared/constant/app_strings.dart';
+import 'package:dun_diary_app/shared/style/color.dart';
+import 'package:dun_diary_app/shared/style/dimension.dart';
+import 'package:dun_diary_app/shared/utils/blood_pressure_utils.dart';
+import 'package:dun_diary_app/shared/utils/date_utils.dart';
+import 'package:dun_diary_app/shared/widgets/custom/card/custom_card.dart';
+import 'package:dun_diary_app/shared/widgets/custom/text/citation_source.dart';
+import 'package:dun_diary_app/shared/widgets/custom/text/text_widget.dart';
+import 'package:dun_diary_app/shared/widgets/ui/guage/guage.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+class HistorySummaryCard extends StatelessWidget {
+  final bool compact;
+
+  const HistorySummaryCard({super.key, this.compact = false});
+
+  @override
+  Widget build(BuildContext context) {
+    final vm = context.watch<HistoryViewmodel>();
+
+    final avgLevel = vm.getAverageLevelForDate(vm.selectedDate);
+    final label = AppStrings.bloodPressure.bloodPressure(
+      avgLevel?.label ?? '-',
+    );
+
+    if (vm.selectedDateRecords.isEmpty) {
+      return const SizedBox.shrink();
+    }
+
+    final lastRecordLevel = BloodPressureUtils.calculateBloodPressureLevel(
+      vm.selectedDateRecords.first.sys,
+      vm.selectedDateRecords.first.dia,
+    );
+
+    return Column(
+      children: [
+        CustomCard(
+          contentPadding: EdgeInsets.all(compact ? 6 : 10),
+          content: Column(
+            children: [
+              CustomText(
+                text: label,
+                fontSize: compact
+                    ? Dimension.fontSizes.h2
+                    : Dimension.fontSizes.h1,
+                fontWeight: Dimension.fontWeights.bold,
+                color: CustomColor.gray900,
+                textAlign: TextAlign.center,
+              ),
+              SizedBox(height: compact ? 2 : 4),
+              CustomText(
+                text: DateTimeUtils.getHistoryTimeLabel(
+                  vm.selectedDateRecords.firstOrNull?.createdAt,
+                ),
+                fontSize: Dimension.fontSizes.md,
+                fontWeight: Dimension.fontWeights.medium,
+                color: CustomColor.gray500,
+                textAlign: TextAlign.center,
+              ),
+              BloodPressureGauge(
+                level: lastRecordLevel,
+                avgLevel: avgLevel,
+                compact: compact,
+              ),
+            ],
+          ),
+        ),
+        SizedBox(height: 5),
+        CitationSource(
+          sourceName: AppStrings.citation.ahaSourceName,
+          url: AppStrings.citation.ahaUrl,
+          color: CustomColor.gray400,
+        ),
+      ],
+    );
+  }
+}
